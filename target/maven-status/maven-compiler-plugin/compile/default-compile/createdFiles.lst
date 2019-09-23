@@ -1,0 +1,9 @@
+infore\SDE\sketches\Bloomfilter.class
+infore\SDE\sources\kafkaProducer.class
+infore\SDE\sketches\TimeSeriesSketch.class
+infore\SDE\sketches\TimeSeries\MyTimeSeries.class
+infore\SDE\sketches\Sketch.class
+infore\SDE\sketches\AMSsketch.class
+infore\SDE\sources\kafkaConsumer.class
+infore\SDE\sources\AverageSerializer.class
+infore\SDE\sketches\Countmin.class
