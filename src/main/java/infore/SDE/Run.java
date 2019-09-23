@@ -12,7 +12,7 @@ import infore.SDE.sources.kafkaProducer;
 
 /**
  * <br>
- * Implementation code for SDE for INFORE-PROJECT" <br>
+ * Implementation code of the SDE for INFORE-PROJECT" <br>
  * TECHNICAL UNIVERSITY OF CRETE <br>
  * Author:Antonis_Kontaxakis <br>
  * email: adokontax15@gmail.com
