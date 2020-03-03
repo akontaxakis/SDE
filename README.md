@@ -15,7 +15,7 @@ args[0]={@link #kafkaDataInputTopic} DEFAULT: "SpringI2")
 args[1]={@link #kafkaRequestInputTopic} DEFAULT: "rq13")
 args[2]={@link #kafkaBrokersList} (DEFAULT: "localhost:9092")
 args[3]={@link #parallelism} Job parallelism (DEFAULT: "4")
-largs[4]={@link #kafkaOutputTopic} Point dimension (DEFAULT: O10)
+largs[4]={@link #kafkaOutputTopic} (DEFAULT: O10)
 ~~~
 
 SDE reads the Data and the Requests from a Kafka Topic each, given as arguments.
