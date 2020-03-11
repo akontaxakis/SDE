@@ -14,8 +14,6 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.SplitStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
-import infore.SDE.sources.kafkaProducerEstimation;
-import infore.SDE.transformations.IngestionMultiplierFlatMap;
 import infore.SDE.transformations.ReduceFlatMap;
 import infore.SDE.transformations.RqRouterFlatMap;
 import infore.SDE.transformations.SDEcoFlatMap;
@@ -23,7 +21,6 @@ import infore.SDE.transformations.dataRouterCoFlatMap;
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
 import infore.SDE.sources.kafkaConsumer;
-import infore.SDE.sources.kafkaProducer2;
 
 /**
  * <br>
@@ -69,7 +66,7 @@ public class MultySDE {
 		kafkaConsumer kc = new kafkaConsumer(kafkaBrokersList, kafkaDataInputTopic);
 		kafkaConsumer requests = new kafkaConsumer(kafkaBrokersList, kafkaRequestInputTopic);
 		kafkaConsumer union = new kafkaConsumer(kafkaBrokersList, kafkaUnionTopic);
-		kafkaProducerEstimation kp = new kafkaProducerEstimation(kafkaBrokersList, kafkaOutputTopic);
+		//kafkaProducerEstimation kp = new kafkaProducerEstimation(kafkaBrokersList, kafkaOutputTopic);
 		//kafkaProducerEstimation test = new kafkaProducerEstimation(kafkaBrokersList, "testPairs");
 		
 		DataStream<ObjectNode> datastream = env.addSource(kc.getFc()).setParallelism(parallelism2);
@@ -156,10 +153,10 @@ public class MultySDE {
 		
 		DataStream<Estimation> fmulty = UNION_stream.union(multy);
 		
-		single.addSink(kp.getProducer());
+		//single.addSink(kp.getProducer());
 		DataStream<Estimation> finalStream = fmulty.flatMap(new ReduceFlatMap());
 		//DataStream<Tuple2< String, Object>> finalStream = estimationStream.flatMap(new ReduceFlatMap());
-		finalStream.addSink(kp.getProducer());
+		//finalStream.addSink(kp.getProducer());
 		
 		@SuppressWarnings("unused")
 		JobExecutionResult result = env.execute("Streaming Multy SDE");

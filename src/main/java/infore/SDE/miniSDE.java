@@ -16,7 +16,6 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
 import infore.SDE.sources.kafkaConsumer;
-import infore.SDE.sources.kafkaProducerEstimation;
 import infore.SDE.transformations.RqRouterFlatMap;
 import infore.SDE.transformations.SDEcoFlatMap;
 import infore.SDE.transformations.dataRouterCoFlatMap;
@@ -57,8 +56,8 @@ public class miniSDE {
 
 		kafkaConsumer kc = new kafkaConsumer(kafkaBrokersList, kafkaDataInputTopic);
 		kafkaConsumer requests = new kafkaConsumer(kafkaBrokersList, kafkaRequestInputTopic);
-		kafkaProducerEstimation kp = new kafkaProducerEstimation(kafkaBrokersList, kafkaOutputTopic);
-		kafkaProducerEstimation unionp = new kafkaProducerEstimation(kafkaBrokersList, kafkaUnionTopic);
+		//kafkaProducerEstimation kp = new kafkaProducerEstimation(kafkaBrokersList, kafkaOutputTopic);
+		//kafkaProducerEstimation unionp = new kafkaProducerEstimation(kafkaBrokersList, kafkaUnionTopic);
 		//kafkaProducerEstimation test = new kafkaProducerEstimation(kafkaBrokersList, "testPairs");
 
 		DataStream<ObjectNode> RQ_stream = env.addSource(requests.getFc());
@@ -126,10 +125,10 @@ public class miniSDE {
 		
 		DataStream<Estimation> single = split.select("single");
 		DataStream<Estimation> multy = split.select("multy");
-		single.addSink(kp.getProducer());
-		//DataStream<Estimation> finalStream = multy.flatMap(new ReduceFlatMap());
+		//single.addSink(kp.getProducer());
+
 		//DataStream<Tuple2< String, Object>> finalStream = estimationStream.flatMap(new ReduceFlatMap());
-		multy.addSink(unionp.getProducer());
+		//multy.addSink(unionp.getProducer());
 		
 		@SuppressWarnings("unused")
 		JobExecutionResult result = env.execute("Streaming miniSDE");

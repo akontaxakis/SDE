@@ -10,30 +10,28 @@ import infore.SDE.messages.Estimation;
 public class kafkaProducerEstimation {
 
 	FlinkKafkaProducer<Estimation> myProducer;
-	
-	
+
 
 	public kafkaProducerEstimation(String brokerlist, String outputTopic) {
-		
+
 		myProducer = new FlinkKafkaProducer<>(
-					brokerlist,            // broker list
-			        outputTopic,                  // target topic
-			        (KeyedSerializationSchema<Estimation>)new  EstimationSerializer()); 
-			        //new SimpleStringSchema()); 
+				brokerlist,            // broker list
+				outputTopic,                  // target topic
+				(KeyedSerializationSchema<Estimation>) new EstimationSerializer());
+		//new SimpleStringSchema());
 		myProducer.setWriteTimestampToKafka(true);
-		
+
 	}
-	
-	public SinkFunction<Estimation> getProducer(){
+
+	public SinkFunction<Estimation> getProducer() {
 		return myProducer;
 	}
-	
-}
 
+}
 
  class EstimationSerializer implements KeyedSerializationSchema<Estimation> {
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -48,11 +46,11 @@ public class kafkaProducerEstimation {
 		if(element.getSynopsisID() == 4) {
 		Complex[] k = (Complex[])element.getEstimation();
 		return ("\""+k[0].toString()+ ","+k[1].toString() +"\"").getBytes();
-		}else {
-		 
+		}
+		else {
 			return element.toKafka();
 		}
-	  	
+
 	}
 	@Override
 	public String getTargetTopic(Estimation element) {

@@ -1,6 +1,6 @@
 # **Synopsis Data Engine (SDE)**
 
-## A stateless SDE with the basic impelentation of:
+## A stateful SDE with the basic impelentation of:
 
 -  CountMin
 -  BlommFilter
@@ -9,7 +9,7 @@
 -  LSH
 -  Dynamic Add Sketch
 
-## Input
+## Input MAIN CLASS (Run)
 ~~~
 args[0]={@link #kafkaDataInputTopic} DEFAULT: "SpringI2")
 args[1]={@link #kafkaRequestInputTopic} DEFAULT: "rq13")
