@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.yahoo.datasketches:sketches-core:0.13.4">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/yahoo/datasketches/sketches-core/0.13.4/sketches-core-0.13.4.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/yahoo/datasketches/sketches-core/0.13.4/sketches-core-0.13.4-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/yahoo/datasketches/sketches-core/0.13.4/sketches-core-0.13.4-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

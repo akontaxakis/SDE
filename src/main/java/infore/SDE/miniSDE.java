@@ -60,9 +60,10 @@ public class miniSDE {
 		kafkaProducerEstimation kp = new kafkaProducerEstimation(kafkaBrokersList, kafkaOutputTopic);
 		kafkaProducerEstimation unionp = new kafkaProducerEstimation(kafkaBrokersList, kafkaUnionTopic);
 		//kafkaProducerEstimation test = new kafkaProducerEstimation(kafkaBrokersList, "testPairs");
-		
-		DataStream<ObjectNode> datastream = env.addSource(kc.getFc()).setParallelism(parallelism2);
+
 		DataStream<ObjectNode> RQ_stream = env.addSource(requests.getFc());
+		DataStream<ObjectNode> datastream = env.addSource(kc.getFc()).setParallelism(parallelism2);
+
 
 		//map kafka data input to tuple2<int,double>
 		DataStream<Tuple2<String, String>> dataStream = datastream

@@ -2,7 +2,6 @@ package infore.SDE.synopses;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
 import net.sf.geographiclib.Geodesic;

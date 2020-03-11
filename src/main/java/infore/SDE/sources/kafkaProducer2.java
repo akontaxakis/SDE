@@ -16,23 +16,20 @@ FlinkKafkaProducer<Tuple2< String, String>> myProducer;
 					brokerlist,            // broker list
 			        outputTopic,                  // target topic
 			        (SerializationSchema<Tuple2< String, String>>)new  AverageSerializer2()); 
-			        //new SimpleStringSchema()); 
-		myProducer.setWriteTimestampToKafka(true);
+			        //new SimpleStringSchema());
 		
 	}
 	
 	public SinkFunction<Tuple2<String, String>> getProducer(){
 		return myProducer;
 	}
-	
-}
 
 
- class AverageSerializer2 implements SerializationSchema<Tuple2< String, String>> {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	class AverageSerializer2 implements SerializationSchema<Tuple2< String, String>> {
+		/**
+		 *
+		 */
+		private static final long serialVersionUID = 1L;
 /*
 	@Override
     public byte[] serializeKey(Tuple2 element) {
@@ -45,15 +42,17 @@ FlinkKafkaProducer<Tuple2< String, String>> myProducer;
       return value.getBytes();
     }
 */
-  
-    public String getTargetTopic(Tuple2<String, String> element) {
-      // use always the default topic
-      return null;
-    }
 
-	@Override
-	public byte[] serialize(Tuple2<String, String> element) {
-		
-		return ("\""+element.getField(0)+ ","+element.getField(1) +"\"").getBytes();
-	}
-  }
+		public String getTargetTopic(Tuple2<String, String> element) {
+			// use always the default topic
+			return null;
+		}
+
+		@Override
+		public byte[] serialize(Tuple2<String, String> element) {
+
+			return ("\""+element.getField(0)+ ","+element.getField(1) +"\"").getBytes();
+		}
+
+}
+ }

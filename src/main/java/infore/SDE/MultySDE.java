@@ -192,7 +192,6 @@ public class MultySDE {
 			//kafkaBrokersList = "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667";
 			kafkaBrokersList = "localhost:9092";
 			kafkaOutputTopic = "4FINOUT";
-			multi =0;
 			
 		}
 	}

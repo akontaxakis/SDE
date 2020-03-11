@@ -164,7 +164,7 @@ public class Run {
 			
 			System.out.println("[INFO] Default values");
 			//Default values
-			kafkaDataInputTopic = "FIN5000";
+			kafkaDataInputTopic = "FIN500";
 			kafkaRequestInputTopic = "testRequest3";
 			parallelism = 4;
 			parallelism2 = 4;

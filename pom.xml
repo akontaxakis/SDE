@@ -36,17 +36,7 @@
 
 	<dependencies>
 
-		<dependency>
-			<groupId>jdk.tools</groupId>
-			<artifactId>jdk.tools</artifactId>
-			<scope>system</scope>
-			<version>1.8</version>
-			<systemPath>C:\Program Files\Java\jdk-11.0.2\bin\tools.jar</systemPath>
-		</dependency>
-
-
-
- <dependency>
+ 	<dependency>
             <groupId>net.sf.geographiclib</groupId>
             <artifactId>GeographicLib-Java</artifactId>
             <version>1.50</version>
@@ -90,20 +80,7 @@
 		</dependency>
 
 		<!-- Apache Flink dependencies -->
-		<!-- These dependencies are provided, because they should not be packaged 
-			into the JAR file. -->
-		<dependency>
-			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-java</artifactId>
-			<version>${flink.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-streaming-java_${scala.binary.version}</artifactId>
-			<version>${flink.version}</version>
-			<scope>provided</scope>
-		</dependency>
+
 
 		<dependency>
 			<groupId>org.apache.flink</groupId>
@@ -120,12 +97,6 @@
 			<version>0.13.4</version>
 		</dependency>
 
-		<!-- Streamer dependencies -->
-		<dependency>
-			<groupId>com.github.mayconbordin</groupId>
-			<artifactId>streaminer</artifactId>
-			<version>1.1.1</version>
-		</dependency>
 		<!-- Add this dependencies -->
 		<dependency>
 			<groupId>com.clearspring.analytics</groupId>
@@ -133,7 +104,12 @@
 			<version>2.9.5</version>
 		</dependency>
 
-
+		<!-- https://mvnrepository.com/artifact/org.apache.flink/flink-connector-kafka -->
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-connector-kafka_2.11</artifactId>
+			<version>${flink.version}</version>
+		</dependency>
 
 
 
@@ -152,24 +128,13 @@
 			<artifactId>flink-connector-kafka-0.11_2.11</artifactId> <version>1.8.1</version> 
 			</dependency> -->
 
+		<!-- https://mvnrepository.com/artifact/org.apache.flink/flink-connector-kafka-0.11
 
-
-
-
-
-		<!-- https://mvnrepository.com/artifact/org.apache.flink/flink-connector-kafka-0.11 -->
-
-
-		<dependency>
-			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-connector-kafka_2.11</artifactId>
-			<version>${flink.version}</version>
-		</dependency>
-
-		
 			<dependency> <groupId>org.apache.flink</groupId> 
-			<artifactId>flink-connector-kafka-base_2.11</artifactId> 
-			<version>1.8.1</version> </dependency>
+			<artifactId>flink-connector-kafka-base_2.11</artifactId>
+				<version>${flink.version}</version>
+			</dependency>
+			-->
 		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-avro</artifactId>

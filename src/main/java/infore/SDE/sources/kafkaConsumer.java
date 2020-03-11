@@ -27,12 +27,12 @@ public class kafkaConsumer {
 		fc.cancel();
 	
 	}
-	
-	public FlinkKafkaConsumer<ObjectNode> getFc() {
-	return fc;
-}
+
+public FlinkKafkaConsumer<ObjectNode> getFc() {
+		return fc;
+		}
 
 public void setFc(FlinkKafkaConsumer<ObjectNode> fc) {
-	this.fc = fc;
-}
-}
+		this.fc = fc;
+		}
+		}

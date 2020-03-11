@@ -153,6 +153,62 @@
       <scope>system</scope>
       <systemPath>C:\Program Files\Java\jdk-11.0.2\bin\tools.jar</systemPath>
     </dependency>
+      <dependency>
+          <groupId>org.apache.flink</groupId>
+          <artifactId>flink-shaded-jackson</artifactId>
+          <version>2.10.1-9.0</version>
+          <scope>compile</scope>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.flink</groupId>
+          <artifactId>flink-connector-kafka-base_2.11</artifactId>
+          <version>1.9.1</version>
+          <scope>compile</scope>
+      </dependency>
+    <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-connector-kafka-base_2.11</artifactId>
+      <version>1.9.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.flink</groupId>
+      <artifactId>flink-connector-kafka_2.11</artifactId>
+      <version>1.9.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.mayconbordin</groupId>
+      <artifactId>streaminer</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.mayconbordin</groupId>
+      <artifactId>streaminer</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.mayconbordin</groupId>
+      <artifactId>streaminer</artifactId>
+      <version>1.1.1</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.addthis</groupId>
+      <artifactId>stream-lib</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.9.9</version>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.geographiclib</groupId>
+      <artifactId>GeographicLib-Java</artifactId>
+      <version>1.50</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
   <properties>
     <java.version>1.8</java.version>
