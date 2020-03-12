@@ -94,7 +94,7 @@ public class Run {
 					public Request map(ObjectNode node) throws Exception {
 						// TODO Auto-generated method stub
 						String[] valueTokens = node.get("value").toString().replace("\"", "").split(",");
-						if(valueTokens.length == 6) {
+						if(valueTokens.length > 6) {
 						return new Request(node.get("key").toString().replace("\"", ""),valueTokens);
 						}
 						return null;
@@ -159,7 +159,7 @@ public class Run {
 			
 			System.out.println("[INFO] Default values");
 			//Default values
-			kafkaDataInputTopic = "FIN500";
+			kafkaDataInputTopic = "2FIN500";
 			kafkaRequestInputTopic = "testRequest3";
 			parallelism = 4;
 			//parallelism2 = 4;
