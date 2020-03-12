@@ -62,7 +62,7 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String>, 
 				if (rq.getParam().length > 4)
 					sketch = new CountMin(rq.getUID(), rq.getParam());
 				else {
-					String[] _tmp = { "1", "1", "0.0002", "0.99", "4" };
+					String[] _tmp = { "1", "2", "0.0002", "0.99", "4" };
 					sketch = new CountMin(rq.getUID(), _tmp);
 				}
 				Synopses.add(sketch);

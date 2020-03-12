@@ -18,7 +18,8 @@ public class CountMin extends Synopsis{
 	public void add(Object k) {
 		String j = (String)k;
 		String[] tokens = j.split(",");
-		cm.add(Long.parseLong(tokens[this.valueIndex]), 1);	
+
+		cm.add((long)Integer.parseInt(tokens[this.valueIndex]), 1);
 	}
 
 	@SuppressWarnings("deprecation")

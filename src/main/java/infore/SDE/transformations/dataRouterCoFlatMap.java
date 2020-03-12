@@ -8,9 +8,7 @@ import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
-import org.apache.flink.api.java.tuple.Tuple2;
-import org.apache.flink.api.java.tuple.Tuple3;
-import org.apache.flink.api.java.tuple.Tuple4;
+import org.apache.flink.api.java.tuple.*;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.co.RichCoFlatMapFunction;
 import org.apache.flink.util.Collector;
@@ -26,7 +24,7 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Tuple2<String, St
 	ArrayList<Tuple3<Integer, Integer, Integer>> RegisteredSynopses = new ArrayList<Tuple3<Integer, Integer, Integer>>();
 	HashMap<String, ArrayList<String>> keysPerDataPoint = new HashMap<String, ArrayList<String>>();
                                         //UID, SynopsisID, Parameters, Parallelism        
-	private transient ValueState<ArrayList<Tuple4<Integer,Integer, String,Integer>>> rs;
+	private transient ValueState<Tuple1<String>> rs;
 
 	@Override
 	public void flatMap1(Tuple2<String, String> value, Collector<Tuple2<String, String>> out) throws Exception {
@@ -83,14 +81,16 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Tuple2<String, St
 			RegisteredSynopses.add(indx);
 			
 			if(rs.value() !=null) {
-			ArrayList<Tuple4<Integer,Integer, String,Integer>> tmp = rs.value();
-			tmp.add(new Tuple4<Integer,Integer, String,Integer>(rq.getUID(),rq.getSynopsisID(),rq.getParam().toString(),rq.getNoOfP()));
-			rs.update(tmp);
-			System.out.print("update");
+				Tuple1<String> tmp = rs.value();
+
+				String newS = "[" + rq.getUID()+","+rq.getSynopsisID()+","+rq.getParam().toString()+","+rq.getNoOfP()+"]";
+				tmp.f0 = tmp.f0 + newS;
+				rs.update(tmp);
+			//System.out.print("update");
 			}else {
-				ArrayList<Tuple4<Integer,Integer, String,Integer>> tmp = new ArrayList<Tuple4<Integer,Integer, String,Integer>>();
-				tmp.add(new Tuple4<Integer,Integer, String,Integer>(rq.getUID(),rq.getSynopsisID(),rq.getParam().toString(),rq.getNoOfP()));
-				System.out.print("update");
+
+				Tuple1<String> tmp = new Tuple1<String>("[" + rq.getUID()+","+rq.getSynopsisID()+","+rq.getParam().toString()+","+rq.getNoOfP()+"]");
+				//System.out.print("update");
 				rs.update(tmp);
 			}
 		}		
@@ -98,8 +98,8 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Tuple2<String, St
 
 	public void open(Configuration config) {
 		
-		ValueStateDescriptor<ArrayList<Tuple4<Integer,Integer, String,Integer>>> descriptor = new ValueStateDescriptor<>("Synopses", // the state
-	    TypeInformation.of(new TypeHint<ArrayList<Tuple4<Integer,Integer, String,Integer>>>() {})); // type information
+		ValueStateDescriptor<Tuple1<String>> descriptor = new ValueStateDescriptor<Tuple1<String>>("Synopses", // the state
+	    TypeInformation.of(new TypeHint<Tuple1<String>>() {})); // type information
 	    descriptor.setQueryable("getSynopses");
 		rs = getRuntimeContext().getState(descriptor);
 	}
