@@ -19,13 +19,14 @@ public class CountMin extends Synopsis{
 		String j = (String)k;
 		String[] tokens = j.split(",");
 
-		cm.add((long)Integer.parseInt(tokens[this.valueIndex]), 1);
+		cm.add(Math.abs((tokens[this.keyIndex]).hashCode()), (long)Integer.parseInt(tokens[this.valueIndex]));
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public Object estimate(Object k) {
-		return Long.toString(cm.estimateCount(new Long((long) k)));		
+	public Object estimate(Object k)
+	{
+		return Long.toString(cm.estimateCount(new Long((long) k)));
 	}
 
 	@Override
@@ -34,7 +35,7 @@ public class CountMin extends Synopsis{
 	}
 	@Override
 	public Estimation estimate(Request rq) {
-		return new Estimation(rq, Long.toString(cm.estimateCount(Long.parseLong(rq.getParam()[0]))), Integer.toString(rq.getUID()));
+		return new Estimation(rq, Math.abs(cm.estimateCount(rq.getParam()[0].hashCode())), Integer.toString(rq.getUID()));
 	}
 	
 	

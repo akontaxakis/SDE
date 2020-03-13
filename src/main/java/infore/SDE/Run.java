@@ -10,6 +10,7 @@ import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;
 
+
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.flink.streaming.api.collector.selector.OutputSelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -54,7 +55,7 @@ public class Run {
 	 *             </ol>
 	 * @throws Exception
 	 */
-	
+
 	public static void main(String[] args) throws Exception {
 
 		// Initialize Input Parameters
@@ -65,7 +66,7 @@ public class Run {
 		kafkaConsumer kc = new kafkaConsumer(kafkaBrokersList, kafkaDataInputTopic);
 		kafkaConsumer requests = new kafkaConsumer(kafkaBrokersList, kafkaRequestInputTopic);
 		kafkaProducerEstimation kp = new kafkaProducerEstimation(kafkaBrokersList, kafkaOutputTopic);
-		kafkaProducerEstimation test = new kafkaProducerEstimation(kafkaBrokersList, "testPairs");
+		//kafkaProducerEstimation test = new kafkaProducerEstimation(kafkaBrokersList, "testPairs");
 		
 		DataStream<ObjectNode> datastream = env.addSource(kc.getFc());
 		DataStream<ObjectNode> RQ_stream = env.addSource(requests.getFc());
@@ -103,14 +104,12 @@ public class Run {
 			
 		DataStream<Request> SynopsisRequests = RQ_Stream
 				.flatMap(new RqRouterFlatMap()).keyBy((KeySelector<Request, String>) Request::getKey);
-		
 		DataStream<Tuple2<String, String>> DataStream = dataStream.connect(RQ_Stream)
 				.flatMap(new dataRouterCoFlatMap()).keyBy((KeySelector<Tuple2<String, String>, String>) r -> r.f0);
 		
 		DataStream<Estimation> estimationStream = DataStream.connect(SynopsisRequests)
 				.flatMap(new SDEcoFlatMap()).keyBy((KeySelector<Estimation, String>) Estimation::getKey);
-       	
-		estimationStream.addSink(kp.getProducer());
+
 		//estimationStream.writeAsText("cm", FileSystem.WriteMode.OVERWRITE);
        
 		SplitStream<Estimation> split = estimationStream.split(new OutputSelector<Estimation>() {
@@ -131,18 +130,18 @@ public class Run {
 		
 		DataStream<Estimation> single = split.select("single");
 		DataStream<Estimation> multy = split.select("multy");
-		//single.addSink(kp.getProducer());
+		single.addSink(kp.getProducer());
 		DataStream<Estimation> finalStream = multy.flatMap(new ReduceFlatMap());
 		//DataStream<Tuple2< String, Object>> finalStream = estimationStream.flatMap(new ReduceFlatMap());
-		finalStream.addSink(kp.getProducer());
-		
-		@SuppressWarnings("unused")
+		//finalStream.addSink(kp.getProducer());
+
 		JobExecutionResult result = env.execute("Streaming SDE");
+
 }
 
 	private static void initializeParameters(String[] args) {
 
-		if (args.length > 5) {
+		if (args.length > 4) {
 			
 			System.out.println("[INFO] User Defined program arguments");
 			//User defined program arguments
@@ -160,7 +159,7 @@ public class Run {
 			System.out.println("[INFO] Default values");
 			//Default values
 			kafkaDataInputTopic = "6FIN500";
-			kafkaRequestInputTopic = "testRequest3";
+			kafkaRequestInputTopic = "testRequest4";
 			parallelism = 4;
 			//parallelism2 = 4;
 			//kafkaBrokersList = "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667";

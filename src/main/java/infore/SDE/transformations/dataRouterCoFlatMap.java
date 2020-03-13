@@ -86,11 +86,12 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Tuple2<String, St
 				String newS = "[" + rq.getUID()+","+rq.getSynopsisID()+","+rq.getParam().toString()+","+rq.getNoOfP()+"]";
 				tmp.f0 = tmp.f0 + newS;
 				rs.update(tmp);
-			//System.out.print("update");
+
+				System.out.print("StateInit");
 			}else {
 
 				Tuple1<String> tmp = new Tuple1<String>("[" + rq.getUID()+","+rq.getSynopsisID()+","+rq.getParam().toString()+","+rq.getNoOfP()+"]");
-				//System.out.print("update");
+				System.out.print("StateUpdate");
 				rs.update(tmp);
 			}
 		}		

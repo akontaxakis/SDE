@@ -53,8 +53,6 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String>, 
 	public void flatMap2(Request rq, Collector<Estimation> collector) throws Exception {
 		// String key = rq.getKey();
 
-		System.out.println(rq.toString());
-
 		if (rq.getRequestID() == 1) {
 			// countMin
 			if (rq.getSynopsisID() == 1) {
@@ -62,7 +60,7 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String>, 
 				if (rq.getParam().length > 4)
 					sketch = new CountMin(rq.getUID(), rq.getParam());
 				else {
-					String[] _tmp = { "1", "2", "0.0002", "0.99", "4" };
+					String[] _tmp = { "0", "1", "0.0002", "0.99", "4" };
 					sketch = new CountMin(rq.getUID(), _tmp);
 				}
 				Synopses.add(sketch);
@@ -225,14 +223,13 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String>, 
 		}
 		// Estimate - delete
 		else {
-
 			for (Synopsis syn : Synopses) {
 
 				if (rq.getUID() == syn.getSynopsisID()) {
-					if (rq.getRequestID() / 10 == 2) {
+					if (rq.getRequestID() % 10 == 2) {
 						Synopses.remove(syn);
 						break;
-					} else {
+					} else if (rq.getRequestID() % 10 == 3){
 						if (rq.getSynopsisID() == 13) {
 							FinJoinSynopsis fj = (FinJoinSynopsis) syn;
 							HashMap<String, ArrayList<Complex[]>> out = fj.estimate2(rq);
@@ -242,9 +239,9 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String>, 
 							break;
 						}else {
 
-						Estimation e = syn.estimate(rq);
-						collector.collect(e);
-						break;
+							Estimation e = syn.estimate(rq);
+							collector.collect(e);
+							break;
 						}
 					}
 				}
