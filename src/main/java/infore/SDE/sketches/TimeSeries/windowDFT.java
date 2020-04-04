@@ -188,14 +188,11 @@ public class windowDFT {
 		    int key =0;
 		    for (int i = 1; i < indexCOEtoUSE + 1; i++) {
 		      tmpIndex = (int) Math.floor(normalizedFourierCoefficients[i].getReal()/(epsilon))+ hashOffset;
-		      System.out.println(COEFtoString());
 		                // + hashOffset;
 		      stringKey += tmpIndex;
 		      stringKey += ",";
 		      key+= tmpIndex;
 		      tmpIndex = (int) Math.floor(normalizedFourierCoefficients[i].getImaginary()/(epsilon))+ hashOffset;
-		      
-		      System.out.println(tmpIndex);
 		          //+ hashOffset;
 		      stringKey += tmpIndex;
 		      key+= tmpIndex*(hashOffset*2);

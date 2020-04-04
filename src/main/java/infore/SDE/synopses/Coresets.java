@@ -15,8 +15,8 @@ public class Coresets extends Synopsis{
 	public Coresets(int uid, String[] parameters) {
 		super(uid, parameters[0], parameters[1]);
 		Random random = new Random();
-		d = Integer.parseInt(parameters[1]);
-	    bucketManager = new BucketManager(Integer.parseInt(parameters[3]),Integer.parseInt(parameters[4]),random ); 
+		d = Integer.parseInt(parameters[2]);
+	    bucketManager = new BucketManager(Integer.parseInt(parameters[2]),Integer.parseInt(parameters[3]),random );
 	}
 
 	@Override

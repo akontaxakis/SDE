@@ -25,17 +25,17 @@ public class Bloomfilter extends Synopsis{
 	public String estimate(Object k) {
 		 if(bm.isPresent((Double.toString((double)k))))
 		return "1";
-		return "0";			 
-		
+		return "0";
+
 	}
 
 	public Estimation estimate(Request rq) {
-		
+
 		return new Estimation(rq, bm.isPresent(rq.getParam()[0]), Integer.toString(rq.getUID()));
 	}
-	
-	
-	
+
+
+
 	@Override
 	public Synopsis merge(Synopsis sk) {
 		// TODO Auto-generated method stub

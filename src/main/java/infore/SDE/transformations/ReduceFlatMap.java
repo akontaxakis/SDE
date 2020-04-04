@@ -25,7 +25,7 @@ public class ReduceFlatMap extends RichFlatMapFunction<Estimation, Estimation> {
 	@Override
 	public void flatMap(Estimation value, Collector<Estimation> out)
 			throws Exception {
-		System.out.println(value.toString());    
+		//System.out.println(value.toString());
 		ReduceFunction t_rf = rf.get(""+value.getUID());
 	    if(t_rf == null) {
 	    	//MAX

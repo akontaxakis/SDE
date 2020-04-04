@@ -32,8 +32,11 @@ public class AMSsynopsis extends Synopsis{
 	}
 	@Override
 	public Estimation estimate(Request rq) {
-	
-		return new Estimation(rq, Long.toString(ams.estimateCount(Long.parseLong(rq.getParam()[0]))),Integer.toString(rq.getUID()));
+	try {
+		return new Estimation(rq, Long.toString(ams.estimateCount(Long.parseLong(rq.getParam()[0]))), Integer.toString(rq.getUID()));
+	}catch(Exception e){
+		return new Estimation(rq, null, Integer.toString(rq.getUID()));
+	}
 	}
 
 }

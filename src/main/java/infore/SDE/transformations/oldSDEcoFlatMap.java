@@ -59,7 +59,7 @@ public class oldSDEcoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String
 	public void flatMap2(Request rq, Collector<Estimation> collector) throws Exception {
         String key = rq.getKey();
 	
-		System.out.println(rq.toString());
+		//System.out.println(rq.toString());
 		
 		
 		ArrayList<Synopsis> sk = Synopses.get(key);

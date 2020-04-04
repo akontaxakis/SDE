@@ -142,7 +142,7 @@ public class Run {
 	private static void initializeParameters(String[] args) {
 
 		if (args.length > 4) {
-			
+
 			System.out.println("[INFO] User Defined program arguments");
 			//User defined program arguments
 			kafkaDataInputTopic = args[0];
@@ -158,8 +158,8 @@ public class Run {
 			
 			System.out.println("[INFO] Default values");
 			//Default values
-			kafkaDataInputTopic = "6FIN500";
-			kafkaRequestInputTopic = "testRequest4";
+			kafkaDataInputTopic = "AK";
+			kafkaRequestInputTopic = "testRequest6";
 			parallelism = 4;
 			//parallelism2 = 4;
 			//kafkaBrokersList = "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667";

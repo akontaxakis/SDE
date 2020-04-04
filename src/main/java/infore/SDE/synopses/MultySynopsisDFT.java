@@ -59,8 +59,14 @@ public class MultySynopsisDFT extends Synopsis{
 	        System.out.println(pair.getKey() + " = " + pair.getValue());
 	        it.remove(); // avoids a ConcurrentModificationException
 	    } */
-	    
-		return new Estimation(rq, Synopses, Integer.toString(rq.getUID()));
+
+		try {
+			Synopsis DFT = Synopses.get(rq.getParam()[0]);
+			return DFT.estimate(rq);
+		}catch(Exception e){
+			return new Estimation(rq, null, Integer.toString(rq.getUID()));
+		}
+
 	}
 
 }

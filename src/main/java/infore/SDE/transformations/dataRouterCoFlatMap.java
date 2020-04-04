@@ -28,8 +28,7 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Tuple2<String, St
 
 	@Override
 	public void flatMap1(Tuple2<String, String> value, Collector<Tuple2<String, String>> out) throws Exception {
-     
-		
+
 		String[] value_tokens = value.f1.split(",");
 		
 		//Send Data with default Key the StreamID

@@ -7,11 +7,11 @@ import infore.SDE.messages.Request;
 
 public class LossyCountingSynopsis extends Synopsis {
 	
-	LossyCounting<Double> sk;
+	LossyCounting<String> sk;
 	
 	public LossyCountingSynopsis(int uid, String[] parameters) {
 	     super(uid, parameters[0],parameters[1]);		
-		 sk = new LossyCounting<Double>(Double.parseDouble(parameters[2]));
+		 sk = new LossyCounting<String>(Double.parseDouble(parameters[2]));
 		}
 		 
 		@SuppressWarnings("unchecked")
@@ -19,19 +19,19 @@ public class LossyCountingSynopsis extends Synopsis {
 		public void add(Object k) {
 			String j = (String)k;
 			String[] tokens = j.split(",");
-			sk.add((Double.parseDouble(tokens[this.keyIndex])),Long.parseLong(tokens[this.valueIndex]));	
+			sk.add((tokens[this.keyIndex]),Long.parseLong(tokens[this.valueIndex]));
 		}
 
 		@SuppressWarnings("unchecked")
 		@Override
 		public Object estimate(Object k) {
-			return sk.estimateCount((Double)k);		
+			return sk.estimateCount((String)k);
 		}
 		
 		@Override
 		public Estimation estimate(Request rq) {
 
-			return new Estimation(rq,  sk.estimateCount(Double.parseDouble(rq.getParam()[0])), Integer.toString(rq.getUID()));
+			return new Estimation(rq,  sk.estimateCount(rq.getParam()[0]), Integer.toString(rq.getUID()));
 		}
 		
 		

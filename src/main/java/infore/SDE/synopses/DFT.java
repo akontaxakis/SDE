@@ -66,7 +66,7 @@ public class DFT extends Synopsis {
 	@Override
 	public Estimation estimate(Request rq) {
 		// TODO Auto-generated method stub
-		return null;
+		return new Estimation(rq, getCOEF(), Integer.toString(rq.getUID()));
 	}
 
 	public HashSet<String> getKeys(double threshold) {
