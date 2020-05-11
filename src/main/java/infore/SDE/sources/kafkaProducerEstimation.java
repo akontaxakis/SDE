@@ -42,14 +42,8 @@ public class kafkaProducerEstimation {
 
 	@Override
 	public byte[] serializeValue(Estimation element) {
-		// TODO Auto-generated method stub
-		if(element.getSynopsisID() == 4) {
-		Complex[] k = (Complex[])element.getEstimation();
-		return ("\""+k[0].toString()+ ","+k[1].toString() +"\"").getBytes();
-		}
-		else {
+
 			return element.toKafka();
-		}
 
 	}
 	@Override

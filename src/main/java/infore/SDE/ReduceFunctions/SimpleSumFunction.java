@@ -10,10 +10,10 @@ public class SimpleSumFunction extends ReduceFunction {
 
 	@Override
 	public Object reduce() {
-		long sum = 0;
+		double sum = 0;
 		
 		for (Object entry : this.getEstimations()) {
-			sum = sum + (long)entry;
+			sum = sum + Double.parseDouble((String)entry);
 		}
 
 		

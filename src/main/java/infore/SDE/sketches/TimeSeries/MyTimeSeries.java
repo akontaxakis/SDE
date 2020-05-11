@@ -89,7 +89,7 @@ public class MyTimeSeries {
   private String keyHash(double threshold) {
 	  
 	  double epsilon = Math.sqrt(1 - threshold);
-	  int hashOffset = (int) Math.ceil(Math.sqrt(2) / (epsilon));
+	  int hashOffset = (int) Math.ceil(Math.sqrt(2) /(2*(epsilon)));
 	    String stringKey = "";
 	    int tmpIndex;
 	    for (int i = 1; i < 2; i++) {

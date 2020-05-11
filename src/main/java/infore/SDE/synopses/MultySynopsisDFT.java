@@ -1,9 +1,13 @@
 package infore.SDE.synopses;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
+import infore.SDE.sketches.TimeSeries.COEF;
+import org.apache.commons.math3.complex.Complex;
 
 
 public class MultySynopsisDFT extends Synopsis{
@@ -25,7 +29,7 @@ public class MultySynopsisDFT extends Synopsis{
 		
 		Synopsis DFT = Synopses.get(tokens[this.keyIndex]);
 		if(DFT == null)
-		DFT = new DFT(this.SynopsisID,parameters);
+		DFT = new DFT(this.SynopsisID,parameters,tokens[this.keyIndex]);
 		
 		DFT.add(k);
 		Synopses.put(tokens[this.keyIndex], DFT);
@@ -46,27 +50,59 @@ public class MultySynopsisDFT extends Synopsis{
 
 	@Override
 	public Estimation estimate(Request rq) {
-		
-		
-		
-		
-		
-		
-		// TODO Auto-generated method stub
-	   /* Iterator<Entry<String, Synopsis>> it = Synopses.entrySet().iterator();
-	    while (it.hasNext()) {
-	    	Entry<String, Synopsis> pair = (Entry<String, Synopsis>)it.next();
-	        System.out.println(pair.getKey() + " = " + pair.getValue());
-	        it.remove(); // avoids a ConcurrentModificationException
-	    } */
 
-		try {
-			Synopsis DFT = Synopses.get(rq.getParam()[0]);
-			return DFT.estimate(rq);
-		}catch(Exception e){
-			return new Estimation(rq, null, Integer.toString(rq.getUID()));
+		 ArrayList<COEF> Output = new ArrayList<>();
+
+		for( Synopsis pair:  Synopses.values()) {
+			DFT df = (DFT) pair;
+			Output.add(df.getCOEF());
+			}
+
+			return new Estimation(rq, Output, Integer.toString(rq.getUID()));
+	}
+
+
+	public HashMap<String, ArrayList<COEF>> estimate2(Request rq) {
+
+		HashMap<String, ArrayList<COEF>> Output = new HashMap<>();
+		// TODO Auto-generated method stub
+		//Iterator<Entry<String, Synopsis>> it = Synopses.entrySet().iterator();
+		//System.out.println("Size = " + Synopses.size());
+		double epsilon = Math.sqrt(1 - Double.parseDouble(rq.getParam()[0]));
+		int hashOffset = (int) Math.floor(Math.sqrt(2) /(2 *(epsilon)));
+
+		for(Map.Entry<String, Synopsis> pair:  Synopses.entrySet()) {
+
+			DFT df = (DFT) pair.getValue();
+			COEF ncoef = df.getCOEF();
+
+			ArrayList<String> str = df.getKeys2(Double.parseDouble(rq.getParam()[0]));
+
+
+			for(String entry: str) {
+
+				ArrayList<COEF> tmp = Output.get("Bucket_"+entry);
+				if(tmp == null) {
+					tmp = new ArrayList<COEF>();
+				}
+				tmp.add(ncoef);
+				Output.put("Bucket_"+entry, tmp);
+			}
+		}
+		int c=0;
+		ArrayList<COEF> tmp = new ArrayList<>();
+		tmp.add(new COEF("init",null));
+		for(int i =0; i <hashOffset*2*hashOffset*2;i++ ){
+			if(Output.get("Bucket_"+i)==null){
+				Output.put("Bucket_"+i,tmp);
+				c++;
+			}
+
 		}
 
+		return Output;
 	}
+
+
 
 }

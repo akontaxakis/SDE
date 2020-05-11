@@ -18,8 +18,8 @@ public class CountMin extends Synopsis{
 	public void add(Object k) {
 		String j = (String)k;
 		String[] tokens = j.split(",");
-
-		cm.add(Math.abs((tokens[this.keyIndex]).hashCode()), (long)Integer.parseInt(tokens[this.valueIndex]));
+      	//System.out.println(Math.abs((tokens[this.keyIndex]).hashCode())+"_"+(long)Double.parseDouble(tokens[this.valueIndex]));
+		cm.add(Math.abs((tokens[this.keyIndex]).hashCode()), (long)Double.parseDouble(tokens[this.valueIndex]));
 	}
 
 	@SuppressWarnings("deprecation")
@@ -35,7 +35,8 @@ public class CountMin extends Synopsis{
 	}
 	@Override
 	public Estimation estimate(Request rq) {
-		return new Estimation(rq, Math.abs(cm.estimateCount(rq.getParam()[0].hashCode())), Integer.toString(rq.getUID()));
+		//System.out.println(Math.abs(rq.getParam()[0].hashCode())+"_"+(double) cm.estimateCount(Math.abs(rq.getParam()[0].hashCode())));
+		return new Estimation(rq, Double.toString((double)cm.estimateCount(Math.abs(rq.getParam()[0].hashCode()))), Integer.toString(rq.getUID()));
 	}
 	
 	

@@ -28,7 +28,7 @@ public class HyperLogLogSynopsis extends Synopsis {
 		@Override
 		public Estimation estimate(Request rq) {
 
-			return new Estimation(rq, hll.cardinality(), Integer.toString(rq.getUID()));
+			return new Estimation(rq, Double.toString((double)hll.cardinality()), Integer.toString(rq.getUID()));
 		}
 		
 		

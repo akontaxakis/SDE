@@ -97,6 +97,9 @@ public class Request implements Serializable{
 		return "Request [key=" + key + ", RequestID=" + RequestID + ", SynopsisID=" + SynopsisID + ", UID=" + UID
 				+ ", StreamID=" + StreamID + ", Param=" + Arrays.toString(Param) + ", NoOfP=" + NoOfP + "]";
 	}
+	public String toSumString() {
+		return  "[" + UID + "," + SynopsisID + "," + Arrays.toString(Param)  + "," + NoOfP + "]\n";
+	}
 	public String toKafkaProducer() {
 		String pr ="";
 		for(int i=0; i< Param.length; i++) {

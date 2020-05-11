@@ -114,10 +114,10 @@ public class oldSDEcoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String
 					DFT sketch;
 					
 					if (rq.getParam().length > 4)
-						sketch = new DFT(rq.getUID(), rq.getParam());
+						sketch = new DFT(rq.getUID(), rq.getParam(),"INTEL");
 					else {
 						String[] _tmp = {"1","1","15","1","1"};
-						sketch = new DFT(rq.getUID(), _tmp);
+						sketch = new DFT(rq.getUID(), _tmp,"INTEL");
 					}
 					
 					sk.add(sketch);

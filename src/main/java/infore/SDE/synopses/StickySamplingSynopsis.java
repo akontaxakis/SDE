@@ -17,7 +17,7 @@ public class StickySamplingSynopsis extends Synopsis {
 		public void add(Object k) {
 			String j = (String)k;
 			String[] tokens = j.split(",");
-			sk.add(tokens[this.keyIndex],Long.parseLong(tokens[this.valueIndex]));
+			sk.add(tokens[this.keyIndex],(long)Double.parseDouble(tokens[this.valueIndex]));
 		}
 
 		@Override
@@ -34,7 +34,7 @@ public class StickySamplingSynopsis extends Synopsis {
 		@Override
 		public Estimation estimate(Request rq) {
 			// TODO Auto-generated method stub
-			return new Estimation(rq, sk.estimateCount(rq.getParam()[0]), Integer.toString(rq.getUID()));
+			return new Estimation(rq, Double.toString((double)sk.estimateCount(rq.getParam()[0])), Integer.toString(rq.getUID()));
 		}
 
 	}

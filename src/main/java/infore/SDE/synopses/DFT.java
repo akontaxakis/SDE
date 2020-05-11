@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import infore.SDE.sketches.TimeSeries.COEF;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.flink.api.java.tuple.Tuple2;
 
@@ -15,10 +16,10 @@ public class DFT extends Synopsis {
 	windowDFT ts;
 	int index = 1;
 
-	public DFT(int uid, String[] parameters) {
+	public DFT(int uid, String[] parameters, String key) {
 		super(uid, parameters[0], parameters[1]);
 		ts = new windowDFT(Integer.parseInt(parameters[2]), Integer.parseInt(parameters[3]),
-				Integer.parseInt(parameters[4]), 1);
+				Integer.parseInt(parameters[4]), 1,key);
 	}
 
 	@Override
@@ -42,8 +43,8 @@ public class DFT extends Synopsis {
 		return new Tuple2<>(ts.keyHash((double) k), ts.getNormalizedFourierCoefficients());
 	}
 
-	public Complex[] getCOEF() {
-		return ts.getNormalizedFourierCoefficients();
+	public COEF getCOEF() {
+		return new COEF(ts.getStreamID(),ts.getNormalizedFourierCoefficients());
 	}
 
 	public String COEFtoString() {
@@ -88,7 +89,7 @@ public class DFT extends Synopsis {
 	public ArrayList<String> getKeys2(double threshold) {
 
 		double epsilon = Math.sqrt(1 - threshold);
-		int hashOffset = (int) Math.floor(Math.sqrt(2) / (epsilon));
+		int hashOffset = (int) Math.floor(Math.sqrt(2) /(2 *(epsilon)));
 
 		String key = ts.keyStringHash(threshold);
 		String[] keys = key.split(",");
@@ -98,17 +99,28 @@ public class DFT extends Synopsis {
 
 		int tempx, tempy;
 
-		for (int i = -1; i < 2; i++) {
-			for (int j = -1; j < 2; j++) {
+		for (int i = 0; i < 2; i++) {
+			for (int j = 0; j < 2; j++) {
 				tempx = array[0] + i;
 				tempy = array[1] + j;
 
-			if (tempx < hashOffset*2 & tempx > 0 & tempy < hashOffset*2 & tempy > 0)
-				keyList.add(tempx + "," + tempy);
+			if ((tempx < hashOffset*2) && (tempx > -1) && (tempy < hashOffset*2) & (tempy > -1)) {
+				keyList.add(""+ ((tempx-1) + ((tempy-1) * (hashOffset-1))));
+				//System.out.println(" x= "+tempx + " y= " + tempy );
+			}
 
-		    }
 		}
-		
+
+		}
+		tempx = array[0] +1;
+		tempy = array[1] -1;
+
+		if ((tempx < hashOffset*2) && (tempx > -1) && (tempy < hashOffset*2) & (tempy > -1)) {
+			keyList.add(""+ ((tempx-1) + ((tempy-1) * (hashOffset-1))));
+			//System.out.println(" x= "+tempx + " y= " +tempy );
+		}
+
+
 		return keyList;
 
 	}

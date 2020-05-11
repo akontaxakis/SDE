@@ -7,11 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import infore.SDE.sketches.TimeSeries.COEF;
 import infore.SDE.synopses.*;
-import org.apache.commons.math3.complex.Complex;
-import org.apache.flink.api.common.state.MapStateDescriptor;
-import org.apache.flink.api.common.typeinfo.TypeHint;
-import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.co.RichCoFlatMapFunction;
@@ -22,13 +19,12 @@ import infore.SDE.messages.Request;
 public class SDEcoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String>, Request, Estimation> {
 
 	private static final long serialVersionUID = 1L;
-	private ArrayList<Synopsis> Synopses = new ArrayList<Synopsis>();
-	int pId;
-
+	private ArrayList<Synopsis> Synopses = new ArrayList<>();
+	private int pId;
 	@Override
-	public void flatMap1(Tuple2<String, String> node, Collector<Estimation> collector) throws Exception {
-
-		String value = node.f1.toString().replace("\"", "");
+	public void flatMap1(Tuple2<String, String> node, Collector<Estimation> collector) {
+		//System.out.println(node.f0);
+		String value = node.f1.replace("\"", "");
 
 		if (Synopses != null) {
 			for (Synopsis ski : Synopses) {
@@ -39,8 +35,7 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String>, 
 
 	@Override
 	public void flatMap2(Request rq, Collector<Estimation> collector) throws Exception {
-		String key = rq.getKey();
-		System.out.println(rq.toString());
+		//System.out.println(rq.toString());
 		if (rq.getRequestID() == 1) {
 			// countMin
 			if (rq.getSynopsisID() == 1) {
@@ -48,9 +43,10 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String>, 
 				if (rq.getParam().length > 4)
 					sketch = new CountMin(rq.getUID(), rq.getParam());
 				else {
-					String[] _tmp = { "0", "1", "0.0002", "0.99", "4" };
+					String[] _tmp = { "1", "2", "0.0002", "0.99", "4" };
 					sketch = new CountMin(rq.getUID(), _tmp);
 				}
+
 				Synopses.add(sketch);
 
 				// BloomFliter
@@ -70,9 +66,10 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String>, 
 				if (rq.getParam().length > 3)
 					sketch = new AMSsynopsis(rq.getUID(), rq.getParam());
 				else {
-					String[] _tmp = { "2", "2", "100", "10" };
+					String[] _tmp = { "1", "2", "1000", "10" };
 					sketch = new AMSsynopsis(rq.getUID(), _tmp);
 				}
+
 				Synopses.add(sketch);
 
 				// TimeSeries sketch
@@ -82,7 +79,7 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String>, 
 				if (rq.getParam().length > 3)
 					sketch = new MultySynopsisDFT(rq.getUID(), rq.getParam());
 				else {
-					String[] _tmp = {"1", "2", "15", "45", "8"};
+					String[] _tmp = {"1", "2", "5", "30", "8"};
 					sketch = new MultySynopsisDFT(rq.getUID(), _tmp);
 				}
 
@@ -95,13 +92,13 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String>, 
 
 				// Coresets
 			} else if (rq.getSynopsisID() == 6) {
-				Coresets sketch;
+				FinJoinCoresets sketch;
 
-				if (rq.getParam().length > 3)
-					sketch = new Coresets(rq.getUID(), rq.getParam());
+				if (rq.getParam().length > 10)
+					sketch = new FinJoinCoresets(rq.getUID(), rq.getParam());
 				else {
-					String[] _tmp = { "1","2", "5", "15" };
-					sketch = new Coresets(rq.getUID(), _tmp);
+					String[] _tmp = { "1","2", "5", "10" };
+					sketch = new FinJoinCoresets(rq.getUID(), _tmp);
 				}
 				Synopses.add(sketch);
 				// HyperLogLog
@@ -110,7 +107,7 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String>, 
 				if (rq.getParam().length > 2)
 					sketch = new HyperLogLogSynopsis(rq.getUID(), rq.getParam());
 				else {
-					String[] _tmp = { "1", "1", "0.0001" };
+					String[] _tmp = { "1", "1", "0.001" };
 					sketch = new HyperLogLogSynopsis(rq.getUID(), _tmp);
 				}
 				Synopses.add(sketch);
@@ -171,6 +168,7 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String>, 
 							this.getClass().getClassLoader());
 					Class<?> classToLoad = Class.forName(rq.getParam()[3], true, child);
 					instance = classToLoad.getConstructor().newInstance();
+					Synopses.add((Synopsis) instance);
 
 				} else {
 
@@ -215,16 +213,24 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String>, 
 
 				if (rq.getUID() == syn.getSynopsisID()) {
 					if (rq.getRequestID() % 10 == 2) {
+						System.out.println("removed");
 						Synopses.remove(syn);
 						break;
 					} else if (rq.getRequestID() % 10 == 3){
-						if (rq.getSynopsisID() == 13) {
-							FinJoinSynopsis fj = (FinJoinSynopsis) syn;
-							HashMap<String, ArrayList<Complex[]>> out = fj.estimate2(rq);
-							for (Map.Entry<String, ArrayList<Complex[]>> pair : out.entrySet()) {
+						if (rq.getSynopsisID() == 4000) {
+							/*
+							MultySynopsisDFT fj = (MultySynopsisDFT) syn;
+							HashMap<String, ArrayList<COEF>> out=  new HashMap<String, ArrayList<COEF>>();
+							out = fj.estimate2(rq);
+							//System.out.println("_OUT_"+out.size());
+							for (Map.Entry<String, ArrayList<COEF>> pair : out.entrySet()) {
+								//System.out.println("_"+pair.getKey());
 								collector.collect(new Estimation(rq, pair.getValue(), pair.getKey()));
 							}
+							//System.out.println("__"+pId+"__");
 							break;
+
+							 */
 						}else {
 
 							Estimation e = syn.estimate(rq);
@@ -241,8 +247,8 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String>, 
 		}
 	}
 
-	public void open(Configuration config) throws Exception {
-		pId = getRuntimeContext().getIndexOfThisSubtask();
+	public void open(Configuration config)  {
+	 	pId = getRuntimeContext().getIndexOfThisSubtask();
 	}
 
 }

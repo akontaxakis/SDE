@@ -18,7 +18,7 @@ public class ChainSamplerSynopsis extends Synopsis {
 		public void add(Object k) {
 			String j = (String)k;
 			String[] tokens = j.split(",");
-			cs.sample(Long.parseLong(tokens[this.valueIndex]));	
+			cs.sample((long)Double.parseDouble(tokens[this.valueIndex]));
 		}
 
 		@Override
@@ -27,7 +27,7 @@ public class ChainSamplerSynopsis extends Synopsis {
 		}
 
 		public Estimation estimate(Request rq) {
-			
+			rq.setNoOfP(1);
 			return new Estimation(rq, cs.getSamples(), Integer.toString(rq.getUID()));
 		}
 		

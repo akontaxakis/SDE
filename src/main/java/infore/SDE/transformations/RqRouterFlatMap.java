@@ -16,14 +16,25 @@ public class RqRouterFlatMap extends RichFlatMapFunction<Request, Request> imple
 	public void flatMap(Request rq, Collector<Request> out) throws Exception {
 		 
 			 //ADD-REMOVE-ESTIMATE SKETCH FOR A STREAM
-			  if(rq.getRequestID()%10 == 1 || rq.getRequestID()%10 == 2 || rq.getRequestID()%10 ==3) {
+			  if(rq.getRequestID()%10 == 1 || rq.getRequestID()%10 == 2 || rq.getRequestID()%10 ==3 || rq.getRequestID()%10 ==4) {
 				  if(rq.getNoOfP() == 1)
 				  out.collect(rq);
 				  else {
-					  String tmpkey = ""+rq.getKey();
+					  String tmpkey = rq.getKey();
 					  for(int i = 0; i < rq.getNoOfP(); i ++) {
-						  rq.setKey(tmpkey + "_" + i);
-						  out.collect(rq);
+
+					  	if(rq.getRequestID()%10 == 1) {
+							rq.setKey(tmpkey + "_" + rq.getNoOfP() + "_KEYED_" + i);
+							out.collect(rq);
+						}else if(rq.getRequestID()%10 == 4){
+							rq.setKey(tmpkey +"_"+rq.getNoOfP()+"_RANDOM_" + i);
+							out.collect(rq);
+						  }else{
+							rq.setKey(tmpkey + "_" + rq.getNoOfP() + "_KEYED_" + i);
+							out.collect(rq);
+							//rq.setKey(tmpkey +"_"+rq.getNoOfP()+"_RANDOM_" + i);
+							//out.collect(rq);
+						}
 					  }
 				  } 	
 			  }	  

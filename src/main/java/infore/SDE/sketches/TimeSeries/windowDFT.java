@@ -23,7 +23,7 @@ public class windowDFT {
   private  double sumOfSquares;
   private String gridHashKey;
   private int indexCOEtoUSE;
-  
+  private String key;
   //synopsis
   private double mean; 
   private double sigma; 
@@ -35,8 +35,8 @@ public class windowDFT {
   private Complex[] fourierCoefficients; // The Fourier Coefficients of the TimeSeries
   private Complex[] normalizedFourierCoefficients; // The normalized Fourier Coefficients
 
-  public windowDFT( int bw, int sw, int coe, int ictu) {
-    
+  public windowDFT( int bw, int sw, int coe, int ictu, String k) {
+  	key =k;
 	indexCOEtoUSE = ictu;      
 	basicWindowSize = bw;
     slidingWindowSize =sw;
@@ -135,7 +135,7 @@ public class windowDFT {
   public int keyHash(double threshold) {
 	  
 	  double epsilon = Math.sqrt(1 - threshold);
-	  int hashOffset = (int) Math.ceil(Math.sqrt(2) / (epsilon));
+	  int hashOffset = (int) Math.ceil(Math.sqrt(2) / (2*(epsilon)));
 	    String stringKey = "";
 	    int tmpIndex;
 	    int key =0;
@@ -187,12 +187,12 @@ public class windowDFT {
 		    int tmpIndex;
 		    int key =0;
 		    for (int i = 1; i < indexCOEtoUSE + 1; i++) {
-		      tmpIndex = (int) Math.floor(normalizedFourierCoefficients[i].getReal()/(epsilon))+ hashOffset;
+		      tmpIndex = (int) Math.floor(normalizedFourierCoefficients[i].getReal()/(epsilon*2))+ hashOffset;
 		                // + hashOffset;
 		      stringKey += tmpIndex;
 		      stringKey += ",";
 		      key+= tmpIndex;
-		      tmpIndex = (int) Math.floor(normalizedFourierCoefficients[i].getImaginary()/(epsilon))+ hashOffset;
+		      tmpIndex = (int) Math.floor(normalizedFourierCoefficients[i].getImaginary()/(epsilon*2))+ hashOffset;
 		          //+ hashOffset;
 		      stringKey += tmpIndex;
 		      key+= tmpIndex*(hashOffset*2);
@@ -219,6 +219,9 @@ public class windowDFT {
 	return answer;
 }
 
+    public String getStreamID() {
+  		return key;
+    }
 }
 
 

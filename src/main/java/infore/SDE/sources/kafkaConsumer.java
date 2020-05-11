@@ -17,8 +17,8 @@ public class kafkaConsumer {
 	
 	properties.setProperty("bootstrap.servers", server); 
 	properties.setProperty("group.id", "test");
-	
-	fc = (FlinkKafkaConsumer<ObjectNode>) new FlinkKafkaConsumer<>(topic, new JSONKeyValueDeserializationSchema(false), properties).setStartFromEarliest();
+	//.setStartFromEarliest()
+	fc = (FlinkKafkaConsumer<ObjectNode>) new FlinkKafkaConsumer<>(topic, new JSONKeyValueDeserializationSchema(false), properties);
 	
 	}
 

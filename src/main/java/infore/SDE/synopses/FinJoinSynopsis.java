@@ -48,7 +48,7 @@ public class FinJoinSynopsis extends Synopsis{
 			Synopsis DFT = Synopses.get(tokens[this.keyIndex]);
 			
 			if(DFT == null)
-				DFT = new DFT(this.SynopsisID,parameters);
+				DFT = new DFT(this.SynopsisID,parameters,tokens[this.keyIndex]);
 			Integer countSofar = Counters.get(tokens[this.keyIndex]);
 			
 			if (countSofar!=null) {
@@ -77,7 +77,7 @@ public class FinJoinSynopsis extends Synopsis{
 
 	@Override
 	public Estimation estimate(Request rq) {
-		
+		/*
 		HashMap<String, ArrayList<Complex[]>> Output = new HashMap<>();
 		// TODO Auto-generated method stub
 	    //Iterator<Entry<String, Synopsis>> it = Synopses.entrySet().iterator();
@@ -95,11 +95,12 @@ public class FinJoinSynopsis extends Synopsis{
 	    		Output.put(entry, tmp);
 	    	}
 	    }
-		return new Estimation(rq, Output, Integer.toString(rq.getUID()));
+		return new Estimation(rq, Output, Integer.toString(rq.getUID())); */
+		return null;
 	}
 
 public HashMap<String, ArrayList<Complex[]>> estimate2(Request rq) {
-		
+		/*
 		HashMap<String, ArrayList<Complex[]>> Output = new HashMap<>();
 		// TODO Auto-generated method stub
 	    //Iterator<Entry<String, Synopsis>> it = Synopses.entrySet().iterator();
@@ -117,16 +118,7 @@ public HashMap<String, ArrayList<Complex[]>> estimate2(Request rq) {
 	    		Output.put(entry, tmp);
 	    	}
 	    }
-		return Output;
-	}
-	
-	  
-	
-	
-	
-	
-	
-	
-	
-	
+		return Output;*/
+	 return null;}
+
 }

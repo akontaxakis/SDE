@@ -13,7 +13,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<flink.version>1.8.1</flink.version>
+		<flink.version>1.9.3</flink.version>
 		<java.version>1.8</java.version>
 		<scala.binary.version>2.11</scala.binary.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
@@ -104,20 +104,15 @@
 			<version>2.9.5</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.apache.flink/flink-connector-kafka-->
+
+        <!-- https://mvnrepository.com/artifact/org.apache.flink/flink-connector-kafka-->
 		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-connector-kafka_2.11</artifactId>
-			<version>${flink.version}</version>
+			<version>1.9.3</version>
 		</dependency>
 
 
-
-		<dependency>
-			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-queryable-state-client-java_2.11</artifactId>
-			<version>${flink.version}</version>
-		</dependency>
 
 
 
@@ -148,6 +143,12 @@
 			<version>2.9.5</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.apache.flink/flink-queryable-state-runtime -->
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-queryable-state-runtime_2.11</artifactId>
+			<version>${flink.version}</version>
+		</dependency>
 
 
 
@@ -179,11 +180,7 @@
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-connector-kafka_2.11</artifactId>
-			<version>1.8.1</version>
-		</dependency>
+
 
 
 	</dependencies>

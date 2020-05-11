@@ -16,7 +16,7 @@ public class AMSsynopsis extends Synopsis{
 	public void add(Object k) {
 		String j = (String)k;
 		String[] tokens = j.split(",");
-		ams.add(Long.parseLong(tokens[this.keyIndex]));
+		ams.add((long) Math.abs(tokens[this.keyIndex].hashCode()),(long)Double.parseDouble(tokens[this.valueIndex]));
 		
 	}
 	@Override
@@ -33,7 +33,7 @@ public class AMSsynopsis extends Synopsis{
 	@Override
 	public Estimation estimate(Request rq) {
 	try {
-		return new Estimation(rq, Long.toString(ams.estimateCount(Long.parseLong(rq.getParam()[0]))), Integer.toString(rq.getUID()));
+		return new Estimation(rq, Double.toString((double)ams.estimateCount((long)Math.abs(rq.getParam()[0].hashCode()))), Integer.toString(rq.getUID()));
 	}catch(Exception e){
 		return new Estimation(rq, null, Integer.toString(rq.getUID()));
 	}

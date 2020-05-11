@@ -490,7 +490,6 @@ public final class TreeCoreset implements Serializable{
 
         // Total number of points
         int n = n_1 + n_2;
-
         // Set point id to distinguish the points during the selection procedure
         for(int i=0; i<n; i++){
             if (i < n_1) {

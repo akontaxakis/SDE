@@ -19,7 +19,7 @@ public class LossyCountingSynopsis extends Synopsis {
 		public void add(Object k) {
 			String j = (String)k;
 			String[] tokens = j.split(",");
-			sk.add((tokens[this.keyIndex]),Long.parseLong(tokens[this.valueIndex]));
+			sk.add((tokens[this.keyIndex]),(long)Double.parseDouble(tokens[this.valueIndex]));
 		}
 
 		@SuppressWarnings("unchecked")
@@ -31,7 +31,7 @@ public class LossyCountingSynopsis extends Synopsis {
 		@Override
 		public Estimation estimate(Request rq) {
 
-			return new Estimation(rq,  sk.estimateCount(rq.getParam()[0]), Integer.toString(rq.getUID()));
+			return new Estimation(rq,  Double.toString((double)sk.estimateCount(rq.getParam()[0])), Integer.toString(rq.getUID()));
 		}
 		
 		

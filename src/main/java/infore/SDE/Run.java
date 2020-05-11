@@ -104,11 +104,12 @@ public class Run {
 			
 		DataStream<Request> SynopsisRequests = RQ_Stream
 				.flatMap(new RqRouterFlatMap()).keyBy((KeySelector<Request, String>) Request::getKey);
+
 		DataStream<Tuple2<String, String>> DataStream = dataStream.connect(RQ_Stream)
 				.flatMap(new dataRouterCoFlatMap()).keyBy((KeySelector<Tuple2<String, String>, String>) r -> r.f0);
-		
+		//dataStream.print();
 		DataStream<Estimation> estimationStream = DataStream.connect(SynopsisRequests)
-				.flatMap(new SDEcoFlatMap()).keyBy((KeySelector<Estimation, String>) Estimation::getKey);
+				.flatMap(new SDEcoFlatMap());
 
 		//estimationStream.writeAsText("cm", FileSystem.WriteMode.OVERWRITE);
        
@@ -129,11 +130,11 @@ public class Run {
 			});   
 		
 		DataStream<Estimation> single = split.select("single");
-		DataStream<Estimation> multy = split.select("multy");
-		single.addSink(kp.getProducer());
-		DataStream<Estimation> finalStream = multy.flatMap(new ReduceFlatMap());
+		DataStream<Estimation> multy = split.select("multy").keyBy((KeySelector<Estimation, String>) Estimation::getKey);
+		//single.addSink(kp.getProducer());
+		DataStream<Estimation> finalStream = multy.flatMap(new ReduceFlatMap()).keyBy((KeySelector<Estimation, String>) Estimation::getKey);
 		//DataStream<Tuple2< String, Object>> finalStream = estimationStream.flatMap(new ReduceFlatMap());
-		//finalStream.addSink(kp.getProducer());
+		finalStream.addSink(kp.getProducer());
 
 		JobExecutionResult result = env.execute("Streaming SDE");
 
@@ -158,13 +159,13 @@ public class Run {
 			
 			System.out.println("[INFO] Default values");
 			//Default values
-			kafkaDataInputTopic = "AK";
-			kafkaRequestInputTopic = "testRequest6";
+			kafkaDataInputTopic = "Forex";
+			kafkaRequestInputTopic = "Requests";
 			parallelism = 4;
 			//parallelism2 = 4;
 			//kafkaBrokersList = "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667";
 			kafkaBrokersList = "localhost:9092";
-			kafkaOutputTopic = "4FINOUT";
+			kafkaOutputTopic = "OUT";
 			
 		}
 	}

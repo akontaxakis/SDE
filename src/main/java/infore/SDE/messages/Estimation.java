@@ -136,7 +136,8 @@ public class Estimation implements Serializable {
         String par = Arrays.toString(Param).replace(",", ";");
  
         par = par.substring(1, par.length()-1).replaceAll("\\s+","");
-		return ("\""+estimationkey+","+StreamID+","+UID+","+RequestID+","+SynopsisID+","+estimation+","+par+","+NoOfP+"\"").getBytes();
+		//return ("\""+estimationkey+","+StreamID+","+UID+","+RequestID+","+SynopsisID+","+estimation+","+par+","+NoOfP+"\"").getBytes();
+		return ("\"KEY:_"+estimationkey+" SYNOPSIS:_"+SynopsisID+" ESTIMATION:_"+estimation+"_\"").getBytes();
 	}
 	
 }
