@@ -36,6 +36,16 @@ public class Request implements Serializable{
 		NoOfP = Integer.parseInt(valueTokens[6]);
 	}
 
+	public Request(String[] valueTokens) {
+		this.key = valueTokens[0];
+		RequestID = Integer.parseInt(valueTokens[1]);
+		SynopsisID = Integer.parseInt(valueTokens[3]);
+		UID = Integer.parseInt(valueTokens[2]);
+		StreamID = valueTokens[4];
+		Param = valueTokens[5].split(";");
+		NoOfP = Integer.parseInt(valueTokens[6]);
+	}
+
 	public String getKey() {
 		return key;
 	}

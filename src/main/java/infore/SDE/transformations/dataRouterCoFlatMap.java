@@ -34,7 +34,7 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Tuple2<String, St
         String[] value_tokens = value.f1.split(",");
 
         //Send Data with default Key the StreamID
-        value.f0 = value_tokens[0];
+       // value.f0 = value_tokens[0];
         //out.collect(value);
         //System.out.println(pId+" size "+ KeyedParallelism.size());
         if (KeyedParallelism.size() > 0) {
@@ -57,11 +57,17 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Tuple2<String, St
             if(tmp.size()==0){
                 System.out.println(" "+value_tokens[1]+" "+tmp.size());
             }
+            if(tmp.size()>1){
+                System.out.println("kati");
+            }
             for (Tuple2<Integer, String> t : tmp) {
                 value.f0 = t.f1;
                 out.collect(value);
             }
 
+        }
+        if(RandomParallelism.size()>0){
+            System.out.println("kati_kati");
         }
         if(RandomParallelism.size() > 0){
             for (Map.Entry<Integer, Tuple2<Integer, Integer>> entry : RandomParallelism.entrySet()) {
@@ -81,8 +87,10 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Tuple2<String, St
     @Override
     public void flatMap2(Request rq, Collector<Tuple2<String, String>> out) throws Exception {
 
+        if(rq.getRequestID()  == 5)
+            rq.setRequestID(1);
 
-        if (rq.getRequestID()  == 1 || rq.getRequestID()  == 4) {
+        if (rq.getRequestID()  == 1 || rq.getRequestID()  == 4 ) {
 
             if (rq.getNoOfP() > 1) {
 

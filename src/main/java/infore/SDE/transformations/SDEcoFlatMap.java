@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import infore.SDE.sketches.TimeSeries.COEF;
 import infore.SDE.synopses.*;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.configuration.Configuration;
@@ -19,24 +18,45 @@ import infore.SDE.messages.Request;
 public class SDEcoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String>, Request, Estimation> {
 
 	private static final long serialVersionUID = 1L;
-	private ArrayList<Synopsis> Synopses = new ArrayList<>();
+	private HashMap<String,ArrayList<Synopsis>> M_Synopses = new HashMap<>();
+	private HashMap<String,ArrayList<ContinuousSynopsis>> MC_Synopses = new HashMap<>();
 	private int pId;
 	@Override
 	public void flatMap1(Tuple2<String, String> node, Collector<Estimation> collector) {
-		//System.out.println(node.f0);
-		String value = node.f1.replace("\"", "");
 
+		String value = node.f1.replace("\"", "");
+		ArrayList<Synopsis>  Synopses =  M_Synopses.get(node.f0.replace("\"", ""));
 		if (Synopses != null) {
 			for (Synopsis ski : Synopses) {
 				ski.add(value);
 			}
+			M_Synopses.put(node.f0,Synopses);
+		}
+		ArrayList<ContinuousSynopsis>  C_Synopses =  MC_Synopses.get(node.f0);
+		if (C_Synopses != null) {
+			//if(C_Synopses.size()>1)
+			//	System.out.println("kati_kati_kati _>" +" pId -> "+pId+"  " +C_Synopses.size());
+
+			for (ContinuousSynopsis c_ski : C_Synopses) {
+			Estimation e =c_ski.addEstimate(node.f1);
+			if(e.getEstimation()!=null)
+			collector.collect(e);
+			}
+			MC_Synopses.put(node.f0,C_Synopses);
 		}
 	}
 
 	@Override
 	public void flatMap2(Request rq, Collector<Estimation> collector) throws Exception {
-		//System.out.println(rq.toString());
+		ArrayList<Synopsis>  Synopses =  M_Synopses.get(rq.getKey());
+		ArrayList<ContinuousSynopsis>  C_Synopses =  MC_Synopses.get(rq.getKey());
+		System.out.println(pId + rq.toString());
 		if (rq.getRequestID() == 1) {
+			if(Synopses==null){
+				Synopses = new ArrayList<>();
+			}
+
+
 			// countMin
 			if (rq.getSynopsisID() == 1) {
 				CountMin sketch;
@@ -157,7 +177,7 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String>, 
 				Synopses.add(sketch);
 
 				// 6-> dynamic load sketch
-			} else if (rq.getSynopsisID() == 12) {
+			} else if (rq.getSynopsisID() == 15) {
 
 				Object instance;
 
@@ -205,8 +225,29 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String>, 
 				}
 				Synopses.add(sketch);
 			}
+			M_Synopses.put(rq.getKey(),Synopses);
+		} //Continuous Synopsis
+	    else if(rq.getRequestID() == 5){
+			if(rq.getSynopsisID() == 12)
+			{
+				if(C_Synopses==null){
+					C_Synopses = new ArrayList<>();
+				}
 
-		}
+
+			ContinuousMaritimeSketches sketch;
+			rq.setNoOfP(1) ;
+				if (rq.getParam().length > 50)
+					sketch = new ContinuousMaritimeSketches(rq.getUID(), rq, rq.getParam());
+				else {
+					String[] _tmp = {"1", "1", "18000","10000","50","50"};
+					sketch = new ContinuousMaritimeSketches(rq.getUID(), rq, _tmp);
+				}
+				C_Synopses.add(sketch);
+
+			}
+			MC_Synopses.put(rq.getKey(),C_Synopses);
+	    }
 		// Estimate - delete
 		else {
 			for (Synopsis syn : Synopses) {
@@ -215,32 +256,19 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String>, 
 					if (rq.getRequestID() % 10 == 2) {
 						System.out.println("removed");
 						Synopses.remove(syn);
+						M_Synopses.put(rq.getKey(),Synopses);
 						break;
 					} else if (rq.getRequestID() % 10 == 3){
-						if (rq.getSynopsisID() == 4000) {
-							/*
-							MultySynopsisDFT fj = (MultySynopsisDFT) syn;
-							HashMap<String, ArrayList<COEF>> out=  new HashMap<String, ArrayList<COEF>>();
-							out = fj.estimate2(rq);
-							//System.out.println("_OUT_"+out.size());
-							for (Map.Entry<String, ArrayList<COEF>> pair : out.entrySet()) {
-								//System.out.println("_"+pair.getKey());
-								collector.collect(new Estimation(rq, pair.getValue(), pair.getKey()));
-							}
-							//System.out.println("__"+pId+"__");
-							break;
-
-							 */
-						}else {
 
 							Estimation e = syn.estimate(rq);
 							if(e.getEstimation() == null) {
 								System.out.println(e.toString());
 							}else{
+
 								collector.collect(e);
+								System.out.println(e.toString());
 							}
 							break;
-						}
 					}
 				}
 			}
