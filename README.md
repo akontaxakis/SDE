@@ -11,11 +11,11 @@
 
 ## Input MAIN CLASS (Run)
 ~~~
-args[0]={@link #kafkaDataInputTopic} DEFAULT: "SpringI2")
-args[1]={@link #kafkaRequestInputTopic} DEFAULT: "rq13")
-args[2]={@link #kafkaBrokersList} (DEFAULT: "localhost:9092")
-args[3]={@link #parallelism} Job parallelism (DEFAULT: "4")
-largs[4]={@link #kafkaOutputTopic} (DEFAULT: O10)
+args[0]={@link #kafkaDataInputTopic} DEFAULT: "Forex")
+args[1]={@link #kafkaRequestInputTopic} DEFAULT: "Requests")
+args[2]={@link #kafkaOutputTopic} (DEFAULT: "OUT")
+args[3]={@link #kafkaBrokersList} (DEFAULT: "localhost:9092")
+args[4]={@link #parallelism} Job parallelism (DEFAULT: "4")
 ~~~
 
 SDE reads the Data and the Requests from a Kafka Topic each, given as arguments.
@@ -23,7 +23,7 @@ Based on the Request's KEY - VALUE pair SDE performs different actions.
 
 
 
-| KEY - Stream ID | VALUE - Sketch | VALUE - RequestID | VALUE - Parameters |
+| KEY - Stream ID | VALUE - Sketch | VALUE - SynopsisID | VALUE - Parameters |
 | --- | ------- | ---------|-----|
 | Stream ID| CountMin |1 | epsilon, confidence, seed
 | Stream ID| BloomFilter |2 | numberOfElements, FalsePositive
@@ -31,7 +31,7 @@ Based on the Request's KEY - VALUE pair SDE performs different actions.
 | Stream ID| DFT |4|  Basic Window Size
 | Stream ID| LSH |5 | unfinished
 | Stream ID| Dynamic Add Sketch | 6  | JarPath, ClassPath
-| Stream ID| Estimate | ReQuestID | Value 
+
 
 ---
 
