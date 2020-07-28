@@ -1,5 +1,6 @@
 package infore.SDE.sources;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
@@ -45,8 +46,13 @@ public class kafkaProducerEstimation {
 			if(element.getSynopsisID()==12){
 				return (element.getUID()+ ","+element.getEstimation()).getBytes();
 			}
-			return element.toKafka();
-
+			//return element.toKafka();
+		try {
+			return element.toKafkaJson();
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return element.toKafka();
 	}
 	@Override
 	public String getTargetTopic(Estimation element) {

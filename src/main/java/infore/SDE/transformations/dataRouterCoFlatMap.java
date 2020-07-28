@@ -1,5 +1,6 @@
 package infore.SDE.transformations;
 
+import infore.SDE.messages.Datapoint;
 import infore.SDE.messages.Request;
 import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.state.ValueStateDescriptor;
@@ -13,7 +14,7 @@ import org.apache.flink.util.Collector;
 
 import java.util.*;
 
-public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String>, Request, Tuple2<String, String>> {
+public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Datapoint> {
 
     private static final long serialVersionUID = 1L;
     // SourceID (1-5), StreamID(1-10000), Keys(1-1000),
@@ -29,22 +30,22 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Tuple2<String, St
     private transient ValueState<Tuple1<String>> rs;
     private int pId;
     @Override
-    public void flatMap1(Tuple2<String, String> value, Collector<Tuple2<String, String>> out) throws Exception {
+    public void flatMap1(Datapoint value, Collector<Datapoint> out) throws Exception {
 
-        String[] value_tokens = value.f1.split(",");
+
 
         //Send Data with default Key the StreamID
        // value.f0 = value_tokens[0];
         //out.collect(value);
         //System.out.println(pId+" size "+ KeyedParallelism.size());
         if (KeyedParallelism.size() > 0) {
-            ArrayList<Tuple2<Integer, String>> tmp = KeysPerStream.get(value_tokens[1]);
+            ArrayList<Tuple2<Integer, String>> tmp = KeysPerStream.get(value.getStreamID());
             if (tmp == null) {
                 tmp = new ArrayList<>();
                 for (Map.Entry<Integer, Tuple2<Integer, Integer>> entry : KeyedParallelism.entrySet()) {
                     Integer key = entry.getKey();
                     Tuple2<Integer, Integer> v = entry.getValue();
-                    tmp.add(new Tuple2<>(key, value_tokens[0] +"_"+key+"_KEYED_" + v.f1));
+                    tmp.add(new Tuple2<>(key, value.getDataSetkey() +"_"+key+"_KEYED_" + v.f1));
                     v.f1++;
                     if (v.f1 >= key) {
                         //v.f1 = 0;
@@ -52,16 +53,16 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Tuple2<String, St
                         entry.setValue(new Tuple2<>(key,0));
                     }
                 }
-                KeysPerStream.put(value_tokens[1], tmp);
+                KeysPerStream.put(value.getStreamID(), tmp);
             }
             if(tmp.size()==0){
-                System.out.println(" "+value_tokens[1]+" "+tmp.size());
+                System.out.println(" "+value.getStreamID()+" "+tmp.size());
             }
             if(tmp.size()>1){
                 System.out.println("kati");
             }
             for (Tuple2<Integer, String> t : tmp) {
-                value.f0 = t.f1;
+                value.setDataSetkey(t.f1);
                 out.collect(value);
             }
 
@@ -73,7 +74,7 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Tuple2<String, St
             for (Map.Entry<Integer, Tuple2<Integer, Integer>> entry : RandomParallelism.entrySet()) {
                 Integer key = entry.getKey();
                 Tuple2<Integer, Integer> v = entry.getValue();
-                value.f0 = value_tokens[0] +"_"+key+"_RANDOM_" + v.f1;
+                value.setDataSetkey(value.getDataSetkey() +"_"+key+"_RANDOM_" + v.f1);
                 out.collect(value);
                 v.f1++;
                 if (v.f1 == key) {
@@ -85,7 +86,7 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Tuple2<String, St
         }
     }
     @Override
-    public void flatMap2(Request rq, Collector<Tuple2<String, String>> out) throws Exception {
+    public void flatMap2(Request rq, Collector<Datapoint> out) throws Exception {
 
         if(rq.getRequestID()  == 5)
             rq.setRequestID(1);

@@ -2,6 +2,9 @@ package infore.SDE.messages;
 
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -110,6 +113,11 @@ public class Request implements Serializable{
 	public String toSumString() {
 		return  "[" + UID + "," + SynopsisID + "," + Arrays.toString(Param)  + "," + NoOfP + "]\n";
 	}
+
+	public String toJsonString() throws JsonProcessingException {
+		return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
+	}
+
 	public String toKafkaProducer() {
 		String pr ="";
 		for(int i=0; i< Param.length; i++) {

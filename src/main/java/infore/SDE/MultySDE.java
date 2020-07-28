@@ -1,9 +1,14 @@
 package infore.SDE;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import infore.SDE.messages.Datapoint;
+import infore.SDE.sources.kafkaProducerEstimation;
+import infore.SDE.sources.kafkaStringConsumer;
 import org.apache.flink.api.common.JobExecutionResult;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
@@ -63,67 +68,73 @@ public class MultySDE {
 		StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 		env.setParallelism(parallelism);
 
-		kafkaConsumer kc = new kafkaConsumer(kafkaBrokersList, kafkaDataInputTopic);
-		kafkaConsumer requests = new kafkaConsumer(kafkaBrokersList, kafkaRequestInputTopic);
-		kafkaConsumer union = new kafkaConsumer(kafkaBrokersList, kafkaUnionTopic);
+		kafkaStringConsumer kc = new kafkaStringConsumer(kafkaBrokersList, kafkaDataInputTopic);
+		kafkaStringConsumer requests = new kafkaStringConsumer(kafkaBrokersList, kafkaRequestInputTopic);
+		kafkaProducerEstimation kp = new kafkaProducerEstimation(kafkaBrokersList, kafkaOutputTopic);
+		kafkaStringConsumer union = new kafkaStringConsumer(kafkaBrokersList, kafkaUnionTopic);
 		//kafkaProducerEstimation kp = new kafkaProducerEstimation(kafkaBrokersList, kafkaOutputTopic);
 		//kafkaProducerEstimation test = new kafkaProducerEstimation(kafkaBrokersList, "testPairs");
-		
-		DataStream<ObjectNode> datastream = env.addSource(kc.getFc()).setParallelism(parallelism2);
-		DataStream<ObjectNode> RQ_stream = env.addSource(requests.getFc());
-		DataStream<ObjectNode> union_stream = env.addSource(union.getFc());
+
+		DataStream<String> datastream = env.addSource(kc.getFc());
+		DataStream<String> RQ_stream = env.addSource(requests.getFc());
+		DataStream<String> union_stream = env.addSource(union.getFc());
 		//map kafka data input to tuple2<int,double>
-		DataStream<Tuple2<String, String>> dataStream = datastream
-				.map(new MapFunction<ObjectNode, Tuple2<String, String>>() {
-					/**
-					 * 
-					 */
-					private static final long serialVersionUID = 1L;
-				
+		DataStream<Datapoint> dataStream = datastream
+				.map(new MapFunction<String, Datapoint>() {
+
 					@Override
-					public Tuple2<String, String> map(ObjectNode node) throws Exception {
+					public Datapoint map(String node) throws IOException {
 						// TODO Auto-generated method stub
-						
-						String[] key = node.get("key").toString().replace("\"", "").split(",");
-						return new Tuple2<>(key[0], node.get("value").toString().replace("\"", ""));
-				}
-			}).keyBy((KeySelector<Tuple2<String, String>, String>) r -> r.f0);
+						ObjectMapper objectMapper = new ObjectMapper();
+						Datapoint dp = objectMapper.readValue(node, Datapoint.class);
+						return dp;
+					}
+				}).keyBy((KeySelector<Datapoint, String>)Datapoint::getKey);
 		
 		//DataStream<Tuple2<String, String>> dataStream = datastream.flatMap(new IngestionMultiplierFlatMap(multi)).setParallelism(parallelism2).keyBy(0);
-		
+
 		DataStream<Request> RQ_Stream = RQ_stream
-				.map(new MapFunction<ObjectNode, Request>() {
+				.map(new MapFunction<String, Request>() {
 					private static final long serialVersionUID = 1L;
+
 					@Override
-					public Request map(ObjectNode node) throws Exception {
+					public Request map(String node) throws IOException {
 						// TODO Auto-generated method stub
-						String[] valueTokens = node.get("value").toString().replace("\"", "").split(",");
-						if(valueTokens.length > 5) {
-						return new Request(node.get("key").toString().replace("\"", ""),valueTokens);
-						}
-						return null;
+						//String[] valueTokens = node.replace("\"", "").split(",");
+						//if(valueTokens.length > 6) {
+						ObjectMapper objectMapper = new ObjectMapper();
+
+						// byte[] jsonData = json.toString().getBytes();
+						Request request = objectMapper.readValue(node, Request.class);
+						return  request;
+
 					}
-				}).keyBy((KeySelector<Request, String>) r -> r.getKey());
-		
-		DataStream<Estimation> UNION_stream = union_stream.map(new MapFunction<ObjectNode, Estimation>() {
-			private static final long serialVersionUID = 1L;
-			@Override
-			public Estimation map(ObjectNode node) throws Exception {
-				// TODO Auto-generated method stub
-				String[] valueTokens = node.get("value").toString().replace("\"", "").split(",");
-				if(valueTokens.length > 8) {
-				return new Estimation(valueTokens);
-				}
-				return null;
-			}
-		}).keyBy((KeySelector<Estimation, String>) r -> r.getKey());
+				}).keyBy((KeySelector<Request, String>) Request::getKey);
+
+		DataStream<Estimation> UNION_stream = union_stream
+				.map(new MapFunction<String, Estimation>() {
+					private static final long serialVersionUID = 1L;
+
+					@Override
+					public Estimation map(String node) throws IOException {
+						// TODO Auto-generated method stub
+						//String[] valueTokens = node.replace("\"", "").split(",");
+						//if(valueTokens.length > 6) {
+						ObjectMapper objectMapper = new ObjectMapper();
+
+						// byte[] jsonData = json.toString().getBytes();
+						Estimation est = objectMapper.readValue(node, Estimation.class);
+						return  est;
+
+					}
+				}).keyBy((KeySelector<Estimation, String>) Estimation::getKey);
 		
 		
 		DataStream<Request> SynopsisRequests = RQ_Stream
 				.flatMap(new RqRouterFlatMap()).keyBy((KeySelector<Request, String>) r -> r.getKey());
-		
-		DataStream<Tuple2<String, String>> DataStream = dataStream.connect(RQ_Stream)
-				.flatMap(new dataRouterCoFlatMap()).keyBy((KeySelector<Tuple2<String, String>, String>) r -> r.f0);
+
+		DataStream<Datapoint> DataStream = dataStream.connect(RQ_Stream)
+				.flatMap(new dataRouterCoFlatMap()).keyBy((KeySelector<Datapoint, String>) r -> r.getKey());
 		
 		DataStream<Estimation> estimationStream = DataStream.connect(SynopsisRequests)
 				.flatMap(new SDEcoFlatMap()).keyBy((KeySelector<Estimation, String>) r -> r.getKey());

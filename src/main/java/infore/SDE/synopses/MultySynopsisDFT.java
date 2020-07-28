@@ -11,12 +11,12 @@ import org.apache.commons.math3.complex.Complex;
 
 
 public class MultySynopsisDFT extends Synopsis{
-	private  HashMap<String, Synopsis> Synopses;
+	private  HashMap<String, DFT> Synopses;
 	String[] parameters;
 	
 	public MultySynopsisDFT(int uid, String[] param) {
 		super(uid, param[0], param[1]);
-		Synopses = new HashMap<String, Synopsis>();
+		Synopses = new HashMap<String, DFT>();
 		parameters = param;
 		// TODO Auto-generated constructor stub
 	}
@@ -26,13 +26,13 @@ public class MultySynopsisDFT extends Synopsis{
 		String j = (String)k;
 		// TODO Auto-generated method stub
 		String[] tokens = j.split(",");
-		
-		Synopsis DFT = Synopses.get(tokens[this.keyIndex]);
-		if(DFT == null)
-		DFT = new DFT(this.SynopsisID,parameters,tokens[this.keyIndex]);
-		
-		DFT.add(k);
-		Synopses.put(tokens[this.keyIndex], DFT);
+
+		DFT dft = Synopses.get(tokens[this.keyIndex]);
+		if(dft == null)
+			dft = new DFT(this.SynopsisID,parameters,tokens[this.keyIndex]);
+
+		dft.add(k);
+		Synopses.put(tokens[this.keyIndex], dft);
 		
 	}
 
@@ -71,9 +71,9 @@ public class MultySynopsisDFT extends Synopsis{
 		double epsilon = Math.sqrt(1 - Double.parseDouble(rq.getParam()[0]));
 		int hashOffset = (int) Math.floor(Math.sqrt(2) /(2 *(epsilon)));
 
-		for(Map.Entry<String, Synopsis> pair:  Synopses.entrySet()) {
+		for(Map.Entry<String, DFT> pair:  Synopses.entrySet()) {
 
-			DFT df = (DFT) pair.getValue();
+			DFT df =  pair.getValue();
 			COEF ncoef = df.getCOEF();
 
 			ArrayList<String> str = df.getKeys2(Double.parseDouble(rq.getParam()[0]));

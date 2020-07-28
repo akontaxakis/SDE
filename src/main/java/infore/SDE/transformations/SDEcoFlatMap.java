@@ -14,35 +14,36 @@ import org.apache.flink.streaming.api.functions.co.RichCoFlatMapFunction;
 import org.apache.flink.util.Collector;
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
+import infore.SDE.messages.Datapoint;
 
-public class SDEcoFlatMap extends RichCoFlatMapFunction<Tuple2<String, String>, Request, Estimation> {
+public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Estimation> {
 
 	private static final long serialVersionUID = 1L;
 	private HashMap<String,ArrayList<Synopsis>> M_Synopses = new HashMap<>();
 	private HashMap<String,ArrayList<ContinuousSynopsis>> MC_Synopses = new HashMap<>();
 	private int pId;
 	@Override
-	public void flatMap1(Tuple2<String, String> node, Collector<Estimation> collector) {
+	public void flatMap1(Datapoint node, Collector<Estimation> collector) {
 
-		String value = node.f1.replace("\"", "");
-		ArrayList<Synopsis>  Synopses =  M_Synopses.get(node.f0.replace("\"", ""));
+		//String value = node.f1.replace("\"", "");
+		ArrayList<Synopsis>  Synopses =  M_Synopses.get(node.getKey());
 		if (Synopses != null) {
 			for (Synopsis ski : Synopses) {
-				ski.add(value);
+				ski.add(node.getValues());
 			}
-			M_Synopses.put(node.f0,Synopses);
+			M_Synopses.put(node.getKey(),Synopses);
 		}
-		ArrayList<ContinuousSynopsis>  C_Synopses =  MC_Synopses.get(node.f0);
+		ArrayList<ContinuousSynopsis>  C_Synopses =  MC_Synopses.get(node.getKey());
 		if (C_Synopses != null) {
 			//if(C_Synopses.size()>1)
 			//	System.out.println("kati_kati_kati _>" +" pId -> "+pId+"  " +C_Synopses.size());
 
 			for (ContinuousSynopsis c_ski : C_Synopses) {
-			Estimation e =c_ski.addEstimate(node.f1);
+			Estimation e =c_ski.addEstimate(node.getValues());
 			if(e.getEstimation()!=null)
 			collector.collect(e);
 			}
-			MC_Synopses.put(node.f0,C_Synopses);
+			MC_Synopses.put(node.getKey(),C_Synopses);
 		}
 	}
 

@@ -24,6 +24,7 @@ public class SpecialReduce extends ReduceFunction {
 		int counter=0;
 		String str = " ";
 		double correlation;
+		double th = Double.parseDouble(this.getParameters()[0]);
 		if (this.getSynopsisID() == 4) {
 			System.out.println("hera");
 			for (Object entry : this.getEstimations()) {
@@ -38,7 +39,7 @@ public class SpecialReduce extends ReduceFunction {
 						double dist = distance(coefficients0.getFourierCoefficients(), coefficients1.getFourierCoefficients()) / 2;
 						correlation = 1 - dist;
 
-						if (correlation > Double.parseDouble(this.getParameters()[0]) && correlation<1) {
+						if (correlation > th && correlation<1) {
 							str = str.concat("[" + coefficients0.getStreamKey() + "_" + coefficients1.getStreamKey() + "]");
 							counter++;
 						}

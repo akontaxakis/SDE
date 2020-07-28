@@ -116,16 +116,16 @@
 
 
 
-		<!-- Add connector dependencies here. They must be in the default scope 
+		<!-- Add connector dependencies here. They must be in the default scope
 			(compile). -->
-		<!-- <dependency> <groupId>org.apache.flink</groupId> <artifactId>flink-connector-filesystem_2.11</artifactId> 
-			<version>1.6.0</version> </dependency> <dependency> <groupId>org.apache.flink</groupId> 
-			<artifactId>flink-connector-kafka-0.11_2.11</artifactId> <version>1.8.1</version> 
+		<!-- <dependency> <groupId>org.apache.flink</groupId> <artifactId>flink-connector-filesystem_2.11</artifactId>
+			<version>1.6.0</version> </dependency> <dependency> <groupId>org.apache.flink</groupId>
+			<artifactId>flink-connector-kafka-0.11_2.11</artifactId> <version>1.8.1</version>
 			</dependency> -->
 
 		<!-- https://mvnrepository.com/artifact/org.apache.flink/flink-connector-kafka-0.11-->
 
-			<dependency> <groupId>org.apache.flink</groupId> 
+			<dependency> <groupId>org.apache.flink</groupId>
 			<artifactId>flink-connector-kafka-base_2.11</artifactId>
 				<version>${flink.version}</version>
 			</dependency>
@@ -152,7 +152,7 @@
 
 
 
-		<!-- Add logging framework, to produce console output when running in the 
+		<!-- Add logging framework, to produce console output when running in the
 			IDE. -->
 		<!-- These dependencies are excluded from the application JAR by default. -->
 
@@ -162,7 +162,7 @@
 			<version>1.7.7</version>
 			<scope>runtime</scope>
 		</dependency>
-	
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -226,9 +226,9 @@
 				</configuration>
 			</plugin>
 
-			<!-- We use the maven-shade plugin to create a fat jar that contains all 
+			<!-- We use the maven-shade plugin to create a fat jar that contains all
 				necessary dependencies. -->
-			<!-- Change the value of <mainClass>...</mainClass> if your program entry 
+			<!-- Change the value of <mainClass>...</mainClass> if your program entry
 				point changes. -->
 
 		</plugins>
@@ -236,7 +236,7 @@
 		<pluginManagement>
 			<plugins>
 
-				<!-- If you want to use Java 8 Lambda Expressions uncomment the following 
+				<!-- If you want to use Java 8 Lambda Expressions uncomment the following
 					lines -->
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
@@ -254,7 +254,7 @@
 					</dependencies>
 				</plugin>
 
-				<!-- This improves the out-of-the-box experience in Eclipse by resolving 
+				<!-- This improves the out-of-the-box experience in Eclipse by resolving
 					some warnings. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>

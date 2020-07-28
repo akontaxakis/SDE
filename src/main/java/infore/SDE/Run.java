@@ -1,8 +1,12 @@
 package infore.SDE;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import infore.SDE.messages.Datapoint;
 import infore.SDE.sources.kafkaProducerEstimation;
 import infore.SDE.sources.kafkaStringConsumer;
 
@@ -68,21 +72,17 @@ public class Run {
 		DataStream<String> RQ_stream = env.addSource(requests.getFc());
 
 		//map kafka data input to tuple2<int,double>
-		DataStream<Tuple2<String, String>> dataStream = datastream
-				.map(new MapFunction<String, Tuple2<String, String>>() {
-					/**
-					 * 
-					 */
-					private static final long serialVersionUID = 1L;
-				
+		DataStream<Datapoint> dataStream = datastream
+				.map(new MapFunction<String, Datapoint>() {
+
 					@Override
-					public Tuple2<String, String> map(String node) {
+					public Datapoint map(String node) throws IOException {
 						// TODO Auto-generated method stub
-						//return new Tuple2<>(node.get("key").toString().replace("\"", ""), node.replace("\"", ""));
-						String id = node.substring(0, node.indexOf(','));
-						return new Tuple2<>(id, node);
+						ObjectMapper objectMapper = new ObjectMapper();
+						Datapoint dp = objectMapper.readValue(node, Datapoint.class);
+						return dp;
 					}
-			}).keyBy((KeySelector<Tuple2<String, String>, String>) r -> r.f0);
+			}).keyBy((KeySelector<Datapoint, String>)Datapoint::getKey);
 		
 		//DataStream<Tuple2<String, String>> dataStream = datastream.flatMap(new IngestionMultiplierFlatMap(multi)).setParallelism(parallelism2).keyBy(0);
 		
@@ -91,24 +91,27 @@ public class Run {
 					private static final long serialVersionUID = 1L;
 
 					@Override
-					public Request map(String node) {
+					public Request map(String node) throws IOException {
 						// TODO Auto-generated method stub
-						String[] valueTokens = node.replace("\"", "").split(",");
-						if(valueTokens.length > 6) {
-							return new Request(valueTokens);
-						}
-							return null;
+						//String[] valueTokens = node.replace("\"", "").split(",");
+						//if(valueTokens.length > 6) {
+						ObjectMapper objectMapper = new ObjectMapper();
+
+						// byte[] jsonData = json.toString().getBytes();
+						Request request = objectMapper.readValue(node, Request.class);
+						return  request;
+
 					}
 				}).keyBy((KeySelector<Request, String>) Request::getKey);
 			
 		DataStream<Request> SynopsisRequests = RQ_Stream
 				.flatMap(new RqRouterFlatMap()).keyBy((KeySelector<Request, String>) Request::getKey);
 
-		DataStream<Tuple2<String, String>> DataStream = dataStream.connect(RQ_Stream)
-				.flatMap(new dataRouterCoFlatMap()).keyBy((KeySelector<Tuple2<String, String>, String>) r -> r.f0);
+		DataStream<Datapoint> DataStream = dataStream.connect(RQ_Stream)
+				.flatMap(new dataRouterCoFlatMap()).keyBy((KeySelector<Datapoint, String>) Datapoint::getKey);
 		//dataStream.print();
 		DataStream<Estimation> estimationStream = DataStream.connect(SynopsisRequests)
-				.keyBy((KeySelector<Tuple2<String, String>, String>) r -> r.f0,(KeySelector<Request, String>) Request::getKey)
+				//.keyBy((KeySelector<Tuple2<String, String>, String>) r -> r.f0,(KeySelector<Request, String>) Request::getKey)
 				.flatMap(new SDEcoFlatMap());
 		//.keyBy();
 		//estimationStream.writeAsText("cm", FileSystem.WriteMode.OVERWRITE);

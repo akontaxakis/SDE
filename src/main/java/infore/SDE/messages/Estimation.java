@@ -1,5 +1,8 @@
 package infore.SDE.messages;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -131,6 +134,12 @@ public class Estimation implements Serializable {
 				+ ", NoOfP=" + NoOfP + "]";
 	}
 
+	public String toJsonString() throws JsonProcessingException {
+		return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
+	}
+
+
+
 	public byte[] toKafka() {
 		
         String par = Arrays.toString(Param).replace(",", ";");
@@ -139,5 +148,12 @@ public class Estimation implements Serializable {
 		return ("\""+estimationkey+","+StreamID+","+UID+","+RequestID+","+SynopsisID+","+estimation+","+par+","+NoOfP+"\"").getBytes();
 		//return ("\"KEY:_"+estimationkey+" SYNOPSIS:_"+SynopsisID+" ESTIMATION:_"+estimation+"_\"").getBytes();
 	}
-	
+
+
+
+	public byte[] toKafkaJson() throws JsonProcessingException {
+
+		 return toJsonString().getBytes();
+	}
+
 }
