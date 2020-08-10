@@ -1,8 +1,12 @@
 package infore.SDE.synopses;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.streaminer.stream.frequency.AMSSketch;
 
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
+
+import java.io.IOException;
 
 public class AMSsynopsis extends Synopsis{
 	AMSSketch ams;
@@ -15,8 +19,16 @@ public class AMSsynopsis extends Synopsis{
 	@Override
 	public void add(Object k) {
 		String j = (String)k;
-		String[] tokens = j.split(",");
-		ams.add((long) Math.abs(tokens[this.keyIndex].hashCode()),(long)Double.parseDouble(tokens[this.valueIndex]));
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode node = null;
+		try {
+			node = mapper.readTree(j);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		String key = node.get(this.keyIndex).asText();
+		String value = node.get(this.valueIndex).asText();
+		ams.add((long) Math.abs(key.hashCode()),(long)Double.parseDouble(value));
 		
 	}
 	@Override

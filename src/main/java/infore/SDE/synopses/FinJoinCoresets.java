@@ -1,11 +1,14 @@
 package infore.SDE.synopses;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
 import Coresets.BucketManager;
 import Coresets.Point;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
 
@@ -29,17 +32,26 @@ public class FinJoinCoresets extends Synopsis{
 	public void add(Object k) {
 		// TODO Auto-generated method stub
 		String j = (String)k;
-		String[] tokens = j.split(",");
+
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode node = null;
+		try {
+			node = mapper.readTree(j);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		String key = node.get(this.keyIndex).asText();
+		String value = node.get(this.valueIndex).asText();
 
 
 
-			ArrayList<Double> c = Counters.get(tokens[this.keyIndex]);
+			ArrayList<Double> c = Counters.get(key);
 			
 			if (c == null)
 				c = new ArrayList<Double>();
 			
 
-				c.add(Double.parseDouble(tokens[this.valueIndex]));
+				c.add(Double.parseDouble(value));
 
 				if(c.size() == d){
 				double [] coordinates = new double[d];	
@@ -53,13 +65,13 @@ public class FinJoinCoresets extends Synopsis{
 
 					}
 
-				Point value = new Point(coordinates);
-				bucketManager.insertPoint(value);
+				Point pvalue = new Point(coordinates);
+				bucketManager.insertPoint(pvalue );
 
-				Counters.put(tokens[this.keyIndex], new ArrayList<>() );
+				Counters.put(key, new ArrayList<>() );
 
 			}else{
-					Counters.put(tokens[this.keyIndex], c );
+					Counters.put(key, c );
 				}
 				
 		}

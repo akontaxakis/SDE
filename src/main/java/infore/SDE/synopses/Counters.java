@@ -22,7 +22,7 @@ public class Counters extends Synopsis {
 	}
 
 	@Override
-	public void add(Object k) {
+	public void add(Object k) { /*
 		String j = (String) k;
 		// TODO Auto-generated method stub
 		String[] tokens = j.split(",");
@@ -61,7 +61,7 @@ public class Counters extends Synopsis {
 	
 			}
 		}
-
+     */
 	}
 
 	@Override

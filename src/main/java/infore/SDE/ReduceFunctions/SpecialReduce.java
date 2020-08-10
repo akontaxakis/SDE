@@ -26,7 +26,6 @@ public class SpecialReduce extends ReduceFunction {
 		double correlation;
 		double th = Double.parseDouble(this.getParameters()[0]);
 		if (this.getSynopsisID() == 4) {
-			System.out.println("hera");
 			for (Object entry : this.getEstimations()) {
 				COEF coefficients0 = (COEF) entry;
 				for (Object entry2 : this.getEstimations()) {

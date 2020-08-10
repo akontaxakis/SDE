@@ -1,8 +1,12 @@
 package infore.SDE.synopses;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.streaminer.stream.cardinality.HyperLogLog;
 
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
+
+import java.io.IOException;
 
 public class HyperLogLogSynopsis extends Synopsis {
 	
@@ -16,8 +20,16 @@ public class HyperLogLogSynopsis extends Synopsis {
 		@Override
 		public void add(Object k) {
 			String j = (String)k;
-			String[] tokens = j.split(",");
-			hll.offer(tokens[this.valueIndex]);	
+
+			ObjectMapper mapper = new ObjectMapper();
+			JsonNode node = null;
+			try {
+				node = mapper.readTree(j);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			String value = node.get(this.valueIndex).asText();
+			hll.offer(value);
 		}
 
 		@Override

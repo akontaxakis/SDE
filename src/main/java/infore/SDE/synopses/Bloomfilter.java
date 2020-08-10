@@ -2,8 +2,12 @@ package infore.SDE.synopses;
 
 import com.clearspring.analytics.stream.membership.BloomFilter;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
+
+import java.io.IOException;
 
 public class Bloomfilter extends Synopsis{
  private BloomFilter bm;
@@ -16,8 +20,15 @@ public class Bloomfilter extends Synopsis{
 	@Override
 	public void add(Object k) {
 		String j = (String)k;
-		String[] tokens = j.split(",");
-		bm.add(tokens[this.keyIndex]);
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode node = null;
+		try {
+			node = mapper.readTree(j);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		String key = node.get(this.keyIndex).asText();
+		bm.add(key);
 		
 	}
 	

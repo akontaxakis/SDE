@@ -6,13 +6,17 @@ import infore.SDE.messages.Request;
 abstract public class Synopsis {
 	
 	protected int SynopsisID;
-    protected int keyIndex;
-    protected int valueIndex;
+
+
+	protected String keyIndex;
+
+
+	protected String valueIndex;
 	
 	public Synopsis(int ID, String k, String v) {
 		 SynopsisID=ID;
-	     keyIndex=Integer.parseInt(k);
-	     valueIndex=Integer.parseInt(v);
+	     keyIndex=k;
+	     valueIndex=v;
 	}
 	
 	public abstract void add(Object k);
@@ -26,16 +30,10 @@ abstract public class Synopsis {
 	public void setSynopsisID(int SynopsisID) {
 		this.SynopsisID = SynopsisID;
 	}
-	public int getKeyIndex() {
-		return keyIndex;
-	}
-	public void setKeyIndex(int keyIndex) {
-		this.keyIndex = keyIndex;
-	}
-	public int getValueIndex() {
-		return valueIndex;
-	}
-	public void setValueIndex(int valueIndex) {
-		this.valueIndex = valueIndex;
-	}
+	public String getKeyIndex() {return keyIndex;}
+	public void setKeyIndex(String keyIndex) {this.keyIndex = keyIndex;}
+	public String getValueIndex() {return valueIndex;}
+
+	public void setValueIndex(String valueIndex) {this.valueIndex = valueIndex;}
+
 }

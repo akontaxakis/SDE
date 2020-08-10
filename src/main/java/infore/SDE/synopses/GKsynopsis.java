@@ -1,8 +1,12 @@
 package infore.SDE.synopses;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.streaminer.stream.quantile.GKQuantiles;
 
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
+
+import java.io.IOException;
 
 
 public class GKsynopsis extends Synopsis {
@@ -22,16 +26,19 @@ public class GKsynopsis extends Synopsis {
 		 
 		@Override
 		public void add(Object k) {
-		//try {
-
 			String j = (String) k;
-			String[] tokens = j.split(",");
-			//gk.offer(tokens[this.valueIndex]);
-			gk.offer(Double.parseDouble(tokens[this.valueIndex])%10);
 
-		//}catch(NullPointerException e){
-		//	System.out.println("EDW");
-		//	}
+			// TODO Auto-generated method stub
+
+			ObjectMapper mapper = new ObjectMapper();
+			JsonNode node = null;
+			try {
+				node = mapper.readTree(j);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			String value = node.get(this.valueIndex).asText();
+			gk.offer(Double.parseDouble(value) % 10);
 		}
 		@Override
 		public Object estimate(Object k) {

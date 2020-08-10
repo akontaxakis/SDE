@@ -98,7 +98,10 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 				MultySynopsisDFT sketch;
 
 				if (rq.getParam().length > 3)
-					sketch = new MultySynopsisDFT(rq.getUID(), rq.getParam());
+				{
+					System.out.println("create");
+				sketch = new MultySynopsisDFT(rq.getUID(), rq.getParam());
+				}
 				else {
 					String[] _tmp = {"1", "2", "5", "30", "8"};
 					sketch = new MultySynopsisDFT(rq.getUID(), _tmp);

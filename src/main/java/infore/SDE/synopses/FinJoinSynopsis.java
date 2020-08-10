@@ -1,10 +1,13 @@
 package infore.SDE.synopses;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.math3.complex.Complex;
 
 import infore.SDE.messages.Estimation;
@@ -30,34 +33,44 @@ public class FinJoinSynopsis extends Synopsis{
 	public void add(Object k) {
 		String j = (String)k;
 		// TODO Auto-generated method stub
-		String[] tokens = j.split(",");
+
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode node = null;
+		try {
+			node = mapper.readTree(j);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		String key = node.get(this.keyIndex).asText();
+		String value = node.get(this.valueIndex).asText();
+
 		char last = j.charAt(j.length() -1);
 		//System.out.println(last);
 		if(last == '1') {
 			
-			Integer count = Counters.get(tokens[this.keyIndex]);
+			Integer count = Counters.get(key);
 			if(count == null)
 				count = 1;
 			else
 				count++;	
 			
-		Counters.put(tokens[this.keyIndex], count);
+		Counters.put(key, count);
 		}
 		else if(last == '2') {
 		
-			Synopsis DFT = Synopses.get(tokens[this.keyIndex]);
+			Synopsis DFT = Synopses.get(key);
 			
 			if(DFT == null)
-				DFT = new DFT(this.SynopsisID,parameters,tokens[this.keyIndex]);
-			Integer countSofar = Counters.get(tokens[this.keyIndex]);
+				DFT = new DFT(this.SynopsisID,parameters,key);
+			Integer countSofar = Counters.get(key);
 			
 			if (countSofar!=null) {
 				//System.out.println(countSofar);
 				DFT.add(countSofar +"");
-				Synopses.put(tokens[this.keyIndex], DFT);
-				Counters.put(tokens[this.keyIndex], 0);
+				Synopses.put(key, DFT);
+				Counters.put(key, 0);
 		}else {
-				Counters.put(tokens[this.keyIndex], 0);
+				Counters.put(key, 0);
 		      }
 		}
 		

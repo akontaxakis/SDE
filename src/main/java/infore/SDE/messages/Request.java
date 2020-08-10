@@ -11,16 +11,21 @@ import java.util.Arrays;
 public class Request implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
-	private String key; //hash value
+	private String DataSetkey; //hash value
 	private int RequestID; //request type
 	private int SynopsisID; // synopsis type
 	private int UID; // unique identifier for each Request
 	private String StreamID; //the stream ID
 	private String[] Param; // the parameters of the Request
 	private int NoOfP; // Number of parallelism 
-	
+
+
+	public Request(){
+
+	}
+
 	public Request(String key, int requestID, int synopsisID, int uID, String streamID, String[] param, int noOfP) {
-		this.key = key;
+		this.DataSetkey = key;
 		RequestID = requestID;
 		SynopsisID = synopsisID;
 		UID = uID;
@@ -30,7 +35,7 @@ public class Request implements Serializable{
 	}
 
 	public Request(String replace, String[] valueTokens) {
-		this.key = replace;
+		this.DataSetkey = replace;
 		RequestID = Integer.parseInt(valueTokens[1]);
 		SynopsisID = Integer.parseInt(valueTokens[3]);
 		UID = Integer.parseInt(valueTokens[2]);
@@ -40,7 +45,7 @@ public class Request implements Serializable{
 	}
 
 	public Request(String[] valueTokens) {
-		this.key = valueTokens[0];
+		this.DataSetkey = valueTokens[0];
 		RequestID = Integer.parseInt(valueTokens[1]);
 		SynopsisID = Integer.parseInt(valueTokens[3]);
 		UID = Integer.parseInt(valueTokens[2]);
@@ -49,12 +54,19 @@ public class Request implements Serializable{
 		NoOfP = Integer.parseInt(valueTokens[6]);
 	}
 
-	public String getKey() {
-		return key;
+	public String getDataSetkey() {
+		return DataSetkey;
 	}
 
+	public void setDataSetkey(String key) {
+		this.DataSetkey = key;
+	}
+
+	public String getKey() {
+		return getDataSetkey();
+	}
 	public void setKey(String key) {
-		this.key = key;
+		this.DataSetkey = key;
 	}
 
 	public int getRequestID() {
@@ -107,7 +119,7 @@ public class Request implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Request [key=" + key + ", RequestID=" + RequestID + ", SynopsisID=" + SynopsisID + ", UID=" + UID
+		return "Request [key=" + DataSetkey + ", RequestID=" + RequestID + ", SynopsisID=" + SynopsisID + ", UID=" + UID
 				+ ", StreamID=" + StreamID + ", Param=" + Arrays.toString(Param) + ", NoOfP=" + NoOfP + "]";
 	}
 	public String toSumString() {
@@ -129,7 +141,7 @@ public class Request implements Serializable{
 		}
 		
 		
-		return "\"" +key+","+RequestID+","+UID+","+SynopsisID+","+StreamID+","+pr+","+NoOfP+"\"";
+		return "\"" +DataSetkey+","+RequestID+","+UID+","+SynopsisID+","+StreamID+","+pr+","+NoOfP+"\"";
 
 	}
 }

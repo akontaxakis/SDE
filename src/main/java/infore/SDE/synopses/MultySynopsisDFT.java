@@ -1,9 +1,12 @@
 package infore.SDE.synopses;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
 import infore.SDE.sketches.TimeSeries.COEF;
@@ -25,14 +28,21 @@ public class MultySynopsisDFT extends Synopsis{
 	public void add(Object k) {
 		String j = (String)k;
 		// TODO Auto-generated method stub
-		String[] tokens = j.split(",");
 
-		DFT dft = Synopses.get(tokens[this.keyIndex]);
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode node = null;
+		try {
+			node = mapper.readTree(j);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		String key = node.get(this.keyIndex).asText();
+		DFT dft = Synopses.get(key);
 		if(dft == null)
-			dft = new DFT(this.SynopsisID,parameters,tokens[this.keyIndex]);
+			dft = new DFT(this.SynopsisID,parameters,key);
 
-		dft.add(k);
-		Synopses.put(tokens[this.keyIndex], dft);
+		dft.add(j);
+		Synopses.put(key, dft);
 		
 	}
 

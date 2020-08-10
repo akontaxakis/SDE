@@ -49,6 +49,7 @@ public class miniSDE {
 
 	public static void main(String[] args) throws Exception {
 
+		/*
 		// Initialize Input Parameters
 		initializeParameters(args);
 		StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -67,9 +68,7 @@ public class miniSDE {
 		//map kafka data input to tuple2<int,double>
 		DataStream<Tuple2<String, String>> dataStream = datastream
 				.map(new MapFunction<ObjectNode, Tuple2<String, String>>() {
-					/**
-					 * 
-					 */
+
 					private static final long serialVersionUID = 1L;
 				
 					@Override
@@ -132,6 +131,9 @@ public class miniSDE {
 		
 		@SuppressWarnings("unused")
 		JobExecutionResult result = env.execute("Streaming miniSDE");
+
+		 */
+
 }
 
 	private static void initializeParameters(String[] args) {

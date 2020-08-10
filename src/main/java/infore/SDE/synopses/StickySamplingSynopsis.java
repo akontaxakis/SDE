@@ -1,8 +1,12 @@
 package infore.SDE.synopses;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.streaminer.stream.frequency.StickySampling;
 
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
+
+import java.io.IOException;
 
 public class StickySamplingSynopsis extends Synopsis {
 	
@@ -16,8 +20,18 @@ public class StickySamplingSynopsis extends Synopsis {
 		@Override
 		public void add(Object k) {
 			String j = (String)k;
-			String[] tokens = j.split(",");
-			sk.add(tokens[this.keyIndex],(long)Double.parseDouble(tokens[this.valueIndex]));
+			// TODO Auto-generated method stub
+
+			ObjectMapper mapper = new ObjectMapper();
+			JsonNode node = null;
+			try {
+				node = mapper.readTree(j);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			String key = node.get(this.keyIndex).asText();
+			String value = node.get(this.valueIndex).asText();
+			sk.add(key,(long)Double.parseDouble(value));
 		}
 
 		@Override

@@ -1,9 +1,12 @@
 package infore.SDE.synopses;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import infore.SDE.sketches.TimeSeries.COEF;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.flink.api.java.tuple.Tuple2;
@@ -14,19 +17,32 @@ import infore.SDE.sketches.TimeSeries.windowDFT;
 
 public class DFT extends Synopsis {
 	windowDFT ts;
-	int index = 1;
-
+	int intervalSec;
+	String timestampIndex;
 	public DFT(int uid, String[] parameters, String key) {
+		//keyIndex,valueIndex
 		super(uid, parameters[0], parameters[1]);
-		ts = new windowDFT(Integer.parseInt(parameters[2]), Integer.parseInt(parameters[3]),
-				Integer.parseInt(parameters[4]), 1,key);
+		// timestampIndex
+		timestampIndex = parameters[2];
+		intervalSec = Integer.parseInt(parameters[3]);
+		ts = new windowDFT(Integer.parseInt(parameters[4])/intervalSec, Integer.parseInt(parameters[5])/intervalSec,
+				Integer.parseInt(parameters[6]), 1,key);
 	}
 
 	@Override
 	public void add(Object k) {
 		String j = (String) k;
-		String[] tokens = j.split(",");
-		ts.pushToValues(Double.parseDouble(tokens[this.valueIndex]));
+
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode node = null;
+		try {
+			node = mapper.readTree(j);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		String key = node.get(this.keyIndex).asText();
+		String value = node.get(this.valueIndex).asText();
+		ts.pushToValues(Double.parseDouble(value));
 	}
 
 	@Override

@@ -2,8 +2,12 @@ package infore.SDE.synopses;
 
 import com.clearspring.analytics.stream.frequency.CountMinSketch;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
+
+import java.io.IOException;
 
 public class CountMin extends Synopsis{
 
@@ -17,9 +21,18 @@ public class CountMin extends Synopsis{
 	@Override
 	public void add(Object k) {
 		String j = (String)k;
-		String[] tokens = j.split(",");
+
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode node = null;
+		try {
+			node = mapper.readTree(j);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		String key = node.get(this.keyIndex).asText();
+		String value = node.get(this.valueIndex).asText();
       	//System.out.println(Math.abs((tokens[this.keyIndex]).hashCode())+"_"+(long)Double.parseDouble(tokens[this.valueIndex]));
-		cm.add(Math.abs((tokens[this.keyIndex]).hashCode()), (long)Double.parseDouble(tokens[this.valueIndex]));
+		cm.add(Math.abs((key).hashCode()), (long)Double.parseDouble(value));
 	}
 
 	@SuppressWarnings("deprecation")
