@@ -43,6 +43,7 @@ public class MaritimeSketch {
 
 		if (positions.isEmpty()) {
 		    positions.add(k);
+			return k;
 		} else {
 		    ObjectNode prev = null;
 			try {

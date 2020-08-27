@@ -53,6 +53,7 @@ public class ContinuousMaritimeSketches extends ContinuousSynopsis{
             mTs = new MaritimeSketch(this.SynopsisID,parameters);
 
         String Estimation = mTs.addEstimate(k);
+        System.out.println(Estimation);
         Synopses.put(curr.get("ship").asText(), mTs);
 
         return new Estimation(this.rq, Estimation, Integer.toString(rq.getUID()));

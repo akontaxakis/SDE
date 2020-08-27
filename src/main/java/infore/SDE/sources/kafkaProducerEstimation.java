@@ -43,9 +43,9 @@ public class kafkaProducerEstimation {
 
 	@Override
 	public byte[] serializeValue(Estimation element) {
-			if(element.getSynopsisID()==12){
-				return (element.getUID()+ ","+element.getEstimation()).getBytes();
-			}
+			//if(element.getSynopsisID()==12){
+			//	return (element.getUID()+ ","+element.getEstimation()).getBytes();
+			//}
 			//return element.toKafka();
 		try {
 			return element.toKafkaJson();

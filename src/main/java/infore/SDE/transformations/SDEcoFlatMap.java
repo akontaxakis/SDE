@@ -34,11 +34,12 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 		if (C_Synopses != null) {
 			//if(C_Synopses.size()>1)
 			//	System.out.println("kati_kati_kati _>" +" pId -> "+pId+"  " +C_Synopses.size());
-
 			for (ContinuousSynopsis c_ski : C_Synopses) {
 			Estimation e =c_ski.addEstimate(node.getValues());
-			if(e.getEstimation()!=null)
-			collector.collect(e);
+			if(e.getEstimation()!=null){
+				System.out.println(e.toString());
+				collector.collect(e);
+			}
 			}
 			MC_Synopses.put(node.getKey(),C_Synopses);
 		}
