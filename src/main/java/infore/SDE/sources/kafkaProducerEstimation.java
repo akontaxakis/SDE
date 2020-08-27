@@ -49,6 +49,7 @@ public class kafkaProducerEstimation {
 			//return element.toKafka();
 		try {
 			return element.toKafkaJson();
+
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
