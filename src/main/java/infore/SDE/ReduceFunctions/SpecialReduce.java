@@ -24,6 +24,7 @@ public class SpecialReduce extends ReduceFunction {
 		int counter=0;
 		String str = " ";
 		double correlation;
+		//System.out.println("NUMBER OF STOCKS CORRELATIONS ->  " + this.getEstimations().size());
 		double th = Double.parseDouble(this.getParameters()[0]);
 		if (this.getSynopsisID() == 4) {
 			for (Object entry : this.getEstimations()) {
@@ -47,10 +48,11 @@ public class SpecialReduce extends ReduceFunction {
 
 			}
 			if(counter ==0) {
-				System.out.println("hera22");
-				return null;
+				//System.out.println("HERE ZERO CORRELATIONS");
+				return "null";
 
 			}
+			//System.out.println("HERE " + counter +  " CORRELATIONS");
 			return str+"_"+counter;
 		}
 		if (this.getSynopsisID() == 14) {

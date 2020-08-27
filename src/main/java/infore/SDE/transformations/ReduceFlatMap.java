@@ -55,17 +55,19 @@ public class ReduceFlatMap extends RichFlatMapFunction<Estimation, Estimation> {
 				 rf.put(""+value.getEstimationkey(), t_rf);
 		    }
 	    	else if(id == 4 || id == 6) {
+				//System.out.println("START");
 				 t_rf = new SpecialReduce(value.getNoOfP(), 0, value.getParam(), value.getSynopsisID());
 				 t_rf.add(value);
 				 rf.put(""+value.getEstimationkey(), t_rf);
 		    }
 	    }else {
 		    	if(t_rf.add(value)) {
-
+					//System.out.println("CAL");
 		    		Object output = t_rf.reduce();
 					if(output !=null) {
 						value.setEstimation(output);
 						rf.remove("" + value.getEstimationkey());
+						//System.out.println("SEND");
 						out.collect(value);
 					}
 		    	}	

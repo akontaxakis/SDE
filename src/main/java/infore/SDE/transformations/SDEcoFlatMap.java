@@ -5,10 +5,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-
 import infore.SDE.synopses.*;
-import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.co.RichCoFlatMapFunction;
 import org.apache.flink.util.Collector;
@@ -99,7 +96,6 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 
 				if (rq.getParam().length > 3)
 				{
-					System.out.println("create");
 				sketch = new MultySynopsisDFT(rq.getUID(), rq.getParam());
 				}
 				else {
@@ -238,10 +234,9 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 					C_Synopses = new ArrayList<>();
 				}
 
-
 			ContinuousMaritimeSketches sketch;
 			rq.setNoOfP(1) ;
-				if (rq.getParam().length > 50)
+				if (rq.getParam().length > 5)
 					sketch = new ContinuousMaritimeSketches(rq.getUID(), rq, rq.getParam());
 				else {
 					String[] _tmp = {"1", "1", "18000","10000","50","50"};
@@ -256,24 +251,22 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 		else {
 			for (Synopsis syn : Synopses) {
 
-				if (rq.getUID() == syn.getSynopsisID()) {
-					if (rq.getRequestID() % 10 == 2) {
-						System.out.println("removed");
-						Synopses.remove(syn);
-						M_Synopses.put(rq.getKey(),Synopses);
-						break;
-					} else if (rq.getRequestID() % 10 == 3){
+						if (rq.getUID() == syn.getSynopsisID()) {
+							if (rq.getRequestID() % 10 == 2) {
+								//System.out.println("removed");
+								Synopses.remove(syn);
+								M_Synopses.put(rq.getKey(),Synopses);
 
-							Estimation e = syn.estimate(rq);
-							if(e.getEstimation() == null) {
-								System.out.println(e.toString());
-							}else{
+							} else if (rq.getRequestID() % 10 == 3){
 
-								collector.collect(e);
-								System.out.println(e.toString());
+								Estimation e = syn.estimate(rq);
+								if(e.getEstimation() == null) {
+									System.out.println(e.toString());
+								}else{
+									collector.collect(e);
+									//System.out.println(pId+ "_"  + rq.getKey() + "_" + e.toString());
+								}
 							}
-							break;
-					}
 				}
 			}
 		}

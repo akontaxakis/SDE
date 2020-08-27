@@ -21,4 +21,8 @@ public class COEF {
     public Complex[] getFourierCoefficients() {
         return fourierCoefficients;
     }
+
+    public String toString(){
+      return fourierCoefficients.toString();
+    }
 }

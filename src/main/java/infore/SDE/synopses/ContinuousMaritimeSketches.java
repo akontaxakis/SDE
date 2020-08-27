@@ -1,12 +1,13 @@
 package infore.SDE.synopses;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
-import infore.SDE.sketches.TimeSeries.COEF;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
+
 
 public class ContinuousMaritimeSketches extends ContinuousSynopsis{
     private HashMap<String, MaritimeSketch> Synopses;
@@ -39,20 +40,20 @@ public class ContinuousMaritimeSketches extends ContinuousSynopsis{
     @Override
     public Estimation addEstimate(Object k) {
         String j = (String)k;
+        ObjectMapper jackson_mapper = new ObjectMapper();
+        ObjectNode curr = null;
+        try {
+            curr = (ObjectNode) jackson_mapper.readTree(j);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        String Dataset = j.substring(0, j.indexOf(','));
-       // System.out.println("dataset " + Dataset);
-        String rest = j.substring(j.indexOf(',') + 1);
-        String StreamId = rest.substring(0, rest.indexOf('{')-1);
-        String Data = rest.substring(rest.indexOf('{'));
-       // System.out.println("StreamId " + StreamId);
-       // System.out.println("Data " + Data);
-        MaritimeSketch mTs = Synopses.get(StreamId);
+        MaritimeSketch mTs = Synopses.get(curr.get("ship").asText());
         if(mTs == null)
             mTs = new MaritimeSketch(this.SynopsisID,parameters);
 
-        String Estimation = mTs.addEstimate(Data);
-        Synopses.put(StreamId, mTs);
+        String Estimation = mTs.addEstimate(k);
+        Synopses.put(curr.get("ship").asText(), mTs);
 
         return new Estimation(this.rq, Estimation, Integer.toString(rq.getUID()));
 

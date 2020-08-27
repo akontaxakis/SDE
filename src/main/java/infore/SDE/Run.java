@@ -161,9 +161,9 @@ public class Run {
 			
 			System.out.println("[INFO] Default values");
 			//Default values
-			kafkaDataInputTopic = "Forex";
+			kafkaDataInputTopic = "Forex3";
 			kafkaRequestInputTopic = "Requests";
-			parallelism = 6;
+			parallelism = 4;
 			//parallelism2 = 4;
 			//kafkaBrokersList = "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667";
 			kafkaBrokersList = "localhost:9092";

@@ -16,9 +16,11 @@ import infore.SDE.messages.Request;
 import infore.SDE.sketches.TimeSeries.windowDFT;
 
 public class DFT extends Synopsis {
+
 	windowDFT ts;
 	int intervalSec;
 	String timestampIndex;
+
 	public DFT(int uid, String[] parameters, String key) {
 		//keyIndex,valueIndex
 		super(uid, parameters[0], parameters[1]);

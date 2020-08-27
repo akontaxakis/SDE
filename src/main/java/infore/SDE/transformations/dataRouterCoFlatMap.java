@@ -55,12 +55,6 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Datapoint, Reques
                 }
                 KeysPerStream.put(value.getStreamID(), tmp);
             }
-            if(tmp.size()==0){
-                System.out.println(" "+value.getStreamID()+" "+tmp.size());
-            }
-            if(tmp.size()>1){
-                System.out.println("kati");
-            }
             for (Tuple2<Integer, String> t : tmp) {
                 value.setDataSetkey(t.f1);
                 out.collect(value);
@@ -68,7 +62,7 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Datapoint, Reques
 
         }
         if(RandomParallelism.size()>0){
-            System.out.println("kati_kati");
+
         }
         if(RandomParallelism.size() > 0){
             for (Map.Entry<Integer, Tuple2<Integer, Integer>> entry : RandomParallelism.entrySet()) {
@@ -109,7 +103,7 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Datapoint, Reques
                     else{
                         Tuple2<Integer, Integer> t =  KeyedParallelism.get(rq.getNoOfP());
                         t.f0 += 1;
-                        System.out.println("HERE_> " + t.f0);
+                        //System.out.println("HERE_> " + t.f0);
                         KeyedParallelism.put(rq.getNoOfP(),t);
                     }
                 }else if (rq.getRequestID()  == 4){
@@ -152,7 +146,7 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Datapoint, Reques
                 if(re.getRequestID() == 1){
                     Tuple2<Integer, Integer> t = KeyedParallelism.get(re.getNoOfP());
                     if(t!=null) {
-                        System.out.println("HERE_> " + t.f0);
+                        //System.out.println("HERE_> " + t.f0);
                         t.f0--;
                         if (t.f0 == 0) {
                             KeyedParallelism.remove(re.getNoOfP());
