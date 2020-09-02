@@ -43,22 +43,25 @@ public class ContinuousMaritimeSketches extends ContinuousSynopsis{
         JsonNode node = (JsonNode)k;
         ObjectMapper jackson_mapper = new ObjectMapper();
         ObjectNode curr = null;
+
         try {
-            curr = (ObjectNode) jackson_mapper.readTree(node.asText());
+            curr = (ObjectNode) jackson_mapper.readTree(node.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
+        if(curr!=null) {
+            MaritimeSketch mTs = Synopses.get(curr.get("ship").asText());
+            if (mTs == null)
+                mTs = new MaritimeSketch(this.SynopsisID, parameters);
 
-        MaritimeSketch mTs = Synopses.get(curr.get("ship").asText());
-        if(mTs == null)
-            mTs = new MaritimeSketch(this.SynopsisID,parameters);
+            String Estimation = mTs.addEstimate(node.toString());
+            //System.out.println(Estimation);
+            Synopses.put(curr.get("ship").asText(), mTs);
 
-        String Estimation = mTs.addEstimate(k);
-        System.out.println(Estimation);
-        Synopses.put(curr.get("ship").asText(), mTs);
+            return new Estimation(this.rq, Estimation, Integer.toString(rq.getUID()));
+        }
 
-        return new Estimation(this.rq, Estimation, Integer.toString(rq.getUID()));
-
+        return new Estimation(this.rq, null, Integer.toString(rq.getUID()));
     }
 
     @Override

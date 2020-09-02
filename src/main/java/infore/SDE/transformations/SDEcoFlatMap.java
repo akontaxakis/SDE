@@ -23,6 +23,7 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 	public void flatMap1(Datapoint node, Collector<Estimation> collector) {
 
 		//String value = node.f1.replace("\"", "");
+
 		ArrayList<Synopsis>  Synopses =  M_Synopses.get(node.getKey());
 		if (Synopses != null) {
 			for (Synopsis ski : Synopses) {
@@ -35,9 +36,8 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 			//if(C_Synopses.size()>1)
 			//	System.out.println("kati_kati_kati _>" +" pId -> "+pId+"  " +C_Synopses.size());
 			for (ContinuousSynopsis c_ski : C_Synopses) {
-			Estimation e =c_ski.addEstimate(node.getValues());
+				Estimation e =c_ski.addEstimate(node.getValues());
 			if(e.getEstimation()!=null){
-				//System.out.println(e.toString());
 				collector.collect(e);
 			}
 			}
@@ -282,7 +282,7 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 
 								Estimation e = syn.estimate(rq);
 								if(e.getEstimation() == null) {
-									System.out.println(e.toString());
+
 								}else{
 									collector.collect(e);
 									//System.out.println(pId+ "_"  + rq.getKey() + "_" + e.toString());
