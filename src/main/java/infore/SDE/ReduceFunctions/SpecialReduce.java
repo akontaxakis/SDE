@@ -24,7 +24,7 @@ public class SpecialReduce extends ReduceFunction {
 		int counter=0;
 		String str = " ";
 		double correlation;
-		//System.out.println("NUMBER OF STOCKS CORRELATIONS ->  " + this.getEstimations().size());
+		System.out.println("NUMBER OF STOCKS CORRELATIONS ->  " + this.getEstimations().size());
 		double th = Double.parseDouble(this.getParameters()[0]);
 		if (this.getSynopsisID() == 4) {
 			for (Object entry : this.getEstimations()) {
@@ -33,19 +33,19 @@ public class SpecialReduce extends ReduceFunction {
 					COEF coefficients1 = (COEF) entry2;
 
 					if (coefficients0.getFourierCoefficients() == null || coefficients1.getFourierCoefficients() == null) {
-						break;
-					}
-					if(!((COEF) entry).getStreamKey().startsWith(((COEF) entry2).getStreamKey())) {
-						double dist = distance(coefficients0.getFourierCoefficients(), coefficients1.getFourierCoefficients()) / 2;
-						correlation = 1 - dist;
 
-						if (correlation > th && correlation<1) {
-							str = str.concat("[" + coefficients0.getStreamKey() + "_" + coefficients1.getStreamKey() + "]");
-							counter++;
+					} else {
+						if (!((COEF) entry).getStreamKey().startsWith(((COEF) entry2).getStreamKey())) {
+							double dist = distance(coefficients0.getFourierCoefficients(), coefficients1.getFourierCoefficients()) / 2;
+							correlation = 1 - dist;
+
+							if (correlation > th && correlation < 1) {
+								str = str.concat("[" + coefficients0.getStreamKey() + "_" + coefficients1.getStreamKey() + "]");
+								counter++;
+							}
 						}
 					}
 				}
-
 			}
 			if(counter ==0) {
 				//System.out.println("HERE ZERO CORRELATIONS");

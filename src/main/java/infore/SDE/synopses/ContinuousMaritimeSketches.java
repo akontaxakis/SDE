@@ -1,5 +1,6 @@
 package infore.SDE.synopses;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import infore.SDE.messages.Estimation;
@@ -39,11 +40,11 @@ public class ContinuousMaritimeSketches extends ContinuousSynopsis{
     }
     @Override
     public Estimation addEstimate(Object k) {
-        String j = (String)k;
+        JsonNode node = (JsonNode)k;
         ObjectMapper jackson_mapper = new ObjectMapper();
         ObjectNode curr = null;
         try {
-            curr = (ObjectNode) jackson_mapper.readTree(j);
+            curr = (ObjectNode) jackson_mapper.readTree(node.asText());
         } catch (IOException e) {
             e.printStackTrace();
         }

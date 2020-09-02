@@ -37,7 +37,7 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 			for (ContinuousSynopsis c_ski : C_Synopses) {
 			Estimation e =c_ski.addEstimate(node.getValues());
 			if(e.getEstimation()!=null){
-				System.out.println(e.toString());
+				//System.out.println(e.toString());
 				collector.collect(e);
 			}
 			}
@@ -229,14 +229,31 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 			M_Synopses.put(rq.getKey(),Synopses);
 		} //Continuous Synopsis
 	    else if(rq.getRequestID() == 5){
+			if(rq.getSynopsisID() == 1)
+			{
+				if(C_Synopses==null){
+					C_Synopses = new ArrayList<>();
+				}
+
+			ContinuousCM sketch;
+			rq.setNoOfP(1) ;
+				if (rq.getParam().length > 4)
+					sketch = new ContinuousCM(rq.getUID(), rq, rq.getParam());
+				else {
+					String[] _tmp = { "StockID", "Volume", "0.0002", "0.99", "4" };
+					sketch = new ContinuousCM(rq.getUID(), rq, _tmp);
+				}
+				C_Synopses.add(sketch);
+
+			}
 			if(rq.getSynopsisID() == 12)
 			{
 				if(C_Synopses==null){
 					C_Synopses = new ArrayList<>();
 				}
 
-			ContinuousMaritimeSketches sketch;
-			rq.setNoOfP(1) ;
+				ContinuousMaritimeSketches sketch;
+				rq.setNoOfP(1) ;
 				if (rq.getParam().length > 5)
 					sketch = new ContinuousMaritimeSketches(rq.getUID(), rq, rq.getParam());
 				else {
@@ -246,6 +263,9 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 				C_Synopses.add(sketch);
 
 			}
+
+
+
 			MC_Synopses.put(rq.getKey(),C_Synopses);
 	    }
 		// Estimate - delete

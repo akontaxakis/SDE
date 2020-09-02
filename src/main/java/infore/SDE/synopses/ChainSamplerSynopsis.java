@@ -20,14 +20,14 @@ public class ChainSamplerSynopsis extends Synopsis {
 		 
 		@Override
 		public void add(Object k) {
-			String j = (String)k;
-			ObjectMapper mapper = new ObjectMapper();
-			JsonNode node = null;
-			try {
+
+			//ObjectMapper mapper = new ObjectMapper();
+			JsonNode node = (JsonNode)k;
+			/*try {
 				node = mapper.readTree(j);
 			} catch (IOException e) {
 				e.printStackTrace();
-			}
+			} */
 			String value = node.get(this.valueIndex).asText();
 			cs.sample((long)Double.parseDouble(value));
 		}

@@ -26,17 +26,13 @@ public class GKsynopsis extends Synopsis {
 		 
 		@Override
 		public void add(Object k) {
-			String j = (String) k;
-
-			// TODO Auto-generated method stub
-
-			ObjectMapper mapper = new ObjectMapper();
-			JsonNode node = null;
-			try {
-				node = mapper.readTree(j);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			//ObjectMapper mapper = new ObjectMapper();
+			JsonNode node = (JsonNode)k;
+        /*try {
+            node = mapper.readTree(j);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } */
 			String value = node.get(this.valueIndex).asText();
 			gk.offer(Double.parseDouble(value) % 10);
 		}

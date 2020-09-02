@@ -25,14 +25,14 @@ public class Coresets extends Synopsis{
 	@Override
 	public void add(Object k) {
 		// TODO Auto-generated method stub
-		String j = (String)k;
-		ObjectMapper mapper = new ObjectMapper();
-		JsonNode node = null;
-		try {
-			node = mapper.readTree(j);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+		//ObjectMapper mapper = new ObjectMapper();
+		JsonNode node = (JsonNode)k;
+        /*try {
+            node = mapper.readTree(j);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } */
 		String value = node.get(this.valueIndex).asText();
 		double [] coordinates = new double[d];
 		

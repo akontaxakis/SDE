@@ -1,6 +1,7 @@
 package infore.SDE.messages;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.Serializable;
@@ -11,11 +12,11 @@ public class Datapoint implements Serializable {
     private static final long serialVersionUID = 1L;
     private String DataSetkey; //hash value
     private String StreamID; //the stream ID
-    private String values;
+    private JsonNode values;
 
 
 
-    public Datapoint(String key, String streamID, String value) {
+    public Datapoint(String key, String streamID, JsonNode value) {
         this.DataSetkey = key;
         StreamID = streamID;
         this.values = value;
@@ -54,11 +55,11 @@ public class Datapoint implements Serializable {
         StreamID = streamID;
     }
 
-    public String getValues() {
+    public JsonNode getValues() {
         return values;
     }
 
-    public void setValues(String value) {
+    public void setValues(JsonNode value) {
         this.values = value;
     }
 

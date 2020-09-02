@@ -20,18 +20,16 @@ public class CountMin extends Synopsis{
 	 
 	@Override
 	public void add(Object k) {
-		String j = (String)k;
 
-		ObjectMapper mapper = new ObjectMapper();
-		JsonNode node = null;
-		try {
-			node = mapper.readTree(j);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		//ObjectMapper mapper = new ObjectMapper();
+		JsonNode node = (JsonNode)k;
+        /*try {
+            node = mapper.readTree(j);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } */
 		String key = node.get(this.keyIndex).asText();
 		String value = node.get(this.valueIndex).asText();
-      	//System.out.println(Math.abs((tokens[this.keyIndex]).hashCode())+"_"+(long)Double.parseDouble(tokens[this.valueIndex]));
 		cm.add(Math.abs((key).hashCode()), (long)Double.parseDouble(value));
 	}
 
