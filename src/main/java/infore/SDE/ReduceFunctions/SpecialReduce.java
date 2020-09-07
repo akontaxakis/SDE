@@ -12,6 +12,8 @@ import Coresets.KmeansPP;
 import Coresets.Point;
 import Coresets.TreeCoreset;
 
+import static java.lang.Math.sqrt;
+
 public class SpecialReduce extends ReduceFunction {
 
 	public SpecialReduce(int nOfP, int count, String[] parameters, int syn) {
@@ -24,9 +26,11 @@ public class SpecialReduce extends ReduceFunction {
 		int counter=0;
 		String str = " ";
 		double correlation;
-		System.out.println("NUMBER OF STOCKS CORRELATIONS ->  " + this.getEstimations().size());
-		double th = Double.parseDouble(this.getParameters()[0]);
+
+
 		if (this.getSynopsisID() == 4) {
+			double th = Double.parseDouble(this.getParameters()[0]);
+			System.out.println("NUMBER OF STOCKS CORRELATIONS ->  " + this.getEstimations().size());
 			for (Object entry : this.getEstimations()) {
 				COEF coefficients0 = (COEF) entry;
 				for (Object entry2 : this.getEstimations()) {
@@ -40,7 +44,7 @@ public class SpecialReduce extends ReduceFunction {
 							correlation = 1 - dist;
 
 							if (correlation > th && correlation < 1) {
-								str = str.concat("[" + coefficients0.getStreamKey() + "_" + coefficients1.getStreamKey() + "]");
+								str = str.concat("[" + coefficients0.getStreamKey() + "_" + coefficients1.getStreamKey() + "_" + correlation + "]");
 								counter++;
 							}
 						}
@@ -131,7 +135,7 @@ public class SpecialReduce extends ReduceFunction {
 			distance += Math.pow((a[i].getReal() - b[i].getReal()), 2);
 			distance += Math.pow((a[i].getImaginary() - b[i].getImaginary()), 2);
 		}
-		return distance;
+		return sqrt(distance);
 	}
 
 	private static double[] convertIntegers(List<Integer> integers) {
