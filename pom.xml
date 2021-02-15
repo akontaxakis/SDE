@@ -203,7 +203,8 @@
 						<configuration>
 							<transformers>
 								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+
+				implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<mainClass>infore.SDE.Run</mainClass>
 						</transformer>
 							</transformers>
@@ -211,7 +212,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
 
 
 

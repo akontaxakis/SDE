@@ -16,8 +16,8 @@ import static java.lang.Math.sqrt;
 
 public class SpecialReduce extends ReduceFunction {
 
-	public SpecialReduce(int nOfP, int count, String[] parameters, int syn) {
-		super(nOfP, count, parameters, syn);
+	public SpecialReduce(int nOfP, int count, String[] parameters, int syn, int rq) {
+		super(nOfP, count, parameters, syn, rq);
 		// TODO Auto-generated constructor stub
 	}
 

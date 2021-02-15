@@ -15,8 +15,8 @@ public class ContinuousMaritimeSketches extends ContinuousSynopsis{
     String[] parameters;
 
     public ContinuousMaritimeSketches(int uid,Request rq, String[] param) {
-        super(uid, param[0], param[1]);
-        Synopses = new HashMap<String, MaritimeSketch>();
+        super(uid, param[0], param[1], param[2]);
+        Synopses = new HashMap<>();
         parameters = param;
         this.setRq(rq);
     }
@@ -77,11 +77,6 @@ public class ContinuousMaritimeSketches extends ContinuousSynopsis{
     }
 
     public Estimation estimate(Request rq) {
-
       return null;
     }
-
-
-
-
 }

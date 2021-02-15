@@ -3,8 +3,8 @@ package infore.SDE.ReduceFunctions;
 
 public class SimpleSumFunction extends ReduceFunction {
 
-	public SimpleSumFunction(int nOfP, int count, String[] parameters, int syn) {
-		super(nOfP, count, parameters, syn);
+	public SimpleSumFunction(int nOfP, int count, String[] parameters, int syn, int rq) {
+		super(nOfP, count, parameters, syn, rq);
 		// TODO Auto-generated constructor stub
 	}
 

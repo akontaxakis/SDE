@@ -5,26 +5,46 @@ import infore.SDE.messages.Request;
 
 abstract public class Synopsis {
 	
-	protected int SynopsisID;
-
-
+	private int SynopsisID;
 	protected String keyIndex;
-
-
 	protected String valueIndex;
+	private String operationMode;
 	
 	public Synopsis(int ID, String k, String v) {
-		 SynopsisID=ID;
-	     keyIndex=k;
-	     valueIndex=v;
+		SynopsisID=ID;
+		keyIndex=k;
+		valueIndex=v;
 	}
-	
-	public abstract void add(Object k);
+
+    public Synopsis(int uid, String parameter, String parameter1, String parameter2) {
+
+		SynopsisID=uid;
+		keyIndex=parameter;
+		valueIndex=parameter1;
+		operationMode = parameter2;
+
+    }
+
+    public abstract void add(Object k);
 	public abstract Object estimate(Object k);
 	public abstract Estimation estimate(Request rq);
 	public abstract Synopsis merge(Synopsis sk);
-	
-    public int getSynopsisID() {
+
+	public int operationMode_add(Object k) {
+		if(operationMode.equals("Queryable")){
+			add(k);
+		}else if(operationMode.equals("Partitioner")){
+			add(k);
+			return SynopsisID;
+		}else{
+			add(k);
+		}
+
+		return 0;
+	}
+
+
+	public int getSynopsisID() {
 		return SynopsisID;
 	}
 	public void setSynopsisID(int SynopsisID) {
@@ -35,5 +55,6 @@ abstract public class Synopsis {
 	public String getValueIndex() {return valueIndex;}
 
 	public void setValueIndex(String valueIndex) {this.valueIndex = valueIndex;}
+
 
 }

@@ -13,8 +13,8 @@ public class StickySamplingSynopsis extends Synopsis {
 	StickySampling<String> sk;
 
 	public StickySamplingSynopsis(int uid, String[] parameters) {
-	     super(uid, parameters[0],parameters[1]);		
-		 sk = new StickySampling<String>(Double.parseDouble(parameters[2]),Double.parseDouble(parameters[3]),Double.parseDouble(parameters[4]));
+	     super(uid, parameters[0],parameters[1],parameters[2]);
+		 sk = new StickySampling<String>(Double.parseDouble(parameters[3]),Double.parseDouble(parameters[4]),Double.parseDouble(parameters[5]));
 		}
 		 
 		@Override

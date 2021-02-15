@@ -13,8 +13,8 @@ public class HyperLogLogSynopsis extends Synopsis {
 	HyperLogLog hll;
 	
 	public HyperLogLogSynopsis(int uid, String[] parameters) {
-	     super(uid, parameters[0],parameters[1]);		
-	     hll = new HyperLogLog(Double.parseDouble(parameters[2]));
+	     super(uid, parameters[0],parameters[1],parameters[2]);
+	     hll = new HyperLogLog(Double.parseDouble(parameters[3]));
 		}
 		 
 		@Override

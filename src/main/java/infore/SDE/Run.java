@@ -12,7 +12,6 @@ import infore.SDE.sources.kafkaStringConsumer;
 
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
-import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.collector.selector.OutputSelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.SplitStream;
@@ -62,12 +61,12 @@ public class Run {
 		initializeParameters(args);
 		StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 		env.setParallelism(parallelism);
-
 		kafkaStringConsumer kc = new kafkaStringConsumer(kafkaBrokersList, kafkaDataInputTopic);
 		kafkaStringConsumer requests = new kafkaStringConsumer(kafkaBrokersList, kafkaRequestInputTopic);
 		kafkaProducerEstimation kp = new kafkaProducerEstimation(kafkaBrokersList, kafkaOutputTopic);
+		kafkaProducerEstimation pRequest = new kafkaProducerEstimation(kafkaBrokersList, kafkaRequestInputTopic);
 		//kafkaProducerEstimation test = new kafkaProducerEstimation(kafkaBrokersList, "testPairs");
-		
+
 		DataStream<String> datastream = env.addSource(kc.getFc());
 		DataStream<String> RQ_stream = env.addSource(requests.getFc());
 
@@ -136,6 +135,30 @@ public class Run {
 		DataStream<Estimation> multy = split.select("multy").keyBy((KeySelector<Estimation, String>) Estimation::getKey);
 		single.addSink(kp.getProducer());
 		DataStream<Estimation> finalStream = multy.flatMap(new ReduceFlatMap()).keyBy((KeySelector<Estimation, String>) Estimation::getKey);
+
+		SplitStream<Estimation> split_2 = finalStream.split(new OutputSelector<Estimation>() {
+			private static final long serialVersionUID = 1L;
+			@Override
+			public Iterable<String> select(Estimation value) {
+				// TODO Auto-generated method stub
+				List<String> output = new ArrayList<>();
+				if (value.getRequestID() == 7) {
+					output.add("UR");
+				}
+				else {
+					output.add("E");
+				}
+				return output;
+			}
+		});
+
+		DataStream<Estimation> UR = split_2.select("UR");
+		DataStream<Estimation> E = split_2.select("E");
+		E.addSink(kp.getProducer());
+		UR.addSink(pRequest.getProducer());
+
+
+
 		finalStream.addSink(kp.getProducer());
 
 		 env.execute("Streaming SDE");

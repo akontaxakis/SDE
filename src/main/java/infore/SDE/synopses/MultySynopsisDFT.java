@@ -1,16 +1,15 @@
 package infore.SDE.synopses;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
 import infore.SDE.sketches.TimeSeries.COEF;
-import org.apache.commons.math3.complex.Complex;
+
 
 
 public class MultySynopsisDFT extends Synopsis{
@@ -18,7 +17,7 @@ public class MultySynopsisDFT extends Synopsis{
 	String[] parameters;
 	
 	public MultySynopsisDFT(int uid, String[] param) {
-		super(uid, param[0], param[1]);
+		super(uid, param[0], param[1],param[2]);
 		Synopses = new HashMap<String, DFT>();
 		parameters = param;
 		// TODO Auto-generated constructor stub

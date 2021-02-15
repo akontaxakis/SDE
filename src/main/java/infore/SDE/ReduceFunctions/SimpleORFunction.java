@@ -4,8 +4,8 @@ public class SimpleORFunction extends ReduceFunction {
 
 
 
-	public SimpleORFunction(int nOfP, int count, String[] parameters, int syn) {
-		super(nOfP, count, parameters, syn);
+	public SimpleORFunction(int nOfP, int count, String[] parameters, int syn, int rq) {
+		super(nOfP, count, parameters, syn, rq);
 		// TODO Auto-generated constructor stub
 	}
 

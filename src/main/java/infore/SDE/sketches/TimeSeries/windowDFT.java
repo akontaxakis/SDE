@@ -37,7 +37,7 @@ public class windowDFT {
 
   public windowDFT( int bw, int sw, int coe, int ictu, String k) {
   	key =k;
-	indexCOEtoUSE = ictu;      
+	indexCOEtoUSE = ictu;
 	basicWindowSize = bw;
     slidingWindowSize =sw;
     NofWindows = sw/bw;
@@ -85,14 +85,11 @@ public class windowDFT {
     	double RemovedSum, RemovedsSum;
     	
     	if(currentWindow >= NofWindows + 1) {
-    		
-    		
+
     		RemovedSum	= Sums.removeFirst();
     		RemovedsSum = SquareSums.removeFirst();
         	Complex[] temp = DFTs.removeFirst();
-        	
-    		
-    		
+
     		sumOfValues = sumOfValues - RemovedSum;
     		sumOfSquares =  sumOfSquares - RemovedsSum;
     		
@@ -103,23 +100,22 @@ public class windowDFT {
     		for (int m = 1; m < coefficientsToUse; m++) {
     			RunningDFT[m] = RunningDFT[m].subtract(temp[m]);
            		 normalizedFourierCoefficients[m] = RunningDFT[m].divide(sigma).divide(slidingWindowSize);
-           	
         		// normalizedFourierCoefficients[m] = normalizedFourierCoefficients[m].subtract(temp[m].divide(sigma).divide(basicWindowSize));
         		// fourierCoefficients[m] = fourierCoefficients[m].divide(sigma).divide(basicWindowSize);
         		 
         	 }	
     	}
-    	//System.out.println("\""+normalizedFourierCoefficients[1].toString()+ ","+normalizedFourierCoefficients[2].toString() +"\"");
+		RunningSumOfValues = 0;
+		RunningSumOfSquares = 0;
+		currentPoint = 0;
 
-    		RunningSumOfValues = 0;
-	        RunningSumOfSquares = 0;
-	        currentPoint = 0;
-        
-        for (int k = 0; k < coefficientsToUse; k++) {
-        	fourierCoefficients[k] = new Complex(0.0, 0.0);
-        }
-   
-    }
+		for (int k = 0; k < coefficientsToUse; k++) {
+			fourierCoefficients[k] = new Complex(0.0, 0.0);
+		}
+
+	}    	//System.out.println("\""+normalizedFourierCoefficients[1].toString()+ ","+normalizedFourierCoefficients[2].toString() +"\"");
+
+
   }
 
   private void computeNewDFTDigest(double newValue) {
@@ -132,90 +128,91 @@ public class windowDFT {
     }
   }
   
-  public int keyHash(double threshold) {
-	  
-	  double epsilon = Math.sqrt(1 - threshold);
-	  int hashOffset = (int) Math.ceil(Math.sqrt(2) / (2*(epsilon)));
-	    String stringKey = "";
-	    int tmpIndex;
-	    int key =0;
-	    for (int i = 1; i < indexCOEtoUSE + 1; i++) {
-	      tmpIndex = (int) Math.floor(normalizedFourierCoefficients[i].getReal()/(epsilon))
-	                + hashOffset;
-	      stringKey += tmpIndex;
-	      stringKey += ",";
-	      key+= tmpIndex;
-	      tmpIndex =
-	          (int) Math.floor(normalizedFourierCoefficients[i].getImaginary()/(epsilon))
-	          + hashOffset;
-	      stringKey += tmpIndex;
-	      key+= tmpIndex*(hashOffset*2);
-	      if (i < indexCOEtoUSE - 1) {
-	        stringKey += ",";
-	      }
-	      //System.out.println(key + " -> " + epsilon + "," + hashOffset + " " + normalizedFourierCoefficients[i].getImaginary());
-	    }
-	    
-	    return key;
-	}
 
-	public double getM() {
-		  double temp = 0.0;
-		  for (int i = 1; i < indexCOEtoUSE + 1; i++) 
-		  temp = temp + getMagnitude(normalizedFourierCoefficients[i]);
-		  return temp;
-	}  
-  
+				public int keyHash(double threshold) {
 
-  
-	private double getMagnitude(Complex coefficient) {
-		    return Math.sqrt(Math.pow(coefficient.getReal(), 2) + Math.pow(coefficient.getImaginary(), 2));
-	}	  		
-	public Complex[] getNormalizedFourierCoefficients() {
-		return normalizedFourierCoefficients;
-	}
-	
-	
-	
-	
-	
-	  public String keyStringHash(double threshold) {
-		  
-		  double epsilon = Math.sqrt(1 - threshold);
-		  int hashOffset = (int) Math.floor(Math.sqrt(2) / (epsilon*2));
-		    String stringKey = "";
-		    int tmpIndex;
-		    int key =0;
-		    for (int i = 1; i < indexCOEtoUSE + 1; i++) {
-		      tmpIndex = (int) Math.floor(normalizedFourierCoefficients[i].getReal()/(epsilon*2))+ hashOffset;
-		                // + hashOffset;
-		      stringKey += tmpIndex;
-		      stringKey += ",";
-		      key+= tmpIndex;
-		      tmpIndex = (int) Math.floor(normalizedFourierCoefficients[i].getImaginary()/(epsilon*2))+ hashOffset;
-		          //+ hashOffset;
-		      stringKey += tmpIndex;
-		      key+= tmpIndex*(hashOffset*2);
-		      if (i < indexCOEtoUSE - 1) {
-		        stringKey += ",";
-		      }
-		      //System.out.println(key + " -> " + epsilon + "," + hashOffset + " " + normalizedFourierCoefficients[i].getImaginary());
-		    }
-		    
-		    return stringKey;
-		}
+					double epsilon = Math.sqrt(1 - threshold);
+					int hashOffset = (int) Math.ceil(Math.sqrt(2) / (2*(epsilon)));
+					String stringKey = "";
+					int tmpIndex;
+					int key =0;
+					for (int i = 1; i < indexCOEtoUSE + 1; i++) {
+						tmpIndex = (int) Math.floor(normalizedFourierCoefficients[i].getReal()/(epsilon))
+								+ hashOffset;
+						stringKey += tmpIndex;
+						stringKey += ",";
+						key+= tmpIndex;
+						tmpIndex =
+								(int) Math.floor(normalizedFourierCoefficients[i].getImaginary()/(epsilon))
+										+ hashOffset;
+						stringKey += tmpIndex;
+						key+= tmpIndex*(hashOffset*2);
+						if (i < indexCOEtoUSE - 1) {
+							stringKey += ",";
+						}
+						//System.out.println(key + " -> " + epsilon + "," + hashOffset + " " + normalizedFourierCoefficients[i].getImaginary());
+					}
 
-	  
-		public String COEFtoString() {
-			int COEFFICIENTS_TO_USE = 8;
-			Complex[] fourierCoefficients = normalizedFourierCoefficients;
-			String answer = " ";
-			for (int m = 0; m < COEFFICIENTS_TO_USE ; m++) {
-	            answer = answer + fourierCoefficients[m].getReal() + "  ";
-	        
-	            answer = answer + fourierCoefficients[m].getImaginary() + "  "; 
-	     
-	        }
+					return key;
+				}
+
+				public double getM() {
+					double temp = 0.0;
+					for (int i = 1; i < indexCOEtoUSE + 1; i++)
+						temp = temp + getMagnitude(normalizedFourierCoefficients[i]);
+					return temp;
+				}
+
+
+
+				private double getMagnitude(Complex coefficient) {
+					return Math.sqrt(Math.pow(coefficient.getReal(), 2) + Math.pow(coefficient.getImaginary(), 2));
+				}
+				public Complex[] getNormalizedFourierCoefficients() {
+					return normalizedFourierCoefficients;
+				}
+
+
+
+
+
+				public String keyStringHash(double threshold) {
+
+					double epsilon = Math.sqrt(1 - threshold);
+					int hashOffset = (int) Math.floor(Math.sqrt(2) / (epsilon*2));
+					String stringKey = "";
+					int tmpIndex;
+					int key =0;
+					for (int i = 1; i < indexCOEtoUSE + 1; i++) {
+						tmpIndex = (int) Math.floor(normalizedFourierCoefficients[i].getReal()/(epsilon*2))+ hashOffset;
+						// + hashOffset;
+						stringKey += tmpIndex;
+						stringKey += ",";
+						key+= tmpIndex;
+						tmpIndex = (int) Math.floor(normalizedFourierCoefficients[i].getImaginary()/(epsilon*2))+ hashOffset;
+						//+ hashOffset;
+						stringKey += tmpIndex;
+						key+= tmpIndex*(hashOffset*2);
+						if (i < indexCOEtoUSE - 1) {
+							stringKey += ",";
+						}
+						//System.out.println(key + " -> " + epsilon + "," + hashOffset + " " + normalizedFourierCoefficients[i].getImaginary());
+					}
+
+					return stringKey;
+				}
+
+
+				public String COEFtoString() {
+					int COEFFICIENTS_TO_USE = 8;
+					Complex[] fourierCoefficients = normalizedFourierCoefficients;
+					String answer = " ";
+					for (int m = 0; m < COEFFICIENTS_TO_USE ; m++) {
+						answer = answer + fourierCoefficients[m].getReal() + "  ";
+
+						answer = answer + fourierCoefficients[m].getImaginary() + "  ";
+
+					}
 	return answer;
 }
 

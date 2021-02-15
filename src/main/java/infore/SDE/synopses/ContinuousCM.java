@@ -1,20 +1,19 @@
 package infore.SDE.synopses;
 
-import com.clearspring.analytics.stream.frequency.CountMinSketch;
+
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
-import java.io.IOException;
+
 
 public class ContinuousCM extends ContinuousSynopsis{
-    private CountMinSketch cm;
-    private Request tmp_rq;
+    private CM cm;
 
-    public ContinuousCM(int uid, Request rq, String[] parameters) {
-        super(uid,parameters[0],parameters[1]);
-        cm = new CountMinSketch(Double.parseDouble(parameters[2]),Double.parseDouble(parameters[3]),Integer.parseInt(parameters[4]));
-        tmp_rq = rq;
+
+    public ContinuousCM(int uid, Request t_rq, String[] parameters) {
+        super(uid,parameters[0],parameters[1], parameters[2]);
+        cm = new CM(Double.parseDouble(parameters[3]),Double.parseDouble(parameters[3]),Integer.parseInt(parameters[4]));
+        this.setRq(t_rq);
     }
 
     @Override
@@ -54,6 +53,7 @@ public class ContinuousCM extends ContinuousSynopsis{
     public Synopsis merge(Synopsis sk) {
         return sk;
     }
+
     @Override
     public Estimation estimate(Request rq) {
         //System.out.println(Math.abs(rq.getParam()[0].hashCode())+"_"+(double) cm.estimateCount(Math.abs(rq.getParam()[0].hashCode())));
@@ -77,7 +77,7 @@ public class ContinuousCM extends ContinuousSynopsis{
         String key = node.get(this.keyIndex).asText();
         String e = Double.toString((double)cm.estimateCount(key));
         if(e != null) {
-            Estimation es = new Estimation(tmp_rq, e, Integer.toString(tmp_rq.getUID()));
+            Estimation es = new Estimation(rq, e, Integer.toString(rq.getUID()));
             es.setEstimationkey(key);
             return es;
         }else{

@@ -1,20 +1,17 @@
 package infore.SDE.synopses;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.streaminer.stream.frequency.AMSSketch;
 
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
 
-import java.io.IOException;
-
 public class AMSsynopsis extends Synopsis{
-	AMSSketch ams;
+	private AMSSketch ams;
 	
 	
 	public AMSsynopsis(int uid,String[] parameters) {
-		super(uid,parameters[0],parameters[1]);
-		ams = new AMSSketch(Integer.parseInt(parameters[2]), Integer.parseInt(parameters[3]));
+		super(uid,parameters[0],parameters[1],parameters[2]);
+		ams = new AMSSketch(Integer.parseInt(parameters[3]), Integer.parseInt(parameters[4]));
 	}
 	@Override
 	public void add(Object k) {
@@ -33,8 +30,6 @@ public class AMSsynopsis extends Synopsis{
 	}
 
 
-
-
 	@Override
 	public String estimate(Object k) {
 		// TODO Auto-generated method stub
@@ -46,6 +41,8 @@ public class AMSsynopsis extends Synopsis{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
 	@Override
 	public Estimation estimate(Request rq) {
 	try {

@@ -1,10 +1,7 @@
 package infore.SDE.messages;
 
-
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -17,14 +14,14 @@ public class Request implements Serializable{
 	private int UID; // unique identifier for each Request
 	private String StreamID; //the stream ID
 	private String[] Param; // the parameters of the Request
-	private int NoOfP; // Number of parallelism 
+	private int NoOfP; // Number of parallelism
 
-
-	public Request(){
+		public Request(){
 
 	}
 
 	public Request(String key, int requestID, int synopsisID, int uID, String streamID, String[] param, int noOfP) {
+
 		this.DataSetkey = key;
 		RequestID = requestID;
 		SynopsisID = synopsisID;
@@ -32,6 +29,7 @@ public class Request implements Serializable{
 		StreamID = streamID;
 		Param = param;
 		NoOfP = noOfP;
+
 	}
 
 	public Request(String replace, String[] valueTokens) {
@@ -45,6 +43,7 @@ public class Request implements Serializable{
 	}
 
 	public Request(String[] valueTokens) {
+
 		this.DataSetkey = valueTokens[0];
 		RequestID = Integer.parseInt(valueTokens[1]);
 		SynopsisID = Integer.parseInt(valueTokens[3]);
@@ -52,6 +51,18 @@ public class Request implements Serializable{
 		StreamID = valueTokens[4];
 		Param = valueTokens[5].split(";");
 		NoOfP = Integer.parseInt(valueTokens[6]);
+
+	}
+
+	public Request(Estimation element) {
+		this.DataSetkey = element.getEstimationkey();
+		RequestID = element.getRequestID();
+		SynopsisID = element.getSynopsisID();
+		UID = element.getUID();
+		StreamID = element.getStreamID();
+		Param = element.getParam();
+		NoOfP = element.getNoOfP();
+
 	}
 
 	public String getDataSetkey() {
@@ -139,9 +150,13 @@ public class Request implements Serializable{
 			else
 			pr = pr + Param[i]+";";
 		}
-		
-		
+
 		return "\"" +DataSetkey+","+RequestID+","+UID+","+SynopsisID+","+StreamID+","+pr+","+NoOfP+"\"";
 
+	}
+
+	public byte[] toKafkaJson() throws JsonProcessingException {
+
+		return toJsonString().getBytes();
 	}
 }

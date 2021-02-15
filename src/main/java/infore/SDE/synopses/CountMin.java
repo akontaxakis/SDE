@@ -1,6 +1,6 @@
 package infore.SDE.synopses;
 
-import com.clearspring.analytics.stream.frequency.CountMinSketch;
+
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,16 +11,15 @@ import java.io.IOException;
 
 public class CountMin extends Synopsis{
 
-	private CountMinSketch cm;
+	private CM cm;
 
 	public CountMin(int uid, String[] parameters) {
-     super(uid,parameters[0],parameters[1]);		
-	 cm = new CountMinSketch(Double.parseDouble(parameters[2]),Double.parseDouble(parameters[3]),Integer.parseInt(parameters[4]));
+     super(uid,parameters[0],parameters[1], parameters[2]);
+	 cm = new CM(Double.parseDouble(parameters[3]),Double.parseDouble(parameters[4]),Integer.parseInt(parameters[5]));
 	}
 	 
 	@Override
 	public void add(Object k) {
-
 		//ObjectMapper mapper = new ObjectMapper();
 		JsonNode node = (JsonNode)k;
         /*try {
@@ -31,6 +30,7 @@ public class CountMin extends Synopsis{
 		String key = node.get(this.keyIndex).asText();
 		String value = node.get(this.valueIndex).asText();
 		cm.add(Math.abs((key).hashCode()), (long)Double.parseDouble(value));
+
 	}
 
 	@SuppressWarnings("deprecation")
@@ -44,10 +44,23 @@ public class CountMin extends Synopsis{
 	public Synopsis merge(Synopsis sk) {
 		return sk;	
 	}
+
 	@Override
 	public Estimation estimate(Request rq) {
-		//System.out.println(Math.abs(rq.getParam()[0].hashCode())+"_"+(double) cm.estimateCount(Math.abs(rq.getParam()[0].hashCode())));
+
+		if(rq.getRequestID() % 10 == 6){
+
+			String[] par = rq.getParam();
+			par[2]= ""+rq.getUID();
+			rq.setUID(Integer.parseInt(par[1]));
+			rq.setParam(par);
+			rq.setNoOfP(rq.getNoOfP()*Integer.parseInt(par[0]));
+			return new Estimation(rq, cm, par[1]);
+
+		}
 		return new Estimation(rq, Double.toString((double)cm.estimateCount(Math.abs(rq.getParam()[0].hashCode()))), Integer.toString(rq.getUID()));
+
+
 	}
 	
 	

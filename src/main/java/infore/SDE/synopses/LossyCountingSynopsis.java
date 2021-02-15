@@ -14,8 +14,8 @@ public class LossyCountingSynopsis extends Synopsis {
 	LossyCounting<String> sk;
 	
 	public LossyCountingSynopsis(int uid, String[] parameters) {
-	     super(uid, parameters[0],parameters[1]);		
-		 sk = new LossyCounting<String>(Double.parseDouble(parameters[2]));
+	     super(uid, parameters[0],parameters[1],parameters[2]);
+		 sk = new LossyCounting<String>(Double.parseDouble(parameters[3]));
 		}
 		 
 		@SuppressWarnings("unchecked")

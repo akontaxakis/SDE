@@ -14,8 +14,8 @@ public class ChainSamplerSynopsis extends Synopsis {
 	ChainSampler cs;
 
 	public ChainSamplerSynopsis(int uid, String[] parameters) {
-	     super(uid,parameters[0],parameters[1]);		
-	     cs = new ChainSampler(Integer.parseInt(parameters[2]),Integer.parseInt(parameters[3]));
+	     super(uid,parameters[0],parameters[1],parameters[2]);
+	     cs = new ChainSampler(Integer.parseInt(parameters[3]),Integer.parseInt(parameters[4]));
 		}
 		 
 		@Override
@@ -51,8 +51,6 @@ public class ChainSamplerSynopsis extends Synopsis {
 			return sk;
 			
 		}
-		
-		
-		
-		
-	}
+
+
+}

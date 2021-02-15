@@ -20,11 +20,11 @@ public class FinJoinCoresets extends Synopsis{
 	private String [] par;
 
 	public FinJoinCoresets(int uid, String[] parameters) {
-		super(uid, parameters[0], parameters[1]);
+		super(uid, parameters[0], parameters[1], parameters[2]);
 		Random random = new Random(1);
-		d = Integer.parseInt(parameters[2]);
+		d = Integer.parseInt(parameters[3]);
 		par = parameters;
-	    bucketManager = new BucketManager(Integer.parseInt(parameters[3]),Integer.parseInt(parameters[2]),random );
+	    bucketManager = new BucketManager(Integer.parseInt(parameters[4]),Integer.parseInt(parameters[5]),random );
 	    Counters = new HashMap<String, ArrayList<Double>>();
 	}
 
@@ -55,12 +55,7 @@ public class FinJoinCoresets extends Synopsis{
 				double [] coordinates = new double[d];	
 				//if(c.size()<d) {
 					for(int i = 0;i<d;i++) {
-						if(i<c.size()) {
 							coordinates[i]=c.get(i);
-						}else {
-							coordinates[i]=0.0;
-						}
-
 					}
 
 				Point pvalue = new Point(coordinates);
@@ -79,7 +74,7 @@ public class FinJoinCoresets extends Synopsis{
 	public Object estimate(Object k) {
 		// TODO Auto-generated method stub
 		Point [] partialCoreset = bucketManager.getCoresetFromManager();
-		return (Object)partialCoreset;
+		return partialCoreset;
 	}
 	@Override
 	public Estimation estimate(Request rq) {

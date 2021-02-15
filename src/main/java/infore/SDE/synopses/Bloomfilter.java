@@ -13,8 +13,8 @@ public class Bloomfilter extends Synopsis{
  private BloomFilter bm;
  
  public Bloomfilter(int uid, String[] parameters) {
-	 super(uid,parameters[0],parameters[1]);
-	 bm = new BloomFilter( Integer.parseInt(parameters[2]), Double.parseDouble(parameters[3]));
+	 super(uid,parameters[0],parameters[1],parameters[2]);
+	 bm = new BloomFilter( Integer.parseInt(parameters[3]), Double.parseDouble(parameters[4]));
 	 
  }
 	@Override
@@ -52,5 +52,6 @@ public class Bloomfilter extends Synopsis{
 		// TODO Auto-generated method stub
 		return sk;
 	}
- 
+
+
 }

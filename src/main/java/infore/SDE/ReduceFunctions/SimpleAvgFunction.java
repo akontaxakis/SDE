@@ -3,8 +3,8 @@ package infore.SDE.ReduceFunctions;
 
 public class SimpleAvgFunction extends ReduceFunction {
 
-	public SimpleAvgFunction(int nOfP, int count, String[] parameters, int syn) {
-		super(nOfP, count, parameters, syn);
+	public SimpleAvgFunction(int nOfP, int count, String[] parameters, int syn, int rq) {
+		super(nOfP, count, parameters, syn, rq);
 		
 	}
 

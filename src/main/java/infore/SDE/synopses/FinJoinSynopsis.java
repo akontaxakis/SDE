@@ -21,10 +21,10 @@ public class FinJoinSynopsis extends Synopsis{
 	private String[] parameters;
 	
 	public FinJoinSynopsis(int uid, String[] param) {
-		super(uid, param[0], param[1]);
-		dataLevelIndex = Integer.parseInt(param[5]);
-		Synopses = new HashMap<String, Synopsis>();
-		Counters = new HashMap<String, Integer>();
+		super(uid, param[0], param[1],param[2]);
+		dataLevelIndex = Integer.parseInt(param[6]);
+		Synopses = new HashMap<>();
+		Counters = new HashMap<>();
 		parameters = param;
 		// TODO Auto-generated constructor stub
 	}

@@ -1,16 +1,13 @@
 package infore.SDE.synopses;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.text.DateFormat;
 
+import java.text.SimpleDateFormat;
+import java.util.*;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import infore.SDE.sketches.TimeSeries.COEF;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.flink.api.java.tuple.Tuple2;
-
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
 import infore.SDE.sketches.TimeSeries.windowDFT;
@@ -23,27 +20,24 @@ public class DFT extends Synopsis {
 
 	public DFT(int uid, String[] parameters, String key) {
 		//keyIndex,valueIndex
-		super(uid, parameters[0], parameters[1]);
+		super(uid, parameters[0], parameters[1], parameters[2]);
 		// timestampIndex
-		timestampIndex = parameters[2];
-		intervalSec = Integer.parseInt(parameters[3]);
-		ts = new windowDFT(Integer.parseInt(parameters[4])/intervalSec, Integer.parseInt(parameters[5])/intervalSec,
-				Integer.parseInt(parameters[6]), 1,key);
+		timestampIndex = parameters[3];
+		intervalSec = Integer.parseInt(parameters[4]);
+		ts = new windowDFT(Integer.parseInt(parameters[5])/intervalSec, Integer.parseInt(parameters[6])/intervalSec,Integer.parseInt(parameters[7]), 1,key);
 	}
 
 	@Override
 	public void add(Object k) {
 
-		//ObjectMapper mapper = new ObjectMapper();
 		JsonNode node = (JsonNode)k;
-        /*try {
-            node = mapper.readTree(j);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } */
+
+		DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.ENGLISH);
+
 		String key = node.get(this.keyIndex).asText();
 		String value = node.get(this.valueIndex).asText();
 		ts.pushToValues(Double.parseDouble(value));
+
 	}
 
 	@Override

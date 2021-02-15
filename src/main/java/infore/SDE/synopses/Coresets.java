@@ -1,12 +1,10 @@
 package infore.SDE.synopses;
 
-import java.io.IOException;
 import java.util.Random;
 
 import Coresets.BucketManager;
 import Coresets.Point;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
 
@@ -16,23 +14,18 @@ public class Coresets extends Synopsis{
 	private BucketManager bucketManager;
 	
 	public Coresets(int uid, String[] parameters) {
-		super(uid, parameters[0], parameters[1]);
+		super(uid, parameters[0], parameters[1], parameters[2]);
+
 		Random random = new Random();
-		d = Integer.parseInt(parameters[2]);
-	    bucketManager = new BucketManager(Integer.parseInt(parameters[2]),Integer.parseInt(parameters[3]),random );
+		d = Integer.parseInt(parameters[3]);
+	    bucketManager = new BucketManager(Integer.parseInt(parameters[4]),Integer.parseInt(parameters[5]),random);
+
 	}
 
 	@Override
 	public void add(Object k) {
 		// TODO Auto-generated method stub
-
-		//ObjectMapper mapper = new ObjectMapper();
 		JsonNode node = (JsonNode)k;
-        /*try {
-            node = mapper.readTree(j);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } */
 		String value = node.get(this.valueIndex).asText();
 		double [] coordinates = new double[d];
 		

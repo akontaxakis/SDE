@@ -25,10 +25,10 @@ public class MaritimeSketch {
 	}
 
 	public MaritimeSketch(int synopsisID, String[] parameters) {
-		msp = Integer.parseInt(parameters[2]);
-		md = Double.parseDouble(parameters[3]);
-		min_knots_diff = Double.parseDouble(parameters[4]);
-		min_course_diff = Double.parseDouble(parameters[5]);
+		msp = Integer.parseInt(parameters[3]);
+		md = Double.parseDouble(parameters[4]);
+		min_knots_diff = Double.parseDouble(parameters[5]);
+		min_course_diff = Double.parseDouble(parameters[6]);
 	}
 
 	public String addEstimate(Object n) {

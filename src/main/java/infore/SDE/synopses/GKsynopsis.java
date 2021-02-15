@@ -19,9 +19,9 @@ public class GKsynopsis extends Synopsis {
      * @param uid The maximum error bound for quantile estimation.
      */
 	public GKsynopsis(int uid,String[] parameters) {
-	     super(uid,parameters[0],parameters[1]);		
-	     gk = new GKQuantiles(Double.parseDouble(parameters[2]));
-		 gk.setEpsilon(Double.parseDouble(parameters[2]));
+	     super(uid,parameters[0],parameters[1],parameters[2]);
+	     gk = new GKQuantiles(Double.parseDouble(parameters[3]));
+		 gk.setEpsilon(Double.parseDouble(parameters[4]));
 		}
 		 
 		@Override

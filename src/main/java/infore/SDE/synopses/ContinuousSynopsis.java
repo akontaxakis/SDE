@@ -11,6 +11,10 @@ public abstract class ContinuousSynopsis extends Synopsis{
         super(ID, k, v);
     }
 
+    public ContinuousSynopsis(int uid, String parameter, String parameter1, String parameter2) {
+        super(uid, parameter, parameter1, parameter2);
+    }
+
     public abstract Estimation addEstimate(Object k);
 
     public Request getRq() {
