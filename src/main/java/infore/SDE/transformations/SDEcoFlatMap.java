@@ -245,7 +245,7 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 							} else if ((rq.getRequestID() % 10 == 3) ||(rq.getRequestID() % 10 == 6)){
 
 								Estimation e = syn.estimate(rq);
-		w						if(e.getEstimation() == null) {
+								if(e.getEstimation() == null) {
 
 								}else{
 									collector.collect(e);
