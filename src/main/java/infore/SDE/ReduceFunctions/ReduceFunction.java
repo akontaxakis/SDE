@@ -11,24 +11,26 @@ import infore.SDE.synopses.CM;
 
 abstract public  class ReduceFunction {
       
-	private ArrayList<Object> estimations;
+	protected ArrayList<Object> estimations;
 	private HashMap<String,Object> indexEstimations;
-	private int nOfP;
+	protected int nOfP;
 	protected int count;
 	protected String[] parameters;
-	private int SynopsisID;
+	protected int SynopsisID;
 	private int requestID;
+
+	public ReduceFunction() {
+
+	}
+
 	abstract public Object reduce();
 	
 
-	private ReduceFunction(int nOfP, int count, String[] parameters, int synID, int rqid) {
+	public ReduceFunction(int nOfP, int count, String[] parameters, int synID, int rqid) {
 		this.requestID = rqid;
 		this.SynopsisID = synID;
 		if(SynopsisID == 1 && requestID == 6){
 			this.indexEstimations = new HashMap<>();
-		}
-		else{
-			this.estimations = new ArrayList<>();
 		}
 
 		this.nOfP = nOfP;
@@ -51,18 +53,18 @@ abstract public  class ReduceFunction {
 			estimations.add(Boolean.parseBoolean((String)e.getEstimation()));
 		} */
 		 if(id == 4) {
-			
 			ArrayList<COEF> k;
 			 k = (ArrayList<COEF>) e.getEstimation();
-			 for(COEF c: k) {
-			estimations.add(c);
+			for(COEF c: k) {
+				estimations.add(c);
 			}
 		}
 		else if(id == 14) {
 			 HashMap<String, ArrayList<Integer>> k2 = (HashMap<String, ArrayList<Integer>>) e.getEstimation();
-
 			 for (Map.Entry<String, ArrayList<Integer>> pair : k2.entrySet()) {
+
 				 estimations.add(pair.getValue());
+
 			 }
 		 }
 		else if(SynopsisID == 1 && requestID == 6){
@@ -89,7 +91,7 @@ abstract public  class ReduceFunction {
 	
 	
 	
-	private ArrayList<Object> getEstimations() {
+	public ArrayList<Object> getEstimations() {
 		return estimations;
 	}
 
@@ -121,7 +123,7 @@ abstract public  class ReduceFunction {
 		this.parameters = parameters;
 	}
 
-	private int getSynopsisID() {
+	public int getSynopsisID() {
 		return SynopsisID;
 	}
 

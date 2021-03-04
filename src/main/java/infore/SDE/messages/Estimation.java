@@ -32,6 +32,7 @@ public class Estimation implements Serializable {
 	}
 	
 	public Estimation(Request rq, Object estimate,  String estimationkey) {
+
 		// TODO Auto-generated constructor stub
 		this.key = estimationkey;
 		this.estimationkey = estimationkey;
@@ -42,9 +43,11 @@ public class Estimation implements Serializable {
 		this.Param = rq.getParam();
 		this.NoOfP = rq.getNoOfP();
 		this.UID = rq.getUID();	
+
 	}
 
 	public Estimation(String[] valueTokens) {
+
 		this.key = valueTokens[0];
 		this.estimationkey = valueTokens[1];
 		this.StreamID = valueTokens[2];
@@ -138,18 +141,13 @@ public class Estimation implements Serializable {
 		return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(this);
 	}
 
-
-
 	public byte[] toKafka() {
 		
         String par = Arrays.toString(Param).replace(",", ";");
- 
         par = par.substring(1, par.length()-1).replaceAll("\\s+","");
 		return ("\""+estimationkey+","+StreamID+","+UID+","+RequestID+","+SynopsisID+","+estimation+","+par+","+NoOfP+"\"").getBytes();
 		//return ("\"KEY:_"+estimationkey+" SYNOPSIS:_"+SynopsisID+" ESTIMATION:_"+estimation+"_\"").getBytes();
 	}
-
-
 
 	public byte[] toKafkaJson() throws JsonProcessingException {
 

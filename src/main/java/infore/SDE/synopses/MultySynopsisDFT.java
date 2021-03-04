@@ -35,7 +35,7 @@ public class MultySynopsisDFT extends Synopsis{
 		String key = node.get(this.keyIndex).asText();
 		DFT dft = Synopses.get(key);
 		if(dft == null)
-			dft = new DFT(this.SynopsisID,parameters,key);
+			dft = new DFT(this.getSynopsisID(),parameters,key);
 
 		dft.add(k);
 		Synopses.put(key, dft);

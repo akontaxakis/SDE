@@ -5,7 +5,7 @@ import infore.SDE.messages.Request;
 
 public abstract class ContinuousSynopsis extends Synopsis{
 
-    Request rq;
+    protected Request rq;
 
     public ContinuousSynopsis(int ID, String k, String v) {
         super(ID, k, v);

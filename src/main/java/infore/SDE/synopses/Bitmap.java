@@ -7,7 +7,7 @@ public class Bitmap {
     private BitSet bits;
     private double h_weight;
 
-    private Bitmap(String streamKey, BitSet bits, double Hweight) {
+    public Bitmap(String streamKey, BitSet bits, double Hweight) {
         StreamKey = streamKey;
         this.bits = bits;
         h_weight=Hweight;

@@ -136,7 +136,7 @@ public class DFT extends Synopsis {
 
 	}
 
-	public HashSet<String> findAllKeys(int idx, int[] array, HashSet<String> keyList, int hashOffset) {
+	private HashSet<String> findAllKeys(int idx, int[] array, HashSet<String> keyList, int hashOffset) {
 		String key;
 		array[idx] -= 1;
 		if (array[idx] >= 0) {

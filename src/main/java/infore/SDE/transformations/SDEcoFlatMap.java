@@ -5,6 +5,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import infore.SDE.synopses.*;
 import org.apache.flink.configuration.Configuration;
@@ -46,6 +48,8 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 
 	@Override
 	public void flatMap2(Request rq, Collector<Estimation> collector) throws Exception {
+
+		System.out.println(rq.toString());
 		ArrayList<Synopsis>  Synopses =  M_Synopses.get(rq.getKey());
 		ArrayList<ContinuousSynopsis>  C_Synopses =  MC_Synopses.get(rq.getKey());
 
@@ -62,48 +66,48 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 					sketch = new CountMin(rq.getUID(), rq.getParam());
 				//{ "1", "2", "0.0002", "0.99", "4" };
 				Synopses.add(sketch);
-				break;
+			break;
 			// BloomFliter
 			case 2:
 				if (rq.getParam().length > 3)
 					sketch = new Bloomfilter(rq.getUID(), rq.getParam());
 				//	String[] _tmp = { "1", "1", "100000", "0.0002" };
 				Synopses.add(sketch);
-				break;
+			break;
 			// AMS sketch
 			case 3:
 				if (rq.getParam().length > 3)
 					sketch = new AMSsynopsis(rq.getUID(), rq.getParam());
 				//	String[] _tmp = { "1", "2", "1000", "10" };
 				Synopses.add(sketch);
-				break;
+			break;
 			// DFT
 			case 4:
 				if (rq.getParam().length > 3)
 					sketch = new MultySynopsisDFT(rq.getUID(), rq.getParam());
 				//String[] _tmp = {"1", "2", "5", "30", "8"};
 				Synopses.add(sketch);
-				break;
+			break;
 			//LSH - unfinished
 			case 5:
 				sketch = new Bloomfilter(rq.getUID(), rq.getParam());
 				Synopses.add(sketch);
 
-				break;
+			break;
 			// Coresets
 			case 6:
 				if (rq.getParam().length > 10)
 					sketch = new FinJoinCoresets(rq.getUID(), rq.getParam());
 				//	String[] _tmp = { "1","2", "5", "10" };
 				Synopses.add(sketch);
-				break;
+			break;
 			// HyperLogLog
 			case 7:
 				if (rq.getParam().length > 2)
 					sketch = new HyperLogLogSynopsis(rq.getUID(), rq.getParam());
 				//String[] _tmp = { "1", "1", "0.001" };
 				Synopses.add(sketch);
-				break;
+			break;
 			// StickySampling
 			case 8:
 
@@ -111,7 +115,7 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 					sketch = new StickySamplingSynopsis(rq.getUID(), rq.getParam());
 				//String[] _tmp = { "1", "2", "0.01", "0.01", "0.0001"};
 				Synopses.add(sketch);
-				break;
+			break;
 			// LossyCounting
 			case 9:
 
@@ -120,7 +124,7 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 				//String[] _tmp = { "1", "2", "0.0001" };
 
 				Synopses.add(sketch);
-				break;
+			break;
 			// ChainSampler
 			case 10:
 
@@ -128,7 +132,7 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 					sketch = new ChainSamplerSynopsis(rq.getUID(), rq.getParam());
 				//String[] _tmp = { "2", "2", "1000", "100000" };
 				Synopses.add(sketch);
-				break;
+			break;
 			// GKQuantiles
 			case 11:
 
@@ -136,21 +140,21 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 					sketch = new GKsynopsis(rq.getUID(), rq.getParam());
 				//String[] _tmp = { "2", "2", "0.01"};
 				Synopses.add(sketch);
-				break;
+			break;
 			// TopK
 			case 13:
 				if (rq.getParam().length > 3)
 					sketch = new SynopsisTopK(rq.getUID(), rq.getParam());
 				//String[] _tmp = { "2", "2", "0.01"};
 				Synopses.add(sketch);
-				break;
+			break;
 			// windowQuantiles
 			case 16:
 				if (rq.getParam().length > 3)
 					sketch = new windowQuantiles(rq.getUID(), rq.getParam());
 				//String[] _tmp = { "2", "2", "0.01"};
 				Synopses.add(sketch);
-				break;
+			break;
 			// 6-> dynamic load sketch
 			case 25:
 
@@ -175,7 +179,7 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 					Synopses.add((Synopsis) instance);
 
 				}
-				break;
+			break;
 			// FINJOIN
 			case 26:
 
@@ -184,7 +188,7 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 				//String[] _tmp = { "0", "0", "10", "100", "8", "3" };
 				Synopses.add(sketch);
 
-				break;
+			break;
 			// COUNT
 			case 27:
 
@@ -195,10 +199,19 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 					sketch = new Counters(rq.getUID(), _tmp);
 				}
 				Synopses.add(sketch);
-				break;
+			break;
+			//window lsh
+			case 28:
+				System.out.println("ADD-> _ " +rq.toString());
+				if (rq.getParam().length > 3)
+					sketch = new WLSHSynopses(rq.getUID(), rq.getParam());
+
+				Synopses.add(sketch);
+			break;
 		}
 			M_Synopses.put(rq.getKey(),Synopses);
-		} //Continuous Synopsis
+		}
+	//Continuous Synopsis
 	else if(rq.getRequestID() == 5) {
 
 			if (C_Synopses == null){
@@ -245,14 +258,31 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 							} else if ((rq.getRequestID() % 10 == 3) ||(rq.getRequestID() % 10 == 6)){
 
 								Estimation e = syn.estimate(rq);
-								if(e.getEstimation() == null) {
+								if(e.getEstimation() != null) {
+									if(rq.getSynopsisID() == 28){
 
-								}else{
-									collector.collect(e);
-									//System.out.println(pId+ "_"  + rq.getKey() + "_" + e.toString());
-								}
+										HashMap<Integer, ArrayList<String>> buckets = (HashMap<Integer, ArrayList<String>>)e.getEstimation();
+
+											for (Map.Entry<Integer, ArrayList<String>> entry : buckets.entrySet()) {
+
+												Integer key = entry.getKey();
+												System.out.println("Keys -> " + key);
+												ArrayList<String> value = entry.getValue();
+
+												e.setKey(e.getUID() + "_" + key);
+												e.setEstimation(value);
+												collector.collect(e);
+
+											}
+
+								}else {
+										collector.collect(e);
+									}
 							}
-				}
+
+						}
+					}
+
 			}
 		}
 	}

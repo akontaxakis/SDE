@@ -19,7 +19,7 @@ public class kafkaStringConsumer {
         properties.setProperty("bootstrap.servers", server);
         properties.setProperty("group.id", "test");
         //.setStartFromEarliest()
-        fc = (FlinkKafkaConsumer<String>) new FlinkKafkaConsumer<>(topic, new SimpleStringSchema(), properties);
+        fc = (FlinkKafkaConsumer<String>) new FlinkKafkaConsumer<>(topic, new SimpleStringSchema(), properties).setStartFromEarliest();
 
     }
 

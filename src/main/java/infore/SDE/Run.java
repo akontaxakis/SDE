@@ -56,7 +56,6 @@ public class Run {
 	 */
 
 	public static void main(String[] args) throws Exception {
-
 		// Initialize Input Parameters
 		initializeParameters(args);
 		StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -73,7 +72,6 @@ public class Run {
 		//map kafka data input to tuple2<int,double>
 		DataStream<Datapoint> dataStream = datastream
 				.map(new MapFunction<String, Datapoint>() {
-
 					@Override
 					public Datapoint map(String node) throws IOException {
 						// TODO Auto-generated method stub
@@ -98,6 +96,7 @@ public class Run {
 
 						// byte[] jsonData = json.toString().getBytes();
 						Request request = objectMapper.readValue(node, Request.class);
+						System.out.println(request.toString());
 						return  request;
 
 					}
@@ -105,16 +104,35 @@ public class Run {
 			
 		DataStream<Request> SynopsisRequests = RQ_Stream
 				.flatMap(new RqRouterFlatMap()).keyBy((KeySelector<Request, String>) Request::getKey);
-
 		DataStream<Datapoint> DataStream = dataStream.connect(RQ_Stream)
 				.flatMap(new dataRouterCoFlatMap()).keyBy((KeySelector<Datapoint, String>) Datapoint::getKey);
-		//dataStream.print();
 		DataStream<Estimation> estimationStream = DataStream.connect(SynopsisRequests)
-				//.keyBy((KeySelector<Tuple2<String, String>, String>) r -> r.f0,(KeySelector<Request, String>) Request::getKey)
 				.flatMap(new SDEcoFlatMap());
-		//.keyBy();
-		//estimationStream.writeAsText("cm", FileSystem.WriteMode.OVERWRITE);
-       
+
+
+		estimationStream.map(new MapFunction<Estimation, Estimation>() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Estimation map(Estimation node) throws IOException {
+				// TODO Auto-generated method stub
+				//String[] valueTokens = node.replace("\"", "").split(",");
+				//if(valueTokens.length > 6) {
+
+				if(node.getSynopsisID() == 28){
+					System.out.println(node.getKey());
+
+					for(String token : (ArrayList<String>)node.getEstimation()){
+						System.out.print("|"+token);
+					}
+					System.out.println("\n Next");
+				}
+
+				return  node;
+
+			}
+		});
+
 		SplitStream<Estimation> split = estimationStream.split(new OutputSelector<Estimation>() {
 			private static final long serialVersionUID = 1L;
 			@Override
@@ -157,11 +175,8 @@ public class Run {
 		E.addSink(kp.getProducer());
 		UR.addSink(pRequest.getProducer());
 
-
-
 		finalStream.addSink(kp.getProducer());
-
-		 env.execute("Streaming SDE");
+		env.execute("Streaming SDE");
 
 }
 
@@ -184,8 +199,8 @@ public class Run {
 			
 			System.out.println("[INFO] Default values");
 			//Default values
-			kafkaDataInputTopic = "Forex3";
-			kafkaRequestInputTopic = "Requests";
+			kafkaDataInputTopic = "SimSource_4";
+			kafkaRequestInputTopic = "Rq_Bio";
 			parallelism = 4;
 			//parallelism2 = 4;
 			//kafkaBrokersList = "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667";

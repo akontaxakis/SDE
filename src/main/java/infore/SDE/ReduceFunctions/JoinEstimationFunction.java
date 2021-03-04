@@ -5,12 +5,17 @@ import infore.SDE.synopses.CM;
 
 public class JoinEstimationFunction extends ReduceFunction {
 
-    public JoinEstimationFunction(int nOfP, int count, String[] parameters, int syn,int rq) {
+    @Override
+    public Object reduce() {
+        return null;
+    }
+
+    public JoinEstimationFunction(int nOfP, int count, String[] parameters, int syn, int rq) {
         super(nOfP, count, parameters, syn,rq);
 
     }
 
-
+/*
     @Override
     public Object reduce() {
         int n = Integer.parseInt(this.parameters[0]);
@@ -52,5 +57,5 @@ public class JoinEstimationFunction extends ReduceFunction {
         }
     return ""+min;
 }
-
+*/
 }

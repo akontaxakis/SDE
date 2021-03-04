@@ -179,7 +179,7 @@ public class windowDFT {
 				public String keyStringHash(double threshold) {
 
 					double epsilon = Math.sqrt(1 - threshold);
-					int hashOffset = (int) Math.floor(Math.sqrt(2) / (epsilon*2));
+					int hashOffset = (int) Math.ceil(Math.sqrt(2) / (epsilon*2));
 					String stringKey = "";
 					int tmpIndex;
 					int key =0;
@@ -201,6 +201,32 @@ public class windowDFT {
 
 					return stringKey;
 				}
+
+	public String keyStringHash2(double threshold) {
+
+		double epsilon = Math.sqrt(1 - threshold);
+		double hashOffset =  Math.ceil(Math.sqrt(2)/2);
+		String stringKey = "";
+		int tmpIndex;
+
+		for (int i = 1; i < indexCOEtoUSE + 1; i++) {
+			tmpIndex = (int) Math.ceil(normalizedFourierCoefficients[i].getReal() + hashOffset/(epsilon));
+			// + hashOffset;
+			stringKey += tmpIndex;
+			stringKey += ",";
+
+			tmpIndex = (int) Math.ceil(normalizedFourierCoefficients[i].getImaginary()+hashOffset/(epsilon));
+			//+ hashOffset;
+			stringKey += tmpIndex;
+
+			if (i < indexCOEtoUSE - 1) {
+				stringKey += ",";
+			}
+		}
+
+		return stringKey;
+	}
+
 
 
 				public String COEFtoString() {

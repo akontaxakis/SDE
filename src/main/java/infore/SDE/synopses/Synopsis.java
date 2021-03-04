@@ -4,11 +4,11 @@ import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
 
 abstract public class Synopsis {
-	
-	private int SynopsisID;
+
+	protected int SynopsisID;
 	protected String keyIndex;
 	protected String valueIndex;
-	private String operationMode;
+	protected String operationMode;
 	
 	public Synopsis(int ID, String k, String v) {
 		SynopsisID=ID;
