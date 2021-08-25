@@ -17,7 +17,7 @@ Based on the Request's KEY - VALUE pair SDE performs different actions.
 ### The List of Available Synopsis.
 
 | SynopsisID | Synopsis| Estimation Parameters| Estimates| Mostly Used|	Parameters|
-| ---------- | ------- | ---------|-----|-----|----------|------------|-----------|
+| ---------- | ------- | ---------------------|----------|------------|-----------|
 |1|	CountMin |	KEY |	Count|	Frequent Itemsets|	KeyField, ValueField,OperationMode, epsilon, cofidence, seed |
 |2|	BloomFilter| KEY |	Member of a Set| 	Membership|	KeyField, ValueField,OperationMode, numberOfElements, FalsePositive|
 |3|	AMS|	KEY|	 L2 norm, innerProduct, Count|	Frequent Itemsets|	KeyField, ValueField,OperationMode, Depth, Buckets|
