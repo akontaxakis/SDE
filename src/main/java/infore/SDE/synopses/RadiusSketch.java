@@ -32,8 +32,8 @@ public class RadiusSketch extends ContinuousSynopsis {
     public RadiusSketch(int uid, String parameter, String parameter1, String parameter2, String id, String[] param) {
         super(uid, parameter, parameter1, parameter2);
         Datasetid = id;
-        number_of_groups = 60;
-        window_size = 256;
+        number_of_groups = Integer.parseInt(param[2]);
+        window_size = Integer.parseInt(param[5]);
         group_size = Integer.parseInt(param[3]);
         sketch_size = Integer.parseInt(param[4]);
         r = new double[window_size][sketch_size];

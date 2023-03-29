@@ -27,8 +27,8 @@ public class Test_Return_FIN_Data {
     public static void main(String[] args) throws Exception {
 
 
-        //SendaddRequest("RAD_REQUEST_4");
-        sendFINData("RAD_DATA_4");
+        SendaddRequest("RAD_REQUEST_5");
+        //sendFINData("RAD_DATA_12_2");
     }
 
     public static void sendFINData(String kafkaDataInputTopic) throws IOException {
@@ -119,7 +119,11 @@ public class Test_Return_FIN_Data {
     public static void SendaddRequest(String topicRequests) throws JsonProcessingException {
 
         //STOCK ID, RETURN, #GROUPS, GROUP_DIMENSIONS, SketchSIZE, windowSize, threshold
-        String[] parameters5 = {"StockID", "price", "60", "2", "60","256","50"};
+        //String[] parameters5 = {"StockID", "price", "60", "2", "60","256","50"};
+
+        //STOCK ID, RETURN, #GROUPS, GROUP_DIMENSIONS, SketchSIZE, windowSize, threshold
+        String[] parameters5 = {"StockID", "price", "5", "2", "10","256","70"};
+
 
         Properties props = new Properties();
         props.put("bootstrap.servers", "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667");

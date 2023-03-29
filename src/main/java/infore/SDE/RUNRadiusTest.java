@@ -49,13 +49,6 @@ public class RUNRadiusTest {
         // Initialize Input Parameters
         initializeParameters(args);
 
-        if(Source.startsWith("auto")) {
-            Thread thread1 = new Thread(() -> {
-                (new sendAISTest()).run(kafkaDataInputTopic,kafkaRequestInputTopic,parallelism);
-            });
-            thread1.start();
-        }
-
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(parallelism);
         kafkaStringConsumer_Earliest kc = new kafkaStringConsumer_Earliest(kafkaBrokersList, kafkaDataInputTopic);
@@ -76,7 +69,7 @@ public class RUNRadiusTest {
                         Datapoint dp = objectMapper.readValue(node, Datapoint.class);
                         return dp;
                     }
-                }).name("DATA_SOURCE").keyBy((KeySelector<Datapoint, String>) Datapoint::getKey);
+                }).name("DATA_SOURCE").keyBy((KeySelector<Datapoint, String>) Datapoint::getKey).iterate();
 
         //
         DataStream<Request> RQ_Stream = RQ_stream
@@ -92,11 +85,11 @@ public class RUNRadiusTest {
                 }).name("REQUEST_SOURCE").keyBy((KeySelector<Request, String>) Request::getKey);
 
         DataStream<Request> SynopsisRequests = RQ_Stream
-                .flatMap(new RqRouterFlatMap()).name("REQUEST_ROUTER");
+                .flatMap(new RqRouterFlatMap()).name("REQUEST_ROUTER").setParallelism(1);
 
 
         DataStream<Datapoint> DataStream = dataStream.connect(RQ_Stream)
-                .flatMap(new dataRouterCoFlatMap()).name("DATA_ROUTER")
+                .flatMap(new dataRouterCoFlatMap()).name("DATA_ROUTER").setParallelism(1)
                 .keyBy((KeySelector<Datapoint, String>) Datapoint::getKey);
 
         //Multiplication IF NEEDED
@@ -151,24 +144,24 @@ public class RUNRadiusTest {
             System.out.println("[INFO] Default values");
             //Default values
             //kafkaDataInputTopic = "FAN";
-            Source ="auto";
+            //Source ="auto";
             //kafkaRequestInputTopic = "Rq_FAN";
 
             //parallelism2 = 4;
             kafkaBrokersList = "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667";
             //kafkaBrokersList = "localhost:9092";
             //kafkaBrokersList = "159.69.32.166:9092";
-            kafkaOutputTopic = "AIS_OUT";
+            kafkaOutputTopic = "RAD_OUT";
 
         }else{
 
             System.out.println("[INFO] Default values");
             //Default values
-            kafkaDataInputTopic = "RAD_DATA";
-            kafkaRequestInputTopic = "RAD_REQUEST_4";
+            kafkaDataInputTopic = "RAD_DATA_12_2";
+            kafkaRequestInputTopic = "RAD_REQUEST_5";
             Source ="non";
             multi = 10;
-            parallelism = 12;
+            parallelism = 4;
             //parallelism2 = 4;
             kafkaBrokersList = "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667";
             //kafkaBrokersList = "localhost:9092";

@@ -47,6 +47,7 @@ public class RadiusReduce extends ReduceFunction {
                 results=results+";"+stream;
             }
         }
+        System.out.println(results);
         return results;
     }
 
