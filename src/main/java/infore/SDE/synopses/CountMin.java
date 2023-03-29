@@ -3,11 +3,9 @@ package infore.SDE.synopses;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
-
-import java.io.IOException;
+import infore.SDE.synopses.Sketches.CM;
 
 public class CountMin extends Synopsis{
 

@@ -1,7 +1,7 @@
 package infore.SDE.reduceFunctions;
 
 import infore.SDE.messages.Estimation;
-import infore.SDE.synopses.CM;
+import infore.SDE.synopses.Sketches.CM;
 
 import java.util.HashMap;
 

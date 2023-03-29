@@ -4,18 +4,19 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Estimation implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private Object estimation; // the value of the Estimation
 	private String key; //hash value
 	private String estimationkey; //the key of the Estimation
 	private String StreamID; //the key of the Stream
 	private int UID; // unique identifier for each Request
 	private int RequestID; // request type
 	private int SynopsisID; // Synopsis type
-	private Object estimation; // the value of the Estimation
 	private String[] Param; // the parameters of the Request
 	private int NoOfP; // number of parallelism
 	
@@ -46,6 +47,27 @@ public class Estimation implements Serializable {
 
 	}
 
+	public Estimation(Request rq, String key, ArrayList<String> dps) {
+
+		// TODO Auto-generated constructor stub
+
+		this.estimationkey = key+"_"+rq.getUID();
+		this.key = estimationkey;
+		String est="";
+		for(String str:dps){
+			est=est+str+";";
+		}
+		this.estimation = est;
+		this.RequestID = rq.getRequestID();
+		this.SynopsisID = rq.getSynopsisID();
+		this.StreamID = key;
+		this.Param = new String[1];
+		this.Param[0] = rq.getParam()[6];
+		this.NoOfP = Integer.parseInt(rq.getParam()[2]);
+		this.UID = rq.getUID();
+	}
+
+
 	public Estimation(String[] valueTokens) {
 
 		this.key = valueTokens[0];
@@ -70,10 +92,9 @@ public class Estimation implements Serializable {
 		this.estimation = e.getEstimation();
 		this.Param = e.getParam();
 		this.NoOfP = e.getNoOfP();
-
-
-
     }
+
+
 
     public String getEstimationkey() {
 		return estimationkey;

@@ -19,10 +19,10 @@ public class sendSIMTest {
 
     public void run(String kafkaDataInputTopic) {
         try {
-            //SendaddRequest();
+            SendaddRequest();
             sendSIMData(kafkaDataInputTopic);
             TimeUnit.SECONDS.sleep(3);
-            //SendEstimateRequest();
+            SendEstimateRequest();
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();

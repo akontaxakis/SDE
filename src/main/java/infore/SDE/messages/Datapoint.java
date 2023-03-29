@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 
@@ -23,6 +24,19 @@ public class Datapoint implements Serializable {
     public Datapoint() {
 
     }
+
+    public Datapoint(String d, String s, Object o) {
+        DataSetkey=d; //hash value
+        StreamID=s; //the stream ID
+        String jsonString = "{\"value\":\"" +o+ "\"}";
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+        values = mapper.readTree(jsonString);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public String ValueToKafka() {
         return "\""+DataSetkey+","+StreamID+","+values+"\"";
     }

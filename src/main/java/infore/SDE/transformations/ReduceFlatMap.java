@@ -18,7 +18,6 @@ public class ReduceFlatMap extends RichFlatMapFunction<Estimation, Estimation> {
 
     @Override
     public void flatMap(Estimation value, Collector<Estimation> out){
-        //System.out.println(value.toString());
 
         ReduceFunction t_rf = rf.get("" + value.getEstimationkey());
         int id = value.getSynopsisID();
@@ -32,7 +31,6 @@ public class ReduceFlatMap extends RichFlatMapFunction<Estimation, Estimation> {
             }else{
 
                 if (t_rf.add(value)) {
-
                     Object output = t_rf.reduce();
                     if (output != null) {
                         value.setEstimation(output);
@@ -48,6 +46,12 @@ public class ReduceFlatMap extends RichFlatMapFunction<Estimation, Estimation> {
 
     private ReduceFunction initReduceFunction(Estimation value, int id) {
         ReduceFunction t_rf = null;
+        //RadiusCount
+        if (id == 100) {
+            t_rf = new RadiusReduce(value.getNoOfP(), 0, value.getParam(), value.getSynopsisID(), value.getRequestID());
+            t_rf.add(value);
+        }
+
         //MAX
         if (id == 11) {
             t_rf = new SimpleMaxFunction(value.getNoOfP(), 0, value.getParam(), value.getSynopsisID(), value.getRequestID());

@@ -1,6 +1,8 @@
 package infore.SDE.transformations;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+
 import org.apache.flink.api.common.functions.RichFlatMapFunction;
 import org.apache.flink.util.Collector;
 
@@ -8,13 +10,12 @@ import infore.SDE.messages.Request;
 
 public class RqRouterFlatMap extends RichFlatMapFunction<Request, Request> implements Serializable{
 
-	
 	private static final long serialVersionUID = 1L;
 
    //SourceID + Uid (1-1000),Keys(1-1000),        
 	@Override
 	public void flatMap(Request rq, Collector<Request> out) throws Exception {
-		 
+
 			 //ADD-REMOVE-ESTIMATE SKETCH FOR A STREAM
 			  if( rq.getRequestID()%10 < 8) {
 				  if(rq.getNoOfP() == 1)
@@ -42,6 +43,15 @@ public class RqRouterFlatMap extends RichFlatMapFunction<Request, Request> imple
 
 							}
 					  }else{
+						  if(rq.getSynopsisID() == 100){
+							  for(int i=0;i<Integer.parseInt(rq.getParam()[2]);i++){
+								  rq.setDataSetkey(tmpkey + "_" + i);
+
+								  out.collect(rq);
+
+							  }
+							  return;
+						  }
 						  for(int i = 0; i < rq.getNoOfP(); i ++) {
 
 						  	if(rq.getRequestID()%10 == 4){

@@ -1,4 +1,4 @@
-package infore.SDE.synopses;
+package infore.SDE.synopses.Sketches;
 
 import java.util.BitSet;
 

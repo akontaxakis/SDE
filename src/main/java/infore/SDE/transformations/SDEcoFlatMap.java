@@ -5,6 +5,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lib.WDFT.controlBucket;
 import lib.WLSH.Bucket;
 import infore.SDE.synopses.*;
@@ -38,10 +39,13 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 
 			for (ContinuousSynopsis c_ski : C_Synopses) {
 
-				Estimation e =c_ski.addEstimate(node.getValues());
-				if(e.getEstimation()!=null){
-				collector.collect(e);
+				Estimation e =c_ski.addEstimate(node);
+				if(e!=null){
+					if(e.getEstimation()!=null)
+						collector.collect(e);
 				}
+				//Radius_Grid rg = (Radius_Grid)c_ski;
+				//rg.add_and_provide_estimates(node);
 			}
 		MC_Synopses.put(node.getKey(),C_Synopses);
 		}
@@ -57,6 +61,7 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 		if (rq.getRequestID() == 1 || rq.getRequestID() == 4 ) {
 			if(Synopses==null){
 				Synopses = new ArrayList<>();
+				C_Synopses = new ArrayList<>();
 			}
 
 		Synopsis sketch = null;
@@ -235,6 +240,14 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 						sketch = new ContinuousCM(rq.getUID(), rq, rq.getParam());
 						//String[] _tmp = { "StockID", "Volume", "0.0002", "0.99", "4" };
 						C_Synopses.add(sketch);
+					MC_Synopses.put(rq.getKey(), C_Synopses);
+					break;
+				// RadiusSketch
+				case 100:
+					if (rq.getParam().length > 4)
+						sketch = new Radius_Grid(rq);
+					C_Synopses.add(sketch);
+					MC_Synopses.put(rq.getKey(), C_Synopses);
 					break;
 				case 12:
 					rq.setNoOfP(1);

@@ -4,6 +4,7 @@ package infore.SDE.synopses;
 import com.fasterxml.jackson.databind.JsonNode;
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
+import infore.SDE.synopses.Sketches.CM;
 
 
 public class ContinuousCM extends ContinuousSynopsis{

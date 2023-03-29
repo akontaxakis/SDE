@@ -2,6 +2,7 @@ package infore.SDE.transformations;
 
 import infore.SDE.messages.Datapoint;
 import infore.SDE.messages.Request;
+import infore.SDE.synopses.RadiusSketch;
 import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.api.common.typeinfo.TypeHint;
@@ -27,15 +28,25 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Datapoint, Reques
                  //StreamID                 //Parallelism, KEYs
     private HashMap<String, ArrayList<Tuple2<Integer,String>>> KeysPerStream =  new HashMap<>();
     private HashMap<String,Request> Synopses =  new HashMap<>();
+
+    private HashMap<String, RadiusSketch> MapToGrid = new HashMap<>();
+
+
     private transient ValueState<Tuple1<String>> rs;
     private int pId;
     @Override
     public void flatMap1(Datapoint value, Collector<Datapoint> out) throws Exception {
 
-
+        if(MapToGrid.containsKey(value.getDataSetkey())){
+            RadiusSketch RS = MapToGrid.get(value.getDataSetkey());
+            ArrayList<Datapoint> sketches_to_grid  = (ArrayList<Datapoint>) RS.estimate(value.getValues());
+            for(Datapoint dp: sketches_to_grid) {
+                out.collect(dp);
+            }
+        }
 
         //Send Data with default Key the StreamID
-       // value.f0 = value_tokens[0];
+        // value.f0 = value_tokens[0];
         //out.collect(value);
         //System.out.println(pId+" size "+ KeyedParallelism.size());
         if (KeyedParallelism.size() > 0) {
@@ -66,13 +77,14 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Datapoint, Reques
         }
         if(RandomParallelism.size() > 0){
             for (Map.Entry<Integer, Tuple2<Integer, Integer>> entry : RandomParallelism.entrySet()) {
+
                 Integer key = entry.getKey();
                 Tuple2<Integer, Integer> v = entry.getValue();
                 value.setDataSetkey(value.getDataSetkey() +"_"+key+"_RANDOM_" + v.f1);
+
                 out.collect(value);
                 v.f1++;
                 if (v.f1 == key) {
-
                     v.f1 = 0;
                     entry.setValue(v);
                 }
@@ -81,6 +93,11 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Datapoint, Reques
     }
     @Override
     public void flatMap2(Request rq, Collector<Datapoint> out) throws Exception {
+
+        if(rq.getSynopsisID()==100){
+            MapToGrid.put(rq.getDataSetkey(), new RadiusSketch(rq.getUID(),rq.getParam()[0],rq.getParam()[1],"Partitioner", rq.getDataSetkey(),rq.getParam()));
+            return;
+        }
 
         if(rq.getRequestID()  == 5)
             rq.setRequestID(1);

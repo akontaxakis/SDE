@@ -127,9 +127,15 @@ public class RunSIMTest {
                 else {
                     output.add("multy");
                 }
+                if(value.getRequestID()==3){
+                    output.add("column");
+                }
                 return output;
             }
         });
+        DataStream<Estimation> first_reqest = split.select("column");
+
+
 
         DataStream<Estimation> single = split.select("single");
         DataStream<Estimation> multy = split.select("multy").keyBy((KeySelector<Estimation, String>) Estimation::getKey);

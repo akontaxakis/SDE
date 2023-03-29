@@ -1,4 +1,4 @@
-package infore.SDE.synopses;
+package infore.SDE.synopses.Sketches;
 
 import lib.PastCOEF.pastCOEF;
 import lib.TimeSeries.windowDFT;

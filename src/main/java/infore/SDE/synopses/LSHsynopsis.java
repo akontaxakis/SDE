@@ -3,13 +3,13 @@ package infore.SDE.synopses;
 import com.fasterxml.jackson.databind.JsonNode;
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
+import infore.SDE.synopses.Sketches.Bitmap;
+import infore.SDE.synopses.Sketches.LSH;
 import org.apache.commons.math3.distribution.NormalDistribution;
-import org.apache.commons.math3.random.RandomGenerator;
 
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
-import java.util.Random;
 
 
 public class LSHsynopsis extends Synopsis{

@@ -1,4 +1,4 @@
-package infore.SDE.synopses;
+package infore.SDE.synopses.Sketches;
 
 import org.apache.commons.math3.distribution.NormalDistribution;
 

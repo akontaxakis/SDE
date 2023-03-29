@@ -1,6 +1,6 @@
 package lib.PastCOEF;
 
-import infore.SDE.synopses.windowPastDFT;
+import infore.SDE.synopses.Sketches.windowPastDFT;
 
 import java.util.HashMap;
 import java.util.Map;
