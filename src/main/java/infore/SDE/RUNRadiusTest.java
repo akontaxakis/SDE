@@ -148,7 +148,7 @@ public class RUNRadiusTest {
             kafkaRequestInputTopic = args[1];
             multi = Integer.parseInt(args[2]);
             parallelism = Integer.parseInt(args[3]);
-            System.out.println("[INFO] Default values");
+            Source ="non";
             //Default values
             //kafkaDataInputTopic = "FAN";
             //Source ="auto";
