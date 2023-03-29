@@ -168,7 +168,7 @@ public class RUNRadiusTest {
             kafkaRequestInputTopic = "RAD_REQUEST_4";
             Source ="non";
             multi = 10;
-            parallelism = 4;
+            parallelism = 12;
             //parallelism2 = 4;
             kafkaBrokersList = "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667";
             //kafkaBrokersList = "localhost:9092";
