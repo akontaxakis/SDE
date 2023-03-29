@@ -49,13 +49,6 @@ public class RUNRadiusTest {
         // Initialize Input Parameters
         initializeParameters(args);
 
-        if(Source.startsWith("auto")) {
-            Thread thread1 = new Thread(() -> {
-                (new sendAISTest()).run(kafkaDataInputTopic,kafkaRequestInputTopic,parallelism);
-            });
-            thread1.start();
-        }
-
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(parallelism);
         kafkaStringConsumer_Earliest kc = new kafkaStringConsumer_Earliest(kafkaBrokersList, kafkaDataInputTopic);
@@ -149,30 +142,19 @@ public class RUNRadiusTest {
             multi = Integer.parseInt(args[2]);
             parallelism = Integer.parseInt(args[3]);
             Source ="non";
-            //Default values
-            //kafkaDataInputTopic = "FAN";
-            //Source ="auto";
-            //kafkaRequestInputTopic = "Rq_FAN";
-
-            //parallelism2 = 4;
             kafkaBrokersList = "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667";
-            //kafkaBrokersList = "localhost:9092";
-            //kafkaBrokersList = "159.69.32.166:9092";
             kafkaOutputTopic = "RAD_OUT";
 
         }else{
 
             System.out.println("[INFO] Default values");
-            //Default values
-            kafkaDataInputTopic = "RAD_DATA_12_2";
+            kafkaDataInputTopic = "RAD_DATA_4";
             kafkaRequestInputTopic = "RAD_REQUEST_5";
             Source ="non";
             multi = 10;
             parallelism = 12;
             //parallelism2 = 4;
             kafkaBrokersList = "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667";
-            //kafkaBrokersList = "localhost:9092";
-            //kafkaBrokersList = "159.69.32.166:9092";
             kafkaOutputTopic = "RAD_OUT";
         }
     }
