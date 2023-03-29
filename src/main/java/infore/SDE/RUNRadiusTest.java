@@ -49,6 +49,13 @@ public class RUNRadiusTest {
         // Initialize Input Parameters
         initializeParameters(args);
 
+        if(Source.startsWith("auto")) {
+            Thread thread1 = new Thread(() -> {
+                (new sendAISTest()).run(kafkaDataInputTopic,kafkaRequestInputTopic,parallelism);
+            });
+            thread1.start();
+        }
+
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(parallelism);
         kafkaStringConsumer_Earliest kc = new kafkaStringConsumer_Earliest(kafkaBrokersList, kafkaDataInputTopic);
@@ -69,7 +76,7 @@ public class RUNRadiusTest {
                         Datapoint dp = objectMapper.readValue(node, Datapoint.class);
                         return dp;
                     }
-                }).name("DATA_SOURCE").keyBy((KeySelector<Datapoint, String>) Datapoint::getKey).iterate();
+                }).name("DATA_SOURCE").keyBy((KeySelector<Datapoint, String>) Datapoint::getKey);
 
         //
         DataStream<Request> RQ_Stream = RQ_stream
@@ -82,14 +89,14 @@ public class RUNRadiusTest {
                         Request request = objectMapper.readValue(node, Request.class);
                         return  request;
                     }
-                }).name("REQUEST_SOURCE").keyBy((KeySelector<Request, String>) Request::getKey);
+                }).name("REQUEST_SOURCE").setParallelism(1).keyBy((KeySelector<Request, String>) Request::getKey);
 
         DataStream<Request> SynopsisRequests = RQ_Stream
-                .flatMap(new RqRouterFlatMap()).name("REQUEST_ROUTER").setParallelism(1);
+                .flatMap(new RqRouterFlatMap()).setParallelism(1).name("REQUEST_ROUTER");
 
 
         DataStream<Datapoint> DataStream = dataStream.connect(RQ_Stream)
-                .flatMap(new dataRouterCoFlatMap()).name("DATA_ROUTER").setParallelism(1)
+                .flatMap(new dataRouterCoFlatMap()).setParallelism(1).name("DATA_ROUTER")
                 .keyBy((KeySelector<Datapoint, String>) Datapoint::getKey);
 
         //Multiplication IF NEEDED
@@ -161,7 +168,7 @@ public class RUNRadiusTest {
             kafkaRequestInputTopic = "RAD_REQUEST_5";
             Source ="non";
             multi = 10;
-            parallelism = 4;
+            parallelism = 12;
             //parallelism2 = 4;
             kafkaBrokersList = "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667";
             //kafkaBrokersList = "localhost:9092";
