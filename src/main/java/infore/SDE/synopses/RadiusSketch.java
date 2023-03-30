@@ -72,8 +72,8 @@ public class RadiusSketch extends ContinuousSynopsis {
         double[] sketch = multiplyByMatrix(ps,r);
         for (int j = 0; j < number_of_groups; j++) {
             Datapoint dp;
-            if(j+group_size-1<sketch_size) {
-                dp = new Datapoint(Datasetid + "_" + j, key, (int)sketch[j] + ";" + (int)sketch[j + group_size - 1]);
+            if(j*2+1<sketch_size) {
+                dp = new Datapoint(Datasetid + "_" + j, key, (int)sketch[j*2] + ";" + (int)sketch[j*2+1]);
             }else{
                 dp = new Datapoint(Datasetid + "_" + j, key, (int)sketch[j] + ";" + (int)sketch[j - group_size]);
             }

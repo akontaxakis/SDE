@@ -15,15 +15,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-import static infore.SDE.producersForTesting.Test_Return_FIN_Data.SendaddRequest;
-import static infore.SDE.producersForTesting.Test_Return_FIN_Data.sendFINData;
+import static infore.SDE.producersForTesting.Test_Return_FIN_Data.*;
 
 public class sendRETURNSTest {
 
     public void run(String kafkaDataInputTopic, String topicRequests) {
         try {
             SendaddRequest(topicRequests);
-            sendFINData(kafkaDataInputTopic);
+            sendFINPrices(kafkaDataInputTopic);
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
