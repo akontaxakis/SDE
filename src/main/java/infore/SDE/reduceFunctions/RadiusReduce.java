@@ -44,9 +44,10 @@ public class RadiusReduce extends ReduceFunction {
     public Object reduce() {
         for(Map.Entry<String,Integer> stream:counts.entrySet()){
             if(threshold<stream.getValue()){
-                results=results+";"+stream;
+                results=results+";"+stream.getKey();
             }
         }
+       // System.out.println(results);
         return results;
     }
 

@@ -26,10 +26,9 @@ public class Test_Return_FIN_Data {
 
     public static void main(String[] args) throws Exception {
 
-
-        //SendaddRequest("RAD_REQUEST_5");
+        //SendaddRequest("RAD_REQUEST_6");
         //sendFINPrices("RAD_DATA_PR_4");
-        sendREData("RAD_RR_4");
+        sendREData("RAD_RR_512");
     }
 
     public static void sendFINData(String kafkaDataInputTopic) throws IOException {
@@ -123,7 +122,7 @@ public class Test_Return_FIN_Data {
         //String[] parameters5 = {"StockID", "price", "60", "2", "60","256","50"};
 
         //STOCK ID, RETURN, #GROUPS, GROUP_DIMENSIONS, SketchSIZE, windowSize, threshold
-        String[] parameters5 = {"StockID", "price", "5", "2", "10","256","70"};
+        String[] parameters5 = {"StockID", "price", "10", "2", "20","512","70"};
 
 
         Properties props = new Properties();
@@ -255,7 +254,7 @@ public class Test_Return_FIN_Data {
         props.put("value.serializer",
                 "org.apache.kafka.common.serialization.StringSerializer");
         Producer<String, String> producer = new KafkaProducer<String, String>(props);
-        int window = 256;
+        int window = 512;
 
         for (File fileEntry : folder.listFiles()) {
             int i = 0;
