@@ -28,7 +28,7 @@ public class Test_Return_FIN_Data {
 
 
         //SendaddRequest("RAD_REQUEST_5");
-        sendFINData("RAD_DATA_RE_4");
+        sendFINPrices("RAD_DATA_PR_4");
     }
 
     public static void sendFINData(String kafkaDataInputTopic) throws IOException {
@@ -104,8 +104,8 @@ public class Test_Return_FIN_Data {
                         Datapoint dp = new Datapoint("W_FIN_USECASE", stock2, node);
 
                         //SDE data string
-                        //System.out.println(dp.toJsonString());
-                        producer.send(new ProducerRecord<String, String>(topicName, dp.toJsonString()));
+                        System.out.println(dp.toJsonString());
+                        //producer.send(new ProducerRecord<String, String>(topicName, dp.toJsonString()));
                         nOfMessages++;
                     }
                     }
@@ -209,7 +209,7 @@ public class Test_Return_FIN_Data {
                             i++;
                         }else{
                             i=0;
-                            System.out.println(line);
+                            //System.out.println(line);
                             stock2=stock2 + words[1].replace(":","");
                             String jsonString = "{\"StockID\":\"" + stock2+ "\",\"price\":\"" +W + "\"}";
                             W = "";

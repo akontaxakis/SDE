@@ -148,11 +148,11 @@ public class RUNRadiusTest {
         }else{
 
             System.out.println("[INFO] Default values");
-            kafkaDataInputTopic = "RAD_DATA_4";
+            kafkaDataInputTopic = "RAD_DATA_PR_4";
             kafkaRequestInputTopic = "RAD_REQUEST_5";
             Source ="non";
             multi = 10;
-            parallelism = 12;
+            parallelism = 4;
             //parallelism2 = 4;
             kafkaBrokersList = "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667";
             kafkaOutputTopic = "RAD_OUT";
