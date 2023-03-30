@@ -34,6 +34,8 @@ public class Radius_Grid extends ContinuousSynopsis{
         Estimation e;
 
         int cell = Integer.parseInt(prices[0])*100000 + Integer.parseInt(prices[1]);
+       // System.out.println(cell);
+        //System.out.println(prices[0]+","+prices[1]);
         if(grid == null){
             grid  = new HashMap<>();
             ArrayList<String> dps = new ArrayList<>();

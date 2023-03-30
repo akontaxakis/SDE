@@ -5,6 +5,7 @@ package infore.SDE;
 import infore.SDE.producersForTesting.sendSIMTest;
 import infore.SDE.producersForTesting.sendTopKTest;
 
+import static infore.SDE.producersForTesting.Test_Return_FIN_Data.SendaddRequest;
 
 
 /**
@@ -41,21 +42,7 @@ public class DataTests {
 
     public static void main(String[] args) throws Exception {
         // Initialize Input Parameters
-        initializeParameters(args);
-
-      /*  if(Source.startsWith("auto")) {
-            Thread thread1 = new Thread(() -> {
-                (new sendFINTest()).run(kafkaDataInputTopic);
-            });
-            thread1.start();
-        }*/
-        if(Source.startsWith("auto")) {
-            Thread thread1 = new Thread(() -> {
-                (new sendSIMTest()).run(kafkaDataInputTopic);
-            });
-            thread1.start();
-        }
-
+        SendaddRequest("RAD_REQUEST_7");
 
 
     }

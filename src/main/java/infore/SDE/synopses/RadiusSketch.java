@@ -97,7 +97,9 @@ public class RadiusSketch extends ContinuousSynopsis {
                     mResult[i] += g[j][i] * w.get(j);
                 }
             }
+           // System.out.print( mResult[i]);
         }
+      //  System.out.println("");
         return mResult;
     }
 
