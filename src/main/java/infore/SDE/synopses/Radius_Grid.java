@@ -13,6 +13,7 @@ public class Radius_Grid extends ContinuousSynopsis{
     //GRID_ID //CELL, LIST OF STREAMS
     private HashMap<Integer, ArrayList<String>> grid = new HashMap<>();
     private Request rq;
+    private int count =0;
     public Radius_Grid(int ID, String k, String v) {
         super(ID, k, v);
     }
@@ -24,7 +25,7 @@ public class Radius_Grid extends ContinuousSynopsis{
 
     @Override
     public Estimation addEstimate(Object k) {
-
+        count++;
         Datapoint dp = (Datapoint) k;
         JsonNode node = dp.getValues();
         String key = dp.getStreamID();
@@ -58,7 +59,12 @@ public class Radius_Grid extends ContinuousSynopsis{
                 grid.put(cell,dps);
             }
         }
-        return e;
+        if(count>1000) {
+            count=0;
+            return e;
+        }else{
+            return null;
+        }
     }
 
 
