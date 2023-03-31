@@ -89,4 +89,14 @@ public class Datapoint implements Serializable {
     }
 
 
+    public boolean compare(Datapoint dp) {
+
+        JsonNode a1 = dp.getValues();
+
+        String key = a1.get("streamID").asText();
+        String values = a1.get("price").asText();
+        String[] prices = values.split(";");
+
+        return true;
+    }
 }

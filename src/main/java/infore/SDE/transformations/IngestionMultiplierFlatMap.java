@@ -15,7 +15,6 @@ public class IngestionMultiplierFlatMap implements  FlatMapFunction<Datapoint, D
 	 */
 	private static final long serialVersionUID = 1L;
 	int feedMultiplier;
-
 	double start = 0.01;
 	double end = 0.09;
 

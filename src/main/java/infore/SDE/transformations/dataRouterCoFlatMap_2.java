@@ -13,35 +13,49 @@ import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.co.RichCoFlatMapFunction;
 import org.apache.flink.util.Collector;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Datapoint> {
+public class dataRouterCoFlatMap_2 extends RichCoFlatMapFunction<Datapoint, Request, Datapoint> {
 
     private static final long serialVersionUID = 1L;
     // SourceID (1-5), StreamID(1-10000), Keys(1-1000),
 
     //UID, parallelism, index,
+                    //Parallelism //Number, index
+    private HashMap<Integer, Tuple2<Integer,Integer>> KeyedParallelism = new HashMap<>();
     //Parallelism //Number, index
-    private HashMap<Integer, Tuple2<Integer, Integer>> KeyedParallelism = new HashMap<>();
-    //Parallelism //Number, index
-    private HashMap<Integer, Tuple2<Integer, Integer>> RandomParallelism = new HashMap<>();
-    //StreamID                 //Parallelism, KEYs
-    private HashMap<String, ArrayList<Tuple2<Integer, String>>> KeysPerStream = new HashMap<>();
-    private HashMap<String, Request> Synopses = new HashMap<>();
+    private HashMap<Integer, Tuple2<Integer,Integer>> RandomParallelism = new HashMap<>();
+                 //StreamID                 //Parallelism, KEYs
+    private HashMap<String, ArrayList<Tuple2<Integer,String>>> KeysPerStream =  new HashMap<>();
+    private HashMap<String,Request> Synopses =  new HashMap<>();
 
     private HashMap<String, RadiusSketch> MapToGrid = new HashMap<>();
 
 
     private transient ValueState<Tuple1<String>> rs;
     private int pId;
-
     @Override
     public void flatMap1(Datapoint value, Collector<Datapoint> out) throws Exception {
 
-        if (MapToGrid.containsKey(value.getDataSetkey())) {
+        if(MapToGrid.containsKey(value.getDataSetkey())){
             RadiusSketch RS = MapToGrid.get(value.getDataSetkey());
-            ArrayList<Datapoint> sketches_to_grid = (ArrayList<Datapoint>) RS.estimate(value.getValues());
-            for (Datapoint dp : sketches_to_grid) {
+            ArrayList<Datapoint> sketches_to_grid  = (ArrayList<Datapoint>) RS.estimate(value.getValues());
+            for(Datapoint dp: sketches_to_grid) {
+                out.collect(dp);
+            }
+        }else{
+            String s =  value.getDataSetkey().substring(0,value.getDataSetkey().length()-1);
+            String s1 =  s.substring(s.length()-2,s.length()-1);
+            if(s1 =="1" || s1=="2"){
+                s = s.substring(0,s.length()-1);
+            }
+            System.out.println(s);
+            MapToGrid.put(value.getDataSetkey(), new RadiusSketch(1110,"StockID","price","Partitioner",s,null));
+            RadiusSketch RS = MapToGrid.get(value.getDataSetkey());
+            ArrayList<Datapoint> sketches_to_grid  = (ArrayList<Datapoint>) RS.estimate(value.getValues());
+            for(Datapoint dp: sketches_to_grid) {
                 out.collect(dp);
             }
         }
@@ -57,12 +71,12 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Datapoint, Reques
                 for (Map.Entry<Integer, Tuple2<Integer, Integer>> entry : KeyedParallelism.entrySet()) {
                     Integer key = entry.getKey();
                     Tuple2<Integer, Integer> v = entry.getValue();
-                    tmp.add(new Tuple2<>(key, value.getDataSetkey() + "_" + key + "_KEYED_" + v.f1));
+                    tmp.add(new Tuple2<>(key, value.getDataSetkey() +"_"+key+"_KEYED_" + v.f1));
                     v.f1++;
                     if (v.f1 >= key) {
                         //v.f1 = 0;
-                        // System.out.println(v.f1);
-                        entry.setValue(new Tuple2<>(key, 0));
+                       // System.out.println(v.f1);
+                        entry.setValue(new Tuple2<>(key,0));
                     }
                 }
                 KeysPerStream.put(value.getStreamID(), tmp);
@@ -73,15 +87,15 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Datapoint, Reques
             }
 
         }
-        if (RandomParallelism.size() > 0) {
+        if(RandomParallelism.size()>0){
 
         }
-        if (RandomParallelism.size() > 0) {
+        if(RandomParallelism.size() > 0){
             for (Map.Entry<Integer, Tuple2<Integer, Integer>> entry : RandomParallelism.entrySet()) {
 
                 Integer key = entry.getKey();
                 Tuple2<Integer, Integer> v = entry.getValue();
-                value.setDataSetkey(value.getDataSetkey() + "_" + key + "_RANDOM_" + v.f1);
+                value.setDataSetkey(value.getDataSetkey() +"_"+key+"_RANDOM_" + v.f1);
 
                 out.collect(value);
                 v.f1++;
@@ -92,45 +106,46 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Datapoint, Reques
             }
         }
     }
-
     @Override
     public void flatMap2(Request rq, Collector<Datapoint> out) throws Exception {
 
-        if (rq.getSynopsisID() == 100) {
-            MapToGrid.put(rq.getDataSetkey(), new RadiusSketch(rq.getUID(), rq.getParam()[0], rq.getParam()[1], "Partitioner", rq.getDataSetkey(), rq.getParam()));
+        if(rq.getSynopsisID()==100){
+            MapToGrid.put(rq.getDataSetkey(), new RadiusSketch(rq.getUID(),rq.getParam()[0],rq.getParam()[1],"Partitioner", rq.getDataSetkey(),rq.getParam()));
             return;
         }
 
-        if (rq.getRequestID() == 5)
+        if(rq.getRequestID()  == 5)
             rq.setRequestID(1);
 
-        if (rq.getRequestID() == 1 || rq.getRequestID() == 4) {
+        if (rq.getRequestID()  == 1 || rq.getRequestID()  == 4 ) {
 
             if (rq.getNoOfP() > 1) {
 
-                if (rq.getRequestID() == 1) {
-                    if (KeyedParallelism.get(rq.getNoOfP()) == null) {
+                if (rq.getRequestID()  == 1){
+                    if(KeyedParallelism.get(rq.getNoOfP())==null) {
                         KeyedParallelism.put(rq.getNoOfP(), new Tuple2<>(1, 0));
                         int i = 0;
-                        for (ArrayList<Tuple2<Integer, String>> v : KeysPerStream.values()) {
-                            v.add(new Tuple2<>(rq.getNoOfP(), rq.getKey() + "_" + rq.getNoOfP() + "_KEYED_" + i));
-                            i++;
-                            if (i == rq.getNoOfP())
-                                i = 0;
+                        for(ArrayList<Tuple2<Integer,String>> v : KeysPerStream.values()) {
+                             v.add(new Tuple2<>(rq.getNoOfP(), rq.getKey()+"_"+rq.getNoOfP()+"_KEYED_" + i));
+                             i++;
+                             if(i==rq.getNoOfP())
+                                 i=0;
                         }
-                    } else {
-                        Tuple2<Integer, Integer> t = KeyedParallelism.get(rq.getNoOfP());
+                    }
+                    else{
+                        Tuple2<Integer, Integer> t =  KeyedParallelism.get(rq.getNoOfP());
                         t.f0 += 1;
                         //System.out.println("HERE_> " + t.f0);
-                        KeyedParallelism.put(rq.getNoOfP(), t);
+                        KeyedParallelism.put(rq.getNoOfP(),t);
                     }
-                } else if (rq.getRequestID() == 4) {
-                    if (RandomParallelism.get(rq.getNoOfP()) == null) {
+                }else if (rq.getRequestID()  == 4){
+                    if(RandomParallelism.get(rq.getNoOfP())==null) {
                         KeyedParallelism.put(rq.getNoOfP(), new Tuple2<>(1, 0));
-                    } else {
-                        Tuple2<Integer, Integer> t = RandomParallelism.get(rq.getNoOfP());
+                    }
+                    else{
+                        Tuple2<Integer, Integer> t =  RandomParallelism.get(rq.getNoOfP());
                         t.f0++;
-                        RandomParallelism.put(rq.getNoOfP(), t);
+                        RandomParallelism.put(rq.getNoOfP(),t);
                     }
 
 
@@ -138,7 +153,7 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Datapoint, Reques
 
             }
             String newS = rq.toSumString();
-/*
+
             if (rs.value() == null) {
 
                 Tuple1<String> tmp = new Tuple1<String>(newS);
@@ -154,16 +169,15 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Datapoint, Reques
                 //System.out.print("\n StateUpdate");
                 rs.update(tmp);
             }
-             */
-
-        } else if (rq.getRequestID() == 2) {
+        }
+        else if (rq.getRequestID() == 2) {
 
             Request re = Synopses.remove("" + rq.getUID());
             if (re != null) {
 
-                if (re.getRequestID() == 1) {
+                if(re.getRequestID() == 1){
                     Tuple2<Integer, Integer> t = KeyedParallelism.get(re.getNoOfP());
-                    if (t != null) {
+                    if(t!=null) {
                         //System.out.println("HERE_> " + t.f0);
                         t.f0--;
                         if (t.f0 == 0) {
@@ -181,7 +195,7 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Datapoint, Reques
                             KeyedParallelism.put(re.getNoOfP(), t);
                         }
                     }
-                } else if (re.getRequestID() == 4) {
+                }else if(re.getRequestID() == 4) {
                     Tuple2<Integer, Integer> t = RandomParallelism.get(re.getNoOfP());
                     t.f0--;
                     if (t.f0 == 0) {
@@ -196,10 +210,10 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Datapoint, Reques
                     }
 
                     Tuple1<String> tmp2 = new Tuple1<>(tmp);
-                    // rs.update(tmp2);
+                    rs.update(tmp2);
 
                 } else {
-                   // rs.update(new Tuple1<String>(""));
+                    rs.update(new Tuple1<String>(""));
                 }
             }
         }
@@ -208,8 +222,7 @@ public class dataRouterCoFlatMap extends RichCoFlatMapFunction<Datapoint, Reques
     public void open(Configuration config) {
 
 
-        TypeInformation<Tuple1<String>> typeInformation = TypeInformation.of(new TypeHint<Tuple1<String>>() {
-        });
+        TypeInformation<Tuple1<String>> typeInformation = TypeInformation.of(new TypeHint<Tuple1<String>>() {});
 
         ValueStateDescriptor descriptor = new ValueStateDescriptor("Synopses", typeInformation);
         descriptor.setQueryable("getSynopses");

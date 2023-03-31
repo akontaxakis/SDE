@@ -1,27 +1,22 @@
-package infore.SDE;
+package infore.SDE.Experiments;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import infore.SDE.messages.Datapoint;
-import infore.SDE.messages.Estimation;
-import infore.SDE.messages.Request;
 import infore.SDE.sources.kafkaProducerEstimation;
 import infore.SDE.sources.kafkaStringConsumer_Earliest;
-import infore.SDE.transformations.ReduceFlatMap;
-import infore.SDE.transformations.RqRouterFlatMap;
-import infore.SDE.transformations.SDEcoFlatMap;
-import infore.SDE.transformations.dataRouterCoFlatMap;
+import infore.SDE.transformations.IngestionMultiplierFlatMap;
+import infore.SDE.transformations.NaiveCoFlatMap;
+import infore.SDE.transformations.SketchFlatMap;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
-import org.apache.flink.streaming.api.collector.selector.OutputSelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.SplitStream;
+import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
-public class RUNKafkaReadS {
+public class RUNSketchWC {
 
 
     private static String kafkaDataInputTopic;
@@ -51,13 +46,9 @@ public class RUNKafkaReadS {
         initializeParameters(args);
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(parallelism);
+        env.setParallelism(1);
         kafkaStringConsumer_Earliest kc = new kafkaStringConsumer_Earliest(kafkaBrokersList, kafkaDataInputTopic);
-        kafkaStringConsumer_Earliest requests = new kafkaStringConsumer_Earliest(kafkaBrokersList, kafkaRequestInputTopic);
-        kafkaProducerEstimation kp = new kafkaProducerEstimation(kafkaBrokersList, kafkaOutputTopic);
-
         DataStream<String> datastream = env.addSource(kc.getFc());
-        DataStream<String> RQ_stream = env.addSource(requests.getFc());
 
         //map kafka data input to tuple2<int,double>
         DataStream<Datapoint> dataStream = datastream
@@ -67,21 +58,14 @@ public class RUNKafkaReadS {
                         // TODO Auto-generated method stub
                         ObjectMapper objectMapper = new ObjectMapper();
                         Datapoint dp = objectMapper.readValue(node, Datapoint.class);
-                        System.out.println(dp.toJsonString());
                         return dp;
                     }
                 }).name("DATA_SOURCE").keyBy((KeySelector<Datapoint, String>) Datapoint::getKey);
 
-        //
+        DataStream<Datapoint>  DataStream2 = dataStream.flatMap(new SketchFlatMap()).setParallelism(1);
 
 
-
-
-        //Multiplication IF NEEDED
-        //DataStream<Datapoint> DataStream2 = DataStream.flatMap(new IngestionMultiplierFlatMap(multi));
-
-
-        env.execute("Streaming SDE"+parallelism+"_"+multi+"_"+kafkaDataInputTopic);
+        env.execute("StreamingSketch"+parallelism+"_"+multi+"_"+kafkaDataInputTopic);
 
     }
 
@@ -102,7 +86,7 @@ public class RUNKafkaReadS {
         }else{
 
             System.out.println("[INFO] Default values");
-            kafkaDataInputTopic = "RAD_REQUEST_N";
+            kafkaDataInputTopic = "RAD_DATA_RE_4";
             kafkaRequestInputTopic = "RAD_REQUEST_5";
             Source ="non";
             multi = 10;

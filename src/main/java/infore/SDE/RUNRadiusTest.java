@@ -149,7 +149,7 @@ public class RUNRadiusTest {
 
             System.out.println("[INFO] Default values");
             kafkaDataInputTopic = "RAD_RR_mod5";
-            kafkaRequestInputTopic = "RAD_REQUEST_7";
+            kafkaRequestInputTopic = "RAD_REQUEST_6";
             Source ="non";
             multi = 10;
             parallelism = 4;

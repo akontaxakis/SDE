@@ -6,11 +6,9 @@ import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
 import infore.SDE.sources.kafkaProducerEstimation;
 import infore.SDE.sources.kafkaStringConsumer_Earliest;
-import infore.SDE.transformations.ReduceFlatMap;
-import infore.SDE.transformations.RqRouterFlatMap;
-import infore.SDE.transformations.SDEcoFlatMap;
-import infore.SDE.transformations.dataRouterCoFlatMap;
+import infore.SDE.transformations.*;
 import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.common.restartstrategy.RestartStrategies;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.collector.selector.OutputSelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -21,7 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RUNKafkaReadS {
+public class RUNRadiusTest_2 {
 
 
     private static String kafkaDataInputTopic;
@@ -55,7 +53,8 @@ public class RUNKafkaReadS {
         kafkaStringConsumer_Earliest kc = new kafkaStringConsumer_Earliest(kafkaBrokersList, kafkaDataInputTopic);
         kafkaStringConsumer_Earliest requests = new kafkaStringConsumer_Earliest(kafkaBrokersList, kafkaRequestInputTopic);
         kafkaProducerEstimation kp = new kafkaProducerEstimation(kafkaBrokersList, kafkaOutputTopic);
-
+        kafkaProducerEstimation pRequest = new kafkaProducerEstimation(kafkaBrokersList, kafkaRequestInputTopic);
+        env.setRestartStrategy(RestartStrategies.noRestart());
         DataStream<String> datastream = env.addSource(kc.getFc());
         DataStream<String> RQ_stream = env.addSource(requests.getFc());
 
@@ -67,20 +66,66 @@ public class RUNKafkaReadS {
                         // TODO Auto-generated method stub
                         ObjectMapper objectMapper = new ObjectMapper();
                         Datapoint dp = objectMapper.readValue(node, Datapoint.class);
-                        System.out.println(dp.toJsonString());
                         return dp;
                     }
                 }).name("DATA_SOURCE").keyBy((KeySelector<Datapoint, String>) Datapoint::getKey);
 
         //
+        DataStream<Request> RQ_Stream = RQ_stream
+                .map(new MapFunction<String, Request>() {
+                    private static final long serialVersionUID = 1L;
+                    @Override
+                    public Request map(String node) throws IOException {
+                        // TODO Auto-generated method stub
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        Request request = objectMapper.readValue(node, Request.class);
+                        return  request;
+                    }
+                }).name("REQUEST_SOURCE").setParallelism(1).keyBy((KeySelector<Request, String>) Request::getKey);
+
+        DataStream<Request> SynopsisRequests = RQ_Stream
+                .flatMap(new RqRouterFlatMap()).setParallelism(1).name("REQUEST_ROUTER");
 
 
-
+        DataStream<Datapoint> DataStream = dataStream.connect(RQ_Stream)
+                .flatMap(new dataRouterCoFlatMap_2()).name("DATA_ROUTER")
+                .keyBy((KeySelector<Datapoint, String>) Datapoint::getKey);
 
         //Multiplication IF NEEDED
         //DataStream<Datapoint> DataStream2 = DataStream.flatMap(new IngestionMultiplierFlatMap(multi));
 
+        DataStream<Estimation> estimationStream = DataStream.keyBy((KeySelector<Datapoint, String>) Datapoint::getKey)
+                .connect(SynopsisRequests.keyBy((KeySelector<Request, String>) Request::getKey))
+                .flatMap(new SDEcoFlatMap()).name("SYNOPSES_MAINTENANCE").disableChaining();
 
+
+
+
+        SplitStream<Estimation> split = estimationStream.split(new OutputSelector<Estimation>() {
+            private static final long serialVersionUID = 1L;
+            @Override
+            public Iterable<String> select(Estimation value) {
+                // TODO Auto-generated method stub
+                List<String> output = new ArrayList<>();
+                if (value.getNoOfP() == 1) {
+                    output.add("single");
+                }
+                else {
+                    output.add("multy");
+                }
+
+                return output;
+            }
+        });
+
+        DataStream<Estimation> single = split.select("single");
+        DataStream<Estimation> multy = split.select("multy").keyBy((KeySelector<Estimation, String>) Estimation::getKey);
+        //single.addSink(kp.getProducer());
+        DataStream<Estimation> finalStream = multy.flatMap(new ReduceFlatMap()).name("REDUCE");
+
+
+
+        finalStream.addSink(kp.getProducer());
         env.execute("Streaming SDE"+parallelism+"_"+multi+"_"+kafkaDataInputTopic);
 
     }
@@ -102,8 +147,8 @@ public class RUNKafkaReadS {
         }else{
 
             System.out.println("[INFO] Default values");
-            kafkaDataInputTopic = "RAD_REQUEST_N";
-            kafkaRequestInputTopic = "RAD_REQUEST_5";
+            kafkaDataInputTopic = "RAD_RR_N";
+            kafkaRequestInputTopic = "RAD_REQUEST_N2";
             Source ="non";
             multi = 10;
             parallelism = 4;

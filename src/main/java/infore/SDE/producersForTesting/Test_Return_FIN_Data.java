@@ -26,9 +26,9 @@ public class Test_Return_FIN_Data {
 
     public static void main(String[] args) throws Exception {
 
-        SendaddRequest("RAD_REQUEST_7");
+        SendaddRequest("RAD_REQUEST_N2");
         //sendFINPrices("RAD_DATA_PR_4");
-        //sendREData("RAD_RR_mod5");
+        //sendREData("RAD_RR_N");
     }
 
     public static void sendFINData(String kafkaDataInputTopic) throws IOException {
@@ -234,7 +234,7 @@ public class Test_Return_FIN_Data {
     }
 
 
-    public static void sendREData(String kafkaDataInputTopic) throws IOException {
+    public static void sendREData_mod5(String kafkaDataInputTopic) throws IOException {
         String folderPath = "C:\\Users\\adoko\\Downloads\\FinancialData\\history";
         String line = "";
         String topicName = kafkaDataInputTopic;
@@ -334,6 +334,99 @@ public class Test_Return_FIN_Data {
         System.out.println("Message sent successfully -> " + nOfMessages);
         producer.close();
     }
+    public static void sendREData(String kafkaDataInputTopic) throws IOException {
+        String folderPath = "C:\\Users\\adoko\\Downloads\\FinancialData\\history";
+        String line = "";
+        String topicName = kafkaDataInputTopic;
+        int nOfMessages = 0;
+        final File folder = new File(folderPath);
+        ArrayList<Pair<String, BufferedReader>> br = new ArrayList<Pair<String, BufferedReader>>();
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667");
+        //props.put("bootstrap.servers", "localhost:9092");
+        props.put("acks", "all");
+        props.put("retries", 0);
+        props.put("batch.size", 163840);
+        props.put("linger.ms", 0);
+        props.put("buffer.memory", 33554432);
+        props.put("key.serializer",
+                "org.apache.kafka.common.serialization.StringSerializer");
+        props.put("value.serializer",
+                "org.apache.kafka.common.serialization.StringSerializer");
+        Producer<String, String> producer = new KafkaProducer<String, String>(props);
+        int window = 256;
 
+        for (File fileEntry : folder.listFiles()) {
+            int i = 0;
+            int l =0;
+            String W = "";
+            String previous=";";
+            String previous_2="l";
+            double diff = 100;
+            if (fileEntry.getName().endsWith("his")) {
+
+                BufferedReader br1 = new BufferedReader(new FileReader(fileEntry.getAbsolutePath()));
+                String k = fileEntry.getName().toString().replace(".his", "");
+                String stock = k;
+                stock = stock.replace("╖", "");
+                stock = stock.replace("·", "");
+                br.add(new Pair<String, BufferedReader>(stock, br1));
+                while ((line = br1.readLine()) != null) {
+
+                    String stock2 = stock.replace(" ", "");
+                    stock2 = stock2.replace("╖", "");
+                    stock2 = stock2.replace("·", "");
+
+                    String[] words = new String[4];
+                    StringTokenizer tokenizer = new StringTokenizer(line, ",");
+                    //System.out.println(line);
+                    if (tokenizer.hasMoreTokens()) {
+                        for (int jk = 0; jk < 4; jk++) {
+                            words[jk] = tokenizer.nextToken();
+                        }
+
+                        if (i < window+1) {
+                            if(i>1) {
+                                if (i < window) {
+
+                                        diff = (Double.parseDouble(words[2]) / Double.parseDouble(previous)) - 1;
+                                        W = W + diff + ";";
+                                        //W = W +  df.format(diff) + ";";
+                                }else {
+                                    diff = (Double.parseDouble(words[2]) / Double.parseDouble(previous)) - 1;
+                                    W = W + diff;
+                                }
+                            }
+                           previous = words[2];
+                           i++;
+
+                        }else{
+
+                            i=0;
+                            //System.out.println(W);
+                            stock2=stock2 + words[1].replace(":","");
+                            String jsonString = "{\"StockID\":\"" + stock2+ "\",\"price\":\"" +W + "\"}";
+                            W = "";
+                            String str = "" + words[0] + " " + words[1];
+                            //data string
+                            ObjectMapper mapper = new ObjectMapper();
+                            JsonNode node = mapper.readTree(jsonString);
+                            Datapoint dp = new Datapoint("W_FIN_USECASE"+l, stock2, node);
+                            l++;
+                            if(l>20){
+                                l=0;
+                            }
+                            //SDE data string
+                            //System.out.println(dp.toJsonString());
+                            producer.send(new ProducerRecord<String, String>(topicName, dp.toJsonString()));
+                            nOfMessages++;
+                        }
+                    }
+                }
+            }
+        }
+        System.out.println("Message sent successfully -> " + nOfMessages);
+        producer.close();
+    }
 
 }

@@ -1,27 +1,18 @@
-package infore.SDE;
+package infore.SDE.Experiments;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import infore.SDE.messages.Datapoint;
-import infore.SDE.messages.Estimation;
-import infore.SDE.messages.Request;
 import infore.SDE.sources.kafkaProducerEstimation;
 import infore.SDE.sources.kafkaStringConsumer_Earliest;
-import infore.SDE.transformations.ReduceFlatMap;
-import infore.SDE.transformations.RqRouterFlatMap;
-import infore.SDE.transformations.SDEcoFlatMap;
-import infore.SDE.transformations.dataRouterCoFlatMap;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
-import org.apache.flink.streaming.api.collector.selector.OutputSelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.SplitStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
-public class RUNKafkaReadS {
+public class RUNNaiveWC {
 
 
     private static String kafkaDataInputTopic;
@@ -67,10 +58,12 @@ public class RUNKafkaReadS {
                         // TODO Auto-generated method stub
                         ObjectMapper objectMapper = new ObjectMapper();
                         Datapoint dp = objectMapper.readValue(node, Datapoint.class);
-                        System.out.println(dp.toJsonString());
+                        ArrayList<Datapoint> dps = new ArrayList<>();
+
+                        dps.add(dp);
                         return dp;
                     }
-                }).name("DATA_SOURCE").keyBy((KeySelector<Datapoint, String>) Datapoint::getKey);
+                }).name("DATA_SOURCE").setParallelism(1).keyBy((KeySelector<Datapoint, String>) Datapoint::getKey);
 
         //
 
@@ -102,7 +95,7 @@ public class RUNKafkaReadS {
         }else{
 
             System.out.println("[INFO] Default values");
-            kafkaDataInputTopic = "RAD_REQUEST_N";
+            kafkaDataInputTopic = "RAD_DATA_RE_4";
             kafkaRequestInputTopic = "RAD_REQUEST_5";
             Source ="non";
             multi = 10;
