@@ -49,11 +49,11 @@ public class Test_Return_FIN_Data {
         //Set acknowledgements for producer requests.
         props.put("acks", "all");
         //If the request fails, the producer can automatically retry,
-        props.put("retries", 0);
+        props.put("retries", 1);
         //Specify buffer size in config
         props.put("batch.size", 16384);
         //Reduce the no of requests less than 0
-        props.put("linger.ms", 0);
+        props.put("linger.ms", 100);
         //The buffer.memory controls the total amount of memory available to the producer for buffering.
         props.put("buffer.memory", 33554432);
         props.put("key.serializer",
