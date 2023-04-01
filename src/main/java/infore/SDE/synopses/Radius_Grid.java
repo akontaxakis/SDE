@@ -43,8 +43,13 @@ public class Radius_Grid extends ContinuousSynopsis{
             e = new Estimation(rq, key, dps);
             dps.add(dp.getStreamID());
             grid.put(cell,dps);
+            if(count>100) {
+                count=0;
+                return e;
+            }else{
+                return null;
+            }
 
-            return e;
         }else{
             if(grid.containsKey(cell)){
                 ArrayList<String> dps = grid.get(cell);
@@ -59,7 +64,7 @@ public class Radius_Grid extends ContinuousSynopsis{
                 grid.put(cell,dps);
             }
         }
-        if(count>1000) {
+        if(count>100) {
             count=0;
             return e;
         }else{
