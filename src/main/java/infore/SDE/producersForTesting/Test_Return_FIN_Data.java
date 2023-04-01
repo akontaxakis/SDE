@@ -26,9 +26,9 @@ public class Test_Return_FIN_Data {
 
     public static void main(String[] args) throws Exception {
 
-        SendaddRequest("RAD_RQ_N_3", "cluster");
+       // SendaddRequest("RAD_RQ_N_4", "cluster");
         //sendFINPrices("RAD_DATA_PR_4");
-        sendREData("RAD_RR_N2_3", "cluster");
+        sendREData("RAD_RR_N2_4", "cluster");
     }
 
 
@@ -163,6 +163,8 @@ public class Test_Return_FIN_Data {
                             //SDE data string
                             //System.out.println(dp.toJsonString());
                             producer.send(new ProducerRecord<String, String>(topicName, dp.toJsonString()));
+                            if(nOfMessages%1000==0)
+                                System.out.println(nOfMessages);
                             nOfMessages++;
                         }
                     }

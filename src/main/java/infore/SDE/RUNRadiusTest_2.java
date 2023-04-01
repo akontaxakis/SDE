@@ -51,8 +51,8 @@ public class RUNRadiusTest_2 {
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(parallelism);
-        kafkaStringConsumer kc = new kafkaStringConsumer(kafkaBrokersList, kafkaDataInputTopic);
-        kafkaStringConsumer requests = new kafkaStringConsumer(kafkaBrokersList, kafkaRequestInputTopic);
+        kafkaStringConsumer_Earliest kc = new kafkaStringConsumer_Earliest(kafkaBrokersList, kafkaDataInputTopic);
+        kafkaStringConsumer_Earliest requests = new kafkaStringConsumer_Earliest(kafkaBrokersList, kafkaRequestInputTopic);
           DataStream<String> datastream = env.addSource(kc.getFc());
         DataStream<String> RQ_stream = env.addSource(requests.getFc());
 
@@ -144,8 +144,8 @@ public class RUNRadiusTest_2 {
         }else{
 
             System.out.println("[INFO] Default values");
-            kafkaDataInputTopic = "RAD_RR_N2_3";
-            kafkaRequestInputTopic = "RAD_RQ_N_3";
+            kafkaDataInputTopic = "RAD_RR_N2_4";
+            kafkaRequestInputTopic = "RAD_RQ_N_4";
             Source ="non";
             multi = 10;
             parallelism = 4;
