@@ -40,8 +40,8 @@ public class sendSIMTest {
         String[] parameters5 = {"simulationId","data","Time","40","10"};
         Properties props = new Properties();
         //Assign localhost id
-        //props.put("bootstrap.servers", "localhost:9092");
-        props.put("bootstrap.servers", "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667");
+        props.put("bootstrap.servers", "localhost:9092");
+        //props.put("bootstrap.servers", "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667");
         //props.put("bootstrap.servers", "159.69.32.166:9092");
         // http://2.84.152.37/
         //props.put("bootstrap.servers","2.84.152.37:9092,2.84.152.37:9094,2.84.152.37:9095");

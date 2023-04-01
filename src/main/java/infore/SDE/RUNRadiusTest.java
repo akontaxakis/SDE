@@ -126,7 +126,7 @@ public class RUNRadiusTest {
 
 
 
-        finalStream.addSink(kp.getProducer());
+        //finalStream.addSink(kp.getProducer());
         env.execute("Streaming SDE"+parallelism+"_"+multi+"_"+kafkaDataInputTopic);
 
     }

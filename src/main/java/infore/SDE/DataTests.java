@@ -42,7 +42,7 @@ public class DataTests {
 
     public static void main(String[] args) throws Exception {
         // Initialize Input Parameters
-        SendaddRequest("RAD_REQUEST_7");
+        SendaddRequest("RAD_REQUEST_7","cluster");
 
 
     }

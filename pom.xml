@@ -203,7 +203,7 @@
 								<transformer
 
 				implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>infore.SDE.producersForTesting.Test_Return_FIN_Data</mainClass>
+									<mainClass>infore.SDE.RUNRadiusTest_2</mainClass>
 						</transformer>
 							</transformers>
 						</configuration>

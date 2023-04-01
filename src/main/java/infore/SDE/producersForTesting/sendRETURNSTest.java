@@ -21,7 +21,7 @@ public class sendRETURNSTest {
 
     public void run(String kafkaDataInputTopic, String topicRequests) {
         try {
-            SendaddRequest(topicRequests);
+            SendaddRequest(topicRequests,"cluster");
             sendFINPrices(kafkaDataInputTopic);
 
         } catch (JsonProcessingException e) {

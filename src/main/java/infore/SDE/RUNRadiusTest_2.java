@@ -5,6 +5,7 @@ import infore.SDE.messages.Datapoint;
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
 import infore.SDE.sources.kafkaProducerEstimation;
+import infore.SDE.sources.kafkaStringConsumer;
 import infore.SDE.sources.kafkaStringConsumer_Earliest;
 import infore.SDE.transformations.*;
 import org.apache.flink.api.common.functions.MapFunction;
@@ -50,12 +51,9 @@ public class RUNRadiusTest_2 {
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(parallelism);
-        kafkaStringConsumer_Earliest kc = new kafkaStringConsumer_Earliest(kafkaBrokersList, kafkaDataInputTopic);
-        kafkaStringConsumer_Earliest requests = new kafkaStringConsumer_Earliest(kafkaBrokersList, kafkaRequestInputTopic);
-        kafkaProducerEstimation kp = new kafkaProducerEstimation(kafkaBrokersList, kafkaOutputTopic);
-        kafkaProducerEstimation pRequest = new kafkaProducerEstimation(kafkaBrokersList, kafkaRequestInputTopic);
-        env.setRestartStrategy(RestartStrategies.noRestart());
-        DataStream<String> datastream = env.addSource(kc.getFc());
+        kafkaStringConsumer kc = new kafkaStringConsumer(kafkaBrokersList, kafkaDataInputTopic);
+        kafkaStringConsumer requests = new kafkaStringConsumer(kafkaBrokersList, kafkaRequestInputTopic);
+          DataStream<String> datastream = env.addSource(kc.getFc());
         DataStream<String> RQ_stream = env.addSource(requests.getFc());
 
         //map kafka data input to tuple2<int,double>
@@ -81,15 +79,14 @@ public class RUNRadiusTest_2 {
                         Request request = objectMapper.readValue(node, Request.class);
                         return  request;
                     }
-                }).name("REQUEST_SOURCE").setParallelism(1).keyBy((KeySelector<Request, String>) Request::getKey);
+                }).name("REQUEST_SOURCE").keyBy((KeySelector<Request, String>) Request::getKey);
 
         DataStream<Request> SynopsisRequests = RQ_Stream
-                .flatMap(new RqRouterFlatMap()).setParallelism(1).name("REQUEST_ROUTER");
+                .flatMap(new RqRouterFlatMap()).name("REQUEST_ROUTER");
 
 
         DataStream<Datapoint> DataStream = dataStream.connect(RQ_Stream)
-                .flatMap(new dataRouterCoFlatMap_2()).name("DATA_ROUTER")
-                .keyBy((KeySelector<Datapoint, String>) Datapoint::getKey);
+                .flatMap(new dataRouterCoFlatMap_2()).name("DATA_ROUTER");
 
         //Multiplication IF NEEDED
         //DataStream<Datapoint> DataStream2 = DataStream.flatMap(new IngestionMultiplierFlatMap(multi));
@@ -125,7 +122,7 @@ public class RUNRadiusTest_2 {
 
 
 
-        finalStream.addSink(kp.getProducer());
+        //finalStream.addSink(kp.getProducer());
         env.execute("Streaming SDE"+parallelism+"_"+multi+"_"+kafkaDataInputTopic);
 
     }
@@ -147,14 +144,15 @@ public class RUNRadiusTest_2 {
         }else{
 
             System.out.println("[INFO] Default values");
-            kafkaDataInputTopic = "RAD_RR_N";
-            kafkaRequestInputTopic = "RAD_REQUEST_N2";
+            kafkaDataInputTopic = "RAD_RR_N2_3";
+            kafkaRequestInputTopic = "RAD_RQ_N_3";
             Source ="non";
             multi = 10;
             parallelism = 4;
             //parallelism2 = 4;
             kafkaBrokersList = "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667";
-            kafkaOutputTopic = "RAD_OUT";
+            //kafkaBrokersList = "localhost:9092";
+             kafkaOutputTopic = "RAK_K";
         }
     }
 }

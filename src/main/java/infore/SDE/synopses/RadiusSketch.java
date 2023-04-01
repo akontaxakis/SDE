@@ -39,7 +39,7 @@ public class RadiusSketch extends ContinuousSynopsis {
             sketch_size = Integer.parseInt(param[4]);
         }else{
             number_of_groups =10;
-            window_size = 254;
+            window_size = 200;
             group_size = 2;
             sketch_size = 20;
         }

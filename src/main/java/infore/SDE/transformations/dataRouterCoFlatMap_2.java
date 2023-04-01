@@ -43,15 +43,16 @@ public class dataRouterCoFlatMap_2 extends RichCoFlatMapFunction<Datapoint, Requ
             RadiusSketch RS = MapToGrid.get(value.getDataSetkey());
             ArrayList<Datapoint> sketches_to_grid  = (ArrayList<Datapoint>) RS.estimate(value.getValues());
             for(Datapoint dp: sketches_to_grid) {
+               // System.out.println(dp.toJsonString());
                 out.collect(dp);
             }
         }else{
             String s =  value.getDataSetkey().substring(0,value.getDataSetkey().length()-1);
-            String s1 =  s.substring(s.length()-2,s.length()-1);
-            if(s1 =="1" || s1=="2"){
+            char s1 =  s.charAt(s.length()-1);
+            if(s1 =='1' || s1=='1'){
                 s = s.substring(0,s.length()-1);
             }
-            System.out.println(s);
+            //System.out.println(s);
             MapToGrid.put(value.getDataSetkey(), new RadiusSketch(1110,"StockID","price","Partitioner",s,null));
             RadiusSketch RS = MapToGrid.get(value.getDataSetkey());
             ArrayList<Datapoint> sketches_to_grid  = (ArrayList<Datapoint>) RS.estimate(value.getValues());

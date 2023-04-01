@@ -22,6 +22,7 @@ public class RadiusReduce extends ReduceFunction {
     @Override
     public boolean add(Estimation e) {
         String partial_results = (String)e.getEstimation();
+        System.out.println(partial_results);
         String[] streams = partial_results.split(";");
         for(int i=0;i< streams.length;i++){
             if(counts.containsKey(streams[i])) {
@@ -47,7 +48,7 @@ public class RadiusReduce extends ReduceFunction {
                 results=results+";"+stream.getKey();
             }
         }
-       // System.out.println(results);
+        System.out.println(results);
         return results;
     }
 
