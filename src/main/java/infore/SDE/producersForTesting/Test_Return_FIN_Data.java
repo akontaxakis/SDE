@@ -26,9 +26,9 @@ public class Test_Return_FIN_Data {
 
     public static void main(String[] args) throws Exception {
 
-        SendaddRequest("RAD_REQUEST_N2");
+        // SendaddRequest("RAD_REQUEST_N2");
         //sendFINPrices("RAD_DATA_PR_4");
-        //sendREData("RAD_RR_N");
+        sendREData("RAD_RR_Normal_256");
     }
 
     public static void sendFINData(String kafkaDataInputTopic) throws IOException {
@@ -56,7 +56,7 @@ public class Test_Return_FIN_Data {
         for (File fileEntry : folder.listFiles()) {
             int i = 0;
             String W = "";
-            String previous=";";
+            String previous = ";";
             if (fileEntry.getName().endsWith("his")) {
 
                 BufferedReader br1 = new BufferedReader(new FileReader(fileEntry.getAbsolutePath()));
@@ -79,35 +79,35 @@ public class Test_Return_FIN_Data {
                             words[jk] = tokenizer.nextToken();
                         }
 
-                    if (i < window+1) {
-                        if(i>0) {
-                            if (i < window) {
-                                double diff=Double.parseDouble(previous)-Double.parseDouble(words[2]);
-                                W = W +  df.format(diff) + ";";
-                            } else {
-                                double diff=Double.parseDouble(previous)-Double.parseDouble(words[2]);
-                                W = W +  df.format(diff);
+                        if (i < window + 1) {
+                            if (i > 0) {
+                                if (i < window) {
+                                    double diff = Double.parseDouble(previous) - Double.parseDouble(words[2]);
+                                    W = W + df.format(diff) + ";";
+                                } else {
+                                    double diff = Double.parseDouble(previous) - Double.parseDouble(words[2]);
+                                    W = W + df.format(diff);
+                                }
                             }
-                        }
-                        previous = words[2];
-                        i++;
-                    }else{
-                        i=0;
-                        System.out.println(line);
-                        stock2=stock2 + words[1].replace(":","");
-                        String jsonString = "{\"StockID\":\"" + stock2+ "\",\"price\":\"" +W + "\"}";
-                        W = "";
-                        String str = "" + words[0] + " " + words[1];
-                        //data string
-                        ObjectMapper mapper = new ObjectMapper();
-                        JsonNode node = mapper.readTree(jsonString);
-                        Datapoint dp = new Datapoint("W_FIN_USECASE", stock2, node);
+                            previous = words[2];
+                            i++;
+                        } else {
+                            i = 0;
+                            System.out.println(line);
+                            stock2 = stock2 + words[1].replace(":", "");
+                            String jsonString = "{\"StockID\":\"" + stock2 + "\",\"price\":\"" + W + "\"}";
+                            W = "";
+                            String str = "" + words[0] + " " + words[1];
+                            //data string
+                            ObjectMapper mapper = new ObjectMapper();
+                            JsonNode node = mapper.readTree(jsonString);
+                            Datapoint dp = new Datapoint("W_FIN_USECASE", stock2, node);
 
-                        //SDE data string
-                        System.out.println(dp.toJsonString());
-                        //producer.send(new ProducerRecord<String, String>(topicName, dp.toJsonString()));
-                        nOfMessages++;
-                    }
+                            //SDE data string
+                            System.out.println(dp.toJsonString());
+                            //producer.send(new ProducerRecord<String, String>(topicName, dp.toJsonString()));
+                            nOfMessages++;
+                        }
                     }
                 }
             }
@@ -122,7 +122,7 @@ public class Test_Return_FIN_Data {
         //String[] parameters5 = {"StockID", "price", "60", "2", "60","256","50"};
 
         //STOCK ID, RETURN, #GROUPS, GROUP_DIMENSIONS, SketchSIZE, windowSize, threshold
-        String[] parameters5 = {"StockID", "price", "10", "2", "20","254","70"};
+        String[] parameters5 = {"StockID", "price", "10", "2", "20", "254", "70"};
 
 
         Properties props = new Properties();
@@ -171,11 +171,12 @@ public class Test_Return_FIN_Data {
         props.put("value.serializer",
                 "org.apache.kafka.common.serialization.StringSerializer");
         Producer<String, String> producer = new KafkaProducer<String, String>(props);
-        int window = 256;
+        int window = 254;
 
         for (File fileEntry : folder.listFiles()) {
             int i = 0;
             String W = "";
+            int count = 0;
             if (fileEntry.getName().endsWith("his")) {
 
                 BufferedReader br1 = new BufferedReader(new FileReader(fileEntry.getAbsolutePath()));
@@ -199,21 +200,25 @@ public class Test_Return_FIN_Data {
                         }
 
                         if (i < window) {
-                            if(i>0) {
-                                if (i < window-1) {
-                                    W = W +  words[2] + ";";
+                            if (i > 0) {
+                                if (i < window - 1) {
+                                    W = W + words[2] + ";";
+                                    count++;
                                 } else {
-                                    W = W +  words[2];
+                                    W = W + words[2];
+                                    count++;
                                 }
                             }
 
                             i++;
-                        }else{
-                            i=0;
+                        } else {
+                            i = 0;
                             //System.out.println(line);
-                            stock2=stock2 + words[1].replace(":","");
-                            String jsonString = "{\"StockID\":\"" + stock2+ "\",\"price\":\"" +W + "\"}";
+                            stock2 = stock2 + words[1].replace(":", "");
+                            String jsonString = "{\"StockID\":\"" + stock2 + "\",\"price\":\"" + W + "\"}";
                             W = "";
+                            count = 0;
+
                             String str = "" + words[0] + " " + words[1];
                             //data string
                             ObjectMapper mapper = new ObjectMapper();
@@ -239,7 +244,7 @@ public class Test_Return_FIN_Data {
         String line = "";
         String topicName = kafkaDataInputTopic;
         int nOfMessages = 0;
-        int count_zero=0;
+        int count_zero = 0;
         final File folder = new File(folderPath);
         ArrayList<Pair<String, BufferedReader>> br = new ArrayList<Pair<String, BufferedReader>>();
         Properties props = new Properties();
@@ -260,8 +265,8 @@ public class Test_Return_FIN_Data {
         for (File fileEntry : folder.listFiles()) {
             int i = 0;
             String W = "";
-            String previous=";";
-            String previous_2="l";
+            String previous = ";";
+            String previous_2 = "l";
             double diff = 100;
             if (fileEntry.getName().endsWith("his")) {
 
@@ -285,9 +290,9 @@ public class Test_Return_FIN_Data {
                             words[jk] = tokenizer.nextToken();
                         }
 
-                        if (i < window*5) {
-                            if(i>5) {
-                                if (i < window *5) {
+                        if (i < window * 5) {
+                            if (i > 5) {
+                                if (i < window * 5) {
                                     if (i % 5 == 0) {
                                         diff = (Double.parseDouble(words[2]) / Double.parseDouble(previous)) - 1;
                                         W = W + diff + ";";
@@ -296,25 +301,25 @@ public class Test_Return_FIN_Data {
                                         }
                                         //W = W +  df.format(diff) + ";";
                                     }
-                                }else {
-                                        diff = (Double.parseDouble(words[2]) / Double.parseDouble(previous)) - 1;
-                                        W = W + diff;
-                                        if (diff == 0.0) {
-                                            count_zero++;
-                                        }
+                                } else {
+                                    diff = (Double.parseDouble(words[2]) / Double.parseDouble(previous)) - 1;
+                                    W = W + diff;
+                                    if (diff == 0.0) {
+                                        count_zero++;
                                     }
                                 }
+                            }
                             if (i % 5 == 0) {
                                 previous = words[2];
                             }
                             i++;
 
-                        }else{
+                        } else {
 
-                            i=0;
+                            i = 0;
                             System.out.println(W);
-                            stock2=stock2 + words[1].replace(":","");
-                            String jsonString = "{\"StockID\":\"" + stock2+ "\",\"price\":\"" +W + "\"}";
+                            stock2 = stock2 + words[1].replace(":", "");
+                            String jsonString = "{\"StockID\":\"" + stock2 + "\",\"price\":\"" + W + "\"}";
                             W = "";
                             String str = "" + words[0] + " " + words[1];
                             //data string
@@ -334,6 +339,7 @@ public class Test_Return_FIN_Data {
         System.out.println("Message sent successfully -> " + nOfMessages);
         producer.close();
     }
+
     public static void sendREData(String kafkaDataInputTopic) throws IOException {
         String folderPath = "C:\\Users\\adoko\\Downloads\\FinancialData\\history";
         String line = "";
@@ -358,10 +364,10 @@ public class Test_Return_FIN_Data {
 
         for (File fileEntry : folder.listFiles()) {
             int i = 0;
-            int l =0;
+            int l = 0;
             String W = "";
-            String previous=";";
-            String previous_2="l";
+            int count = 0;
+            String previous = ";";
             double diff = 100;
             if (fileEntry.getName().endsWith("his")) {
 
@@ -385,39 +391,45 @@ public class Test_Return_FIN_Data {
                             words[jk] = tokenizer.nextToken();
                         }
 
-                        if (i < window+1) {
-                            if(i>1) {
+                        if (i < window + 1) {
+                            if (i > 0) {
                                 if (i < window) {
 
-                                        diff = (Double.parseDouble(words[2]) / Double.parseDouble(previous)) - 1;
-                                        W = W + diff + ";";
-                                        //W = W +  df.format(diff) + ";";
-                                }else {
+                                    diff = (Double.parseDouble(words[2]) / Double.parseDouble(previous)) - 1;
+                                    W = W + diff + ";";
+                                    count++;
+                                    //W = W +  df.format(diff) + ";";
+                                } else {
                                     diff = (Double.parseDouble(words[2]) / Double.parseDouble(previous)) - 1;
                                     W = W + diff;
+                                    count++;
                                 }
                             }
-                           previous = words[2];
-                           i++;
+                            previous = words[2];
+                            i++;
 
-                        }else{
+                        } else {
 
-                            i=0;
-                            //System.out.println(W);
-                            stock2=stock2 + words[1].replace(":","");
-                            String jsonString = "{\"StockID\":\"" + stock2+ "\",\"price\":\"" +W + "\"}";
+                            i = 0;
+                            String[] returns = W.split(";");
                             W = "";
+
+                            //System.out.println(count +","+ returns.length);
+                            count = 0;
+                            stock2 = stock2 + words[1].replace(":", "");
+                            String jsonString = "{\"StockID\":\"" + stock2 + "\",\"price\":\"" + W + "\"}";
+
                             String str = "" + words[0] + " " + words[1];
                             //data string
                             ObjectMapper mapper = new ObjectMapper();
                             JsonNode node = mapper.readTree(jsonString);
-                            Datapoint dp = new Datapoint("W_FIN_USECASE"+l, stock2, node);
+                            Datapoint dp = new Datapoint("W_FIN_USECASE" + l, stock2, node);
                             l++;
-                            if(l>20){
-                                l=0;
+                            if (l > 16) {
+                                l = 0;
                             }
                             //SDE data string
-                            //System.out.println(dp.toJsonString());
+                            //System.out.println(count);
                             producer.send(new ProducerRecord<String, String>(topicName, dp.toJsonString()));
                             nOfMessages++;
                         }
