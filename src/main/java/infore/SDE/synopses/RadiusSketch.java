@@ -1,11 +1,13 @@
 package infore.SDE.synopses;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import infore.SDE.messages.Datapoint;
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
 import org.apache.commons.math3.distribution.NormalDistribution;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
@@ -88,7 +90,31 @@ public class RadiusSketch extends ContinuousSynopsis {
         }
         return dps;
     }
+    public Datapoint getSketch(Datapoint dp) {
+        JsonNode node = (JsonNode) dp.getValues();
+        System.out.println(node.asText());
+        String values = node.get(this.valueIndex).asText();
+        String[] prices = values.split(";");
 
+        ArrayList<Double> ps = new ArrayList<>();
+        for (int p = 0; p < prices.length; p++) {
+            ps.add(Double.parseDouble(prices[p]));
+        }
+        double[] sketch = multiplyByMatrix(ps, r);
+
+        String k = "";
+        for (int i = 0; i < sketch_size; i++)
+            k = k + sketch[i] + ";";
+
+        String jsonString = "{\"price\":\"" + k + "\"}";
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            dp.setValues(mapper.readTree(jsonString));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return dp;
+    }
     public double[] multiplyByMatrix(ArrayList<Double> w, double[][] g) {
         int wLength = w.size(); // m1 columns length
         int gRowLength = g.length;    // m2 rows length

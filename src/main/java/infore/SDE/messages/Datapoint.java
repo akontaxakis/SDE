@@ -3,6 +3,7 @@ package infore.SDE.messages;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -92,11 +93,26 @@ public class Datapoint implements Serializable {
     public boolean compare(Datapoint dp) {
 
         JsonNode a1 = dp.getValues();
-
-        String key = a1.get("streamID").asText();
         String values = a1.get("price").asText();
-        String[] prices = values.split(";");
+        String[] a1_prices = values.split(";");
 
-        return true;
+        values = this.values.get("price").asText();
+        String[] b1_prices = values.split(";");
+
+
+
+        double[] x = new double[a1_prices.length];
+        double[] y = new double[a1_prices.length];
+        for(int i=0;i<a1_prices.length;i++){
+            x[i] = Double.parseDouble(a1_prices[i]);
+            y[i] = Double.parseDouble(b1_prices[i]);
+        }
+
+        double corr = new PearsonsCorrelation().correlation(y, x);
+        if(corr> 0.7) {
+            return true;
+        }else{
+            return false;
+        }
     }
 }

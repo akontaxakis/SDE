@@ -2,7 +2,6 @@ package infore.SDE.Experiments;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import infore.SDE.messages.Datapoint;
-import infore.SDE.sources.kafkaProducerEstimation;
 import infore.SDE.sources.kafkaStringConsumer_Earliest;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
@@ -10,7 +9,6 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class RUNNaiveWC {
 
@@ -44,11 +42,8 @@ public class RUNNaiveWC {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(parallelism);
         kafkaStringConsumer_Earliest kc = new kafkaStringConsumer_Earliest(kafkaBrokersList, kafkaDataInputTopic);
-        kafkaStringConsumer_Earliest requests = new kafkaStringConsumer_Earliest(kafkaBrokersList, kafkaRequestInputTopic);
-        kafkaProducerEstimation kp = new kafkaProducerEstimation(kafkaBrokersList, kafkaOutputTopic);
 
         DataStream<String> datastream = env.addSource(kc.getFc());
-        DataStream<String> RQ_stream = env.addSource(requests.getFc());
 
         //map kafka data input to tuple2<int,double>
         DataStream<Datapoint> dataStream = datastream
@@ -58,23 +53,15 @@ public class RUNNaiveWC {
                         // TODO Auto-generated method stub
                         ObjectMapper objectMapper = new ObjectMapper();
                         Datapoint dp = objectMapper.readValue(node, Datapoint.class);
-                        ArrayList<Datapoint> dps = new ArrayList<>();
-
-                        dps.add(dp);
                         return dp;
                     }
                 }).name("DATA_SOURCE").setParallelism(1).keyBy((KeySelector<Datapoint, String>) Datapoint::getKey);
 
-        //
+
+        DataStream<Datapoint> DataStream2 = dataStream.flatMap(new NaiveCoFlatMap()).setParallelism(1);
 
 
-
-
-        //Multiplication IF NEEDED
-        //DataStream<Datapoint> DataStream2 = DataStream.flatMap(new IngestionMultiplierFlatMap(multi));
-
-
-        env.execute("Streaming SDE"+parallelism+"_"+multi+"_"+kafkaDataInputTopic);
+        env.execute("StreamingNaive"+parallelism+"_"+multi+"_"+kafkaDataInputTopic);
 
     }
 
@@ -95,8 +82,8 @@ public class RUNNaiveWC {
         }else{
 
             System.out.println("[INFO] Default values");
-            kafkaDataInputTopic = "RAD_DATA_RE_4";
-            kafkaRequestInputTopic = "RAD_REQUEST_5";
+            kafkaDataInputTopic = "RAD_RR_N2_4";
+            kafkaRequestInputTopic = "RAD_RQ_N_4";
             Source ="non";
             multi = 10;
             parallelism = 4;

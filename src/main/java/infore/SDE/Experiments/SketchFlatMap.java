@@ -1,4 +1,4 @@
-package infore.SDE.transformations;
+package infore.SDE.Experiments;
 
 import infore.SDE.messages.Datapoint;
 import infore.SDE.synopses.RadiusSketch;
@@ -30,11 +30,10 @@ public class SketchFlatMap implements  FlatMapFunction<Datapoint, Datapoint>{
 
 			RS = new RadiusSketch(1110,"StockID","price","Partitioner",s,null);
 		}
-
-		dps.add(value);
-
-		if(count>1000) {
-			ArrayList<Datapoint> result = compare(dps,value);
+		Datapoint Sketch = RS.getSketch(value);
+		dps.add(Sketch);
+		if(count>100) {
+			ArrayList<Datapoint> result = compare(dps,Sketch);
 			if(!result.isEmpty())
 				out.collect(value);
 		}

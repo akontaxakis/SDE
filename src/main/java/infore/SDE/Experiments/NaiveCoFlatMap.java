@@ -1,4 +1,4 @@
-package infore.SDE.transformations;
+package infore.SDE.Experiments;
 
 import infore.SDE.messages.Datapoint;
 import org.apache.flink.api.common.functions.FlatMapFunction;
@@ -12,25 +12,25 @@ public class NaiveCoFlatMap implements  FlatMapFunction<Datapoint, Datapoint>{
 	/**
 	 *
 	 */
+
 	private static final long serialVersionUID = 1L;
-	int feedMultiplier;
 
 	private ArrayList<Datapoint> dps = new ArrayList<>();
 	private int count = 0;
+	private int threshold =70;
 
 	@Override
 	public void flatMap(Datapoint value, Collector<Datapoint> out) throws Exception {
         count++;
 		dps.add(value);
 
-		if(count>1000) {
+		if(count>100) {
 			ArrayList<Datapoint> result = compare(dps,value);
-			if(!result.isEmpty())
-				out.collect(value);
+			if(!result.isEmpty()) {
+				for(Datapoint dp: result)
+				out.collect(dp);
+			}
 		}
-
-
-
 
 
 		}

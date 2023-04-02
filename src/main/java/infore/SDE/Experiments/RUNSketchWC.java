@@ -2,19 +2,13 @@ package infore.SDE.Experiments;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import infore.SDE.messages.Datapoint;
-import infore.SDE.sources.kafkaProducerEstimation;
 import infore.SDE.sources.kafkaStringConsumer_Earliest;
-import infore.SDE.transformations.IngestionMultiplierFlatMap;
-import infore.SDE.transformations.NaiveCoFlatMap;
-import infore.SDE.transformations.SketchFlatMap;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class RUNSketchWC {
 
@@ -46,8 +40,9 @@ public class RUNSketchWC {
         initializeParameters(args);
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-        env.setParallelism(1);
+        env.setParallelism(parallelism);
         kafkaStringConsumer_Earliest kc = new kafkaStringConsumer_Earliest(kafkaBrokersList, kafkaDataInputTopic);
+
         DataStream<String> datastream = env.addSource(kc.getFc());
 
         //map kafka data input to tuple2<int,double>
@@ -60,9 +55,10 @@ public class RUNSketchWC {
                         Datapoint dp = objectMapper.readValue(node, Datapoint.class);
                         return dp;
                     }
-                }).name("DATA_SOURCE").keyBy((KeySelector<Datapoint, String>) Datapoint::getKey);
+                }).name("DATA_SOURCE").setParallelism(1).keyBy((KeySelector<Datapoint, String>) Datapoint::getKey);
 
-        DataStream<Datapoint>  DataStream2 = dataStream.flatMap(new SketchFlatMap()).setParallelism(1);
+
+        DataStream<Datapoint> DataStream2 = dataStream.flatMap(new SketchFlatMap()).setParallelism(1);
 
 
         env.execute("StreamingSketch"+parallelism+"_"+multi+"_"+kafkaDataInputTopic);
@@ -86,8 +82,8 @@ public class RUNSketchWC {
         }else{
 
             System.out.println("[INFO] Default values");
-            kafkaDataInputTopic = "RAD_DATA_RE_4";
-            kafkaRequestInputTopic = "RAD_REQUEST_5";
+            kafkaDataInputTopic = "RAD_RR_N2_4";
+            kafkaRequestInputTopic = "RAD_RQ_N_4";
             Source ="non";
             multi = 10;
             parallelism = 4;
