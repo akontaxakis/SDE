@@ -33,6 +33,7 @@ public class SketchFlatMap implements  FlatMapFunction<Datapoint, Datapoint>{
 		Datapoint Sketch = RS.getSketch(value);
 		dps.add(Sketch);
 		if(count>100) {
+			count =0;
 			ArrayList<Datapoint> result = compare(dps,Sketch);
 			if(!result.isEmpty())
 				out.collect(value);

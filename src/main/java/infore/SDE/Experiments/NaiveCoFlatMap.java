@@ -25,6 +25,7 @@ public class NaiveCoFlatMap implements  FlatMapFunction<Datapoint, Datapoint>{
 		dps.add(value);
 
 		if(count>100) {
+			count =0;
 			ArrayList<Datapoint> result = compare(dps,value);
 			if(!result.isEmpty()) {
 				for(Datapoint dp: result)

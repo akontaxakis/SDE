@@ -110,6 +110,7 @@ public class Datapoint implements Serializable {
 
         double corr = new PearsonsCorrelation().correlation(y, x);
         if(corr> 0.7) {
+            //System.out.println(corr);
             return true;
         }else{
             return false;

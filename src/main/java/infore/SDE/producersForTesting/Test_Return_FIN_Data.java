@@ -28,7 +28,7 @@ public class Test_Return_FIN_Data {
 
        // SendaddRequest("RAD_RQ_N_4", "cluster");
         //sendFINPrices("RAD_DATA_PR_4");
-        sendREData("RAD_RR_N2_4", "cluster");
+        sendREData("RAD_RR_N_300000", "cluster");
     }
 
 
@@ -48,6 +48,8 @@ public class Test_Return_FIN_Data {
             props.put("bootstrap.servers", "localhost:9092");
         //Set acknowledgements for producer requests.
         props.put("acks", "all");
+        props.put("transaction.timeout.ms", "60000");
+
         //If the request fails, the producer can automatically retry,
         props.put("retries", 1);
         //Specify buffer size in config
