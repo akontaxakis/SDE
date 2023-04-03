@@ -82,7 +82,7 @@ public class RUNNaiveWC {
         }else{
 
             System.out.println("[INFO] Default values");
-            kafkaDataInputTopic = "RAD_RR_N2_4";
+            kafkaDataInputTopic = "RAD_RR_N_3001";
             kafkaRequestInputTopic = "RAD_RQ_N_4";
             Source ="non";
             multi = 10;
