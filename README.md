@@ -3,7 +3,8 @@
 ## SDEaaS: Synopses Data Engine-as-a-Service
 
 *Cite as:
-@article{DBLP:journals/is/FlourisGDG20,
+
+@article{sdeaas,
   author    = {Antonis Kontaxakis and
                Nikos Giatrakos and
 			   Dimitris Sacharidis and
