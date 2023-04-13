@@ -36,7 +36,7 @@ Based on the Request's KEY - VALUE pair SDE performs different actions.
 |14|	TopK|	none|	TopK|	TopK|	keyField, ValueField, OperationMode, numberOfK, countDown|
 |15|	OptimalDistributedWindowSampling	|none	|Sample of the data	|Sampling|	keyField, ValueField, OperationMode, windowSize|
 |16|	OptimalDistributedSampling|	none	|Sample of the data|	Sampling|	keyField, ValueField, OperationMode|
-|17|	windowQuantiles|	KEY|	Quantile|	Quantiles	|keyField , ValueField, OperationMode, epsilon ( the maximum error bound ),windowSize|
+|17|	WindowedQuantiles|	KEY|	Quantile|	Quantiles	|keyField , ValueField, OperationMode, epsilon ( the maximum error bound ),windowSize|
 |18|	Radius Sketch Family| similarity score|	similarity score|	similarity/distance|	KeyField, ValueField, OperationMode,Group Size, Sketch Size,Window Size, Number of Groups|
 
 ---
@@ -90,7 +90,8 @@ Request  Example for adding new Synopses
 
 ### Contact
 
-For any questions don't hesitate to ask.!!!
+For any questions don't hesitate to ask:
+
 Antonios Kontaxakis, antonios.kontaxakis-ATNOSPAM-ulb.be
 
 Nikos Giatrakos, ngiatrakos-ATNOSPAM-tuc.gr
