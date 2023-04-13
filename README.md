@@ -23,8 +23,8 @@ Based on the Request's KEY - VALUE pair SDE performs different actions.
 |1|	CountMin |	KEY |	Count|	Frequent Itemsets|	KeyField, ValueField,OperationMode, epsilon, cofidence, seed |
 |2|	BloomFilter| KEY |	Member of a Set| 	Membership|	KeyField, ValueField,OperationMode, numberOfElements, FalsePositive|
 |3|	AMS|	KEY|	 L2 norm, innerProduct, Count|	Frequent Itemsets|	KeyField, ValueField,OperationMode, Depth, Buckets|
-|4|	DFT*|	similarityPresentance|	Fourier Coefficients|	Correlation|	KeyField, ValueField,  timeField,OperationMode,Interval in Seconds, Basic Window Size in Seconds, Sliding Window Size in Seconds , #coefficients|
-|5|	LSH*	|none	|BucketID - Projected features	|Correlation|	KeyField, ValueField,OperationMode, windowSize, Dimensions, numberOfBuckets|
+|4|	DFT|	similarity score|	Fourier Coefficients|	Correlation|	KeyField, ValueField,  timeField,OperationMode,Interval in Seconds, Basic Window Size in Seconds, Sliding Window Size in Seconds , #coefficients|
+|5|	LSH	|none	|BucketID - Projected features	|Correlation|	KeyField, ValueField,OperationMode, windowSize, Dimensions, numberOfBuckets|
 |6|	Coresets|	theNumberOfClustersK|	Coresets used for kmeans|	Clustering|	KeyField, ValueField,OperationMode, maxBucketSize,dimensions|
 |7|	HyperLogLog|	none	|Cardinality	|Cardinality	|keyField, ValueField, OperationMode, rsd ( relative standard deviation )|
 |8|	StickySampling	|KEY	|FrequentItems, isFrequent, Count|	Frequent Itemsets	|keyField, ValueField, OperationMode, support, epsilon, probabilityofFailure|
@@ -32,12 +32,12 @@ Based on the Request's KEY - VALUE pair SDE performs different actions.
 |10|	ChainSampler|	none|	Sample of the data|	Sampling|	keyField,  ValueField, OperationMode, size of sample, size of the window|
 |11|	GKQuantiles|	KEY|	Quantile	|Quantiles|keyField , ValueField, OperationMode, epsilon ( the maximum error bound )|
 |12|	MarinetimeSKetch|	none	|Ship positions(Sample)|	Sampling	|keyField, ValueField, OperationMode,  minsamplingperiod, minimumDistance, speed(knots) ,corse(degrees)| 
-|13|	TopK*|	none|	TopK|	TopK|	keyField, ValueField, OperationMode, numberOfK, countDown|
-|14|	OptimalDistributedWindowSampling*	|none	|Sample of the data	|Sampling|	keyField, ValueField, OperationMode, windowSize|
-|15|	OptimalDistributedSampling*|	none	|Sample of the data|	Sampling|	keyField, ValueField, OperationMode|
+|13|	TopK|	none|	TopK|	TopK|	keyField, ValueField, OperationMode, numberOfK, countDown|
+|14|	OptimalDistributedWindowSampling	|none	|Sample of the data	|Sampling|	keyField, ValueField, OperationMode, windowSize|
+|15|	OptimalDistributedSampling|	none	|Sample of the data|	Sampling|	keyField, ValueField, OperationMode|
 |16|	windowQuantiles|	KEY|	Quantile|	Quantiles	|keyField , ValueField, OperationMode, epsilon ( the maximum error bound ),windowSize|
+[17]	Radius Sketch Family| similarity score|	similarity score|	similarity/distance|	KeyField, ValueField, OperationMode,Group Size, Sketch Size,Window Size, Number of Groups|
 
-*high probability of change until the end of the Project
 ---
 ### Full list of available Requests
 
