@@ -26,17 +26,18 @@ Based on the Request's KEY - VALUE pair SDE performs different actions.
 |4|	DFT|	similarity score|	Fourier Coefficients|	Correlation|	KeyField, ValueField,  timeField,OperationMode,Interval in Seconds, Basic Window Size in Seconds, Sliding Window Size in Seconds , #coefficients|
 |5|	LSH	|none	|BucketID - Projected features	|Correlation|	KeyField, ValueField,OperationMode, windowSize, Dimensions, numberOfBuckets|
 |6|	Coresets|	theNumberOfClustersK|	Coresets used for kmeans|	Clustering|	KeyField, ValueField,OperationMode, maxBucketSize,dimensions|
-|7|	HyperLogLog|	none	|Cardinality	|Cardinality	|keyField, ValueField, OperationMode, rsd ( relative standard deviation )|
-|8|	StickySampling	|KEY	|FrequentItems, isFrequent, Count|	Frequent Itemsets	|keyField, ValueField, OperationMode, support, epsilon, probabilityofFailure|
-|9|	LossyCounting|	KEY|	Count, FrequentItems	|Frequent Itemsets	|keyField, ValueField, OperationMode, epsilon ( the maximum error bound )|
-|10|	ChainSampler|	none|	Sample of the data|	Sampling|	keyField,  ValueField, OperationMode, size of sample, size of the window|
-|11|	GKQuantiles|	KEY|	Quantile	|Quantiles|keyField , ValueField, OperationMode, epsilon ( the maximum error bound )|
-|12|	MarinetimeSKetch|	none	|Ship positions(Sample)|	Sampling	|keyField, ValueField, OperationMode,  minsamplingperiod, minimumDistance, speed(knots) ,corse(degrees)| 
-|13|	TopK|	none|	TopK|	TopK|	keyField, ValueField, OperationMode, numberOfK, countDown|
-|14|	OptimalDistributedWindowSampling	|none	|Sample of the data	|Sampling|	keyField, ValueField, OperationMode, windowSize|
-|15|	OptimalDistributedSampling|	none	|Sample of the data|	Sampling|	keyField, ValueField, OperationMode|
-|16|	windowQuantiles|	KEY|	Quantile|	Quantiles	|keyField , ValueField, OperationMode, epsilon ( the maximum error bound ),windowSize|
-17|	Radius Sketch Family| similarity score|	similarity score|	similarity/distance|	KeyField, ValueField, OperationMode,Group Size, Sketch Size,Window Size, Number of Groups|
+|7|	FM Sketch	|	none	|Cardinality	|Cardinality	|keyField, ValueField, OperationMode, Bitmap size, epsilon relative error, probabilityofFailure |
+|8|	HyperLogLog|	none	|Cardinality	|Cardinality	|keyField, ValueField, OperationMode, rsd ( relative standard deviation )|
+|9|	StickySampling	|KEY	|FrequentItems, isFrequent, Count|	Frequent Itemsets	|keyField, ValueField, OperationMode, support, epsilon, probabilityofFailure|
+|10|	LossyCounting|	KEY|	Count, FrequentItems	|Frequent Itemsets	|keyField, ValueField, OperationMode, epsilon ( the maximum error bound )|
+|11|	ChainSampler|	none|	Sample of the data|	Sampling|	keyField,  ValueField, OperationMode, size of sample, size of the window|
+|12|	GKQuantiles|	KEY|	Quantile	|Quantiles|keyField , ValueField, OperationMode, epsilon ( the maximum error bound )|
+|13|	MarinetimeSKetch|	none	|Ship positions(Sample)|	Sampling	|keyField, ValueField, OperationMode,  minsamplingperiod, minimumDistance, speed(knots) ,corse(degrees)| 
+|14|	TopK|	none|	TopK|	TopK|	keyField, ValueField, OperationMode, numberOfK, countDown|
+|15|	OptimalDistributedWindowSampling	|none	|Sample of the data	|Sampling|	keyField, ValueField, OperationMode, windowSize|
+|16|	OptimalDistributedSampling|	none	|Sample of the data|	Sampling|	keyField, ValueField, OperationMode|
+|17|	windowQuantiles|	KEY|	Quantile|	Quantiles	|keyField , ValueField, OperationMode, epsilon ( the maximum error bound ),windowSize|
+|18|	Radius Sketch Family| similarity score|	similarity score|	similarity/distance|	KeyField, ValueField, OperationMode,Group Size, Sketch Size,Window Size, Number of Groups|
 
 ---
 ### Full list of available Requests
