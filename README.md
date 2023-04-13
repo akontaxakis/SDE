@@ -5,7 +5,7 @@
 *Cite as:
 
 @article{sdeaas,
-  author    = {Antonis Kontaxakis and
+  author    = {Antonios Kontaxakis and
                Nikos Giatrakos and
 			   Dimitris Sacharidis and
                Antonios Deligiannakis},
