@@ -1,6 +1,8 @@
-# **Synopsis Data Engine (SDE)**
+# **And Synopses for All: a Synopses Data Engine for Extreme Scale Analytics-as-a-Service**
 
-## A stateful SDE with the basic impelentation of:
+## SDEaaS: Synopses Data Engine-as-a-Service
+
+## Cite as: work under review
 
 ## Input MAIN CLASS (Run)
 ~~~
