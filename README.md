@@ -2,7 +2,18 @@
 
 ## SDEaaS: Synopses Data Engine-as-a-Service
 
-## Cite as: work under review
+*Cite as:
+@article{DBLP:journals/is/FlourisGDG20,
+  author    = {Antonis Kontaxakis and
+               Nikos Giatrakos and
+			   Dimitris Sacharidis and
+               Antonios Deligiannakis},
+  title     = {{And Synopses for All: a Synopses Data Engine for Extreme Scale Analytics-as-a-Service}},
+  journal   = {Inf. Syst. (under review)},
+  volume    = {},
+  year      = {},
+}
+*
 
 ## Input MAIN CLASS (Run)
 ~~~
