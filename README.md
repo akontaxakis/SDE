@@ -16,7 +16,7 @@ args[4]={@link #parallelism} Job parallelism (DEFAULT: "4")
 SDE reads the Data and the Requests from a Kafka Topic each, given as arguments.
 Based on the Request's KEY - VALUE pair SDE performs different actions.
 
-### List of some Available Synopsis.
+### List of Available Synopsis.
 
 | SynopsisID | Synopsis| Estimation Parameters| Estimates| Mostly Used|	Parameters|
 | ---------- | ------- | ---------------------|----------|------------|-----------|
