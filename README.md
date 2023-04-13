@@ -14,7 +14,7 @@ args[4]={@link #parallelism} Job parallelism (DEFAULT: "4")
 SDE reads the Data and the Requests from a Kafka Topic each, given as arguments.
 Based on the Request's KEY - VALUE pair SDE performs different actions.
 
-### The List of Available Synopsis.
+### List of some Available Synopsis.
 
 | SynopsisID | Synopsis| Estimation Parameters| Estimates| Mostly Used|	Parameters|
 | ---------- | ------- | ---------------------|----------|------------|-----------|
@@ -81,13 +81,17 @@ Request  Example for adding new Synopses
 
 ## Getting Started
 
-- git clone https://ATHENAINFORE@bitbucket.org/infore_research_project/6.1-sde.git
+- git clone https://github.com/akontaxakis/SDE.git
 - mvn package
 - You can find the  "Fat-Jar" under the Directory ./target with all the dependencies included
 
 ### Contact
 
 For any questions don't hesitate to ask.!!!
+Antonios Kontaxakis, antonios.kontaxakis-ATNOSPAM-ulb.be
+Nikos Giatrakos, ngiatrakos-ATNOSPAM-tuc.gr
+Dimitris Sacharidis, dimitris.sacharidis-ATNOSPAM-ulb.be
+Antonios Deligiannakis, adeligiannakis-ATNOSPAM-tuc.gr
 
 
 
