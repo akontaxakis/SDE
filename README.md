@@ -93,11 +93,8 @@ Request  Example for adding new Synopses
 For any questions don't hesitate to ask.!!!
 
 Antonios Kontaxakis, antonios.kontaxakis-ATNOSPAM-ulb.be
-
 Nikos Giatrakos, ngiatrakos-ATNOSPAM-tuc.gr
-
 Dimitris Sacharidis, dimitris.sacharidis-ATNOSPAM-ulb.be
-
 Antonios Deligiannakis, adeligiannakis-ATNOSPAM-tuc.gr
 
 
