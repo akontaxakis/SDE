@@ -1,4 +1,4 @@
-package infore.SDE;
+package infore.SDE.Experiments;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import infore.SDE.messages.Datapoint;

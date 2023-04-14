@@ -1,11 +1,10 @@
-package infore.SDE;
+package infore.SDE.Experiments;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import infore.SDE.messages.Datapoint;
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
 import infore.SDE.producersForTesting.sendAISTest;
-import infore.SDE.producersForTesting.sendSIMTest;
 import infore.SDE.sources.kafkaProducerEstimation;
 import infore.SDE.sources.kafkaStringConsumer;
 import infore.SDE.sources.kafkaStringConsumer_Earliest;
@@ -21,7 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RUNAISTest {
+public class RUNRadiusTest {
 
 
     private static String kafkaDataInputTopic;
@@ -50,20 +49,12 @@ public class RUNAISTest {
         // Initialize Input Parameters
         initializeParameters(args);
 
-        if(Source.startsWith("auto")) {
-            Thread thread1 = new Thread(() -> {
-                (new sendAISTest()).run(kafkaDataInputTopic,kafkaRequestInputTopic,parallelism);
-            });
-            thread1.start();
-        }
-
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(parallelism);
         kafkaStringConsumer_Earliest kc = new kafkaStringConsumer_Earliest(kafkaBrokersList, kafkaDataInputTopic);
-        kafkaStringConsumer requests = new kafkaStringConsumer(kafkaBrokersList, kafkaRequestInputTopic);
+        kafkaStringConsumer_Earliest requests = new kafkaStringConsumer_Earliest(kafkaBrokersList, kafkaRequestInputTopic);
         kafkaProducerEstimation kp = new kafkaProducerEstimation(kafkaBrokersList, kafkaOutputTopic);
         kafkaProducerEstimation pRequest = new kafkaProducerEstimation(kafkaBrokersList, kafkaRequestInputTopic);
-        //kafkaProducerEstimation test = new kafkaProducerEstimation(kafkaBrokersList, "testPairs");
 
         DataStream<String> datastream = env.addSource(kc.getFc());
         DataStream<String> RQ_stream = env.addSource(requests.getFc());
@@ -78,7 +69,7 @@ public class RUNAISTest {
                         Datapoint dp = objectMapper.readValue(node, Datapoint.class);
                         return dp;
                     }
-                }).name("DATA_SOURCE");
+                }).name("DATA_SOURCE").keyBy((KeySelector<Datapoint, String>) Datapoint::getKey);
 
         //
         DataStream<Request> RQ_Stream = RQ_stream
@@ -87,27 +78,24 @@ public class RUNAISTest {
                     @Override
                     public Request map(String node) throws IOException {
                         // TODO Auto-generated method stub
-                        //String[] valueTokens = node.replace("\"", "").split(",");
-                        //if(valueTokens.length > 6) {
                         ObjectMapper objectMapper = new ObjectMapper();
-
-                        // byte[] jsonData = json.toString().getBytes();
                         Request request = objectMapper.readValue(node, Request.class);
                         return  request;
                     }
-                }).name("REQUEST_SOURCE").keyBy((KeySelector<Request, String>) Request::getKey);
+                }).name("REQUEST_SOURCE").setParallelism(1).keyBy((KeySelector<Request, String>) Request::getKey);
 
         DataStream<Request> SynopsisRequests = RQ_Stream
-                .flatMap(new RqRouterFlatMap()).name("REQUEST_ROUTER");
+                .flatMap(new RqRouterFlatMap()).setParallelism(1).name("REQUEST_ROUTER");
 
 
         DataStream<Datapoint> DataStream = dataStream.connect(RQ_Stream)
-                .flatMap(new DummydataRouterCoFlatMap(parallelism)).name("DATA_ROUTER")
+                .flatMap(new dataRouterCoFlatMap()).setParallelism(1).name("DATA_ROUTER")
                 .keyBy((KeySelector<Datapoint, String>) Datapoint::getKey);
 
-        DataStream<Datapoint> DataStream2 = DataStream.flatMap(new IngestionMultiplierFlatMap(multi));
+        //Multiplication IF NEEDED
+        //DataStream<Datapoint> DataStream2 = DataStream.flatMap(new IngestionMultiplierFlatMap(multi));
 
-        DataStream<Estimation> estimationStream = DataStream2.keyBy((KeySelector<Datapoint, String>) Datapoint::getKey)
+        DataStream<Estimation> estimationStream = DataStream.keyBy((KeySelector<Datapoint, String>) Datapoint::getKey)
                 .connect(SynopsisRequests.keyBy((KeySelector<Request, String>) Request::getKey))
                 .flatMap(new SDEcoFlatMap()).name("SYNOPSES_MAINTENANCE").disableChaining();
 
@@ -126,6 +114,7 @@ public class RUNAISTest {
                 else {
                     output.add("multy");
                 }
+
                 return output;
             }
         });
@@ -133,33 +122,11 @@ public class RUNAISTest {
         DataStream<Estimation> single = split.select("single");
         DataStream<Estimation> multy = split.select("multy").keyBy((KeySelector<Estimation, String>) Estimation::getKey);
         //single.addSink(kp.getProducer());
-        DataStream<Estimation> partialOutputStream = multy.flatMap(new ReduceFlatMap()).name("REDUCE").setParallelism(1);
-
-        DataStream<Estimation> finalStream = partialOutputStream.flatMap(new GReduceFlatMap()).setParallelism(1);
+        DataStream<Estimation> finalStream = multy.flatMap(new ReduceFlatMap()).name("REDUCE");
 
 
-        SplitStream<Estimation> split_2 = finalStream.split(new OutputSelector<Estimation>() {
-            private static final long serialVersionUID = 1L;
-            @Override
-            public Iterable<String> select(Estimation value) {
-                // TODO Auto-generated method stub
-                List<String> output = new ArrayList<>();
-                if (value.getRequestID() == 7) {
-                    output.add("UR");
-                }
-                else {
-                    output.add("E");
-                }
-                return output;
-            }
-        });
 
-        DataStream<Estimation> UR = split_2.select("UR");
-        DataStream<Estimation> E = split_2.select("E");
-        //E.addSink(kp.getProducer());
-        //UR.addSink(pRequest.getProducer());
-
-        finalStream.addSink(kp.getProducer()).setParallelism(1);
+        //finalStream.addSink(kp.getProducer());
         env.execute("Streaming SDE"+parallelism+"_"+multi+"_"+kafkaDataInputTopic);
 
     }
@@ -174,34 +141,21 @@ public class RUNAISTest {
             kafkaRequestInputTopic = args[1];
             multi = Integer.parseInt(args[2]);
             parallelism = Integer.parseInt(args[3]);
-            System.out.println("[INFO] Default values");
-            //Default values
-            //kafkaDataInputTopic = "FAN";
-            Source ="auto";
-            //kafkaRequestInputTopic = "Rq_FAN";
-
-            //parallelism2 = 4;
+            Source ="non";
             kafkaBrokersList = "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667";
-            //kafkaBrokersList = "localhost:9092";
-            //kafkaBrokersList = "159.69.32.166:9092";
-            kafkaOutputTopic = "AIS_OUT";
+            kafkaOutputTopic = "RAD_OUT";
 
         }else{
 
             System.out.println("[INFO] Default values");
-            //Default values
-            //kafkaDataInputTopic = "FAN";
-            kafkaDataInputTopic = "AIS_DATA_10000";
-            kafkaRequestInputTopic = "Rq_AIS";
-            Source ="auto";
+            kafkaDataInputTopic = "RAD_RR_mod5";
+            kafkaRequestInputTopic = "RAD_REQUEST_6";
+            Source ="non";
             multi = 10;
-            //kafkaRequestInputTopic = "Rq_FAN";
-            parallelism = 2;
+            parallelism = 4;
             //parallelism2 = 4;
             kafkaBrokersList = "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667";
-            //kafkaBrokersList = "localhost:9092";
-            //kafkaBrokersList = "159.69.32.166:9092";
-            kafkaOutputTopic = "AIS_OUT";
+            kafkaOutputTopic = "RAD_OUT";
         }
     }
 }
