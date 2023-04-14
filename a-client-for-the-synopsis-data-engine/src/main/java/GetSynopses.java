@@ -42,28 +42,11 @@ public class GetSynopses {
         CompletableFuture<ValueState<Tuple1<String>>> resultFuture = client.getKvState(jid, "getSynopses", key, BasicTypeInfo.STRING_TYPE_INFO, descriptor);
 
 
-        //CompletableFuture<ValueState<Tuple1<String>>> resultFuture = client.getKvState(jid, "getSynopses", key, typeHint, descriptor);
-       /* CompletableFuture<ValueState<String>> getKvState =
-                client.getKvState(JobID.fromHexString(”JobId”),”request”,
-        key,TypeInformation.of(newTypeHint<String>(){ }),
-        mydescriptor);*/
-
 
         // now handle the returned value
        //resultFuture.
         ImmutableValueState<Tuple1<String>> res2 = (ImmutableValueState<Tuple1<String>>)resultFuture.get();
        System.out.println(res2.value().f0);
-        /*
-            resultFuture.thenAccept(response -> {
-                try {
 
-                    ValueState<Tuple1<String>> res = resultFuture.get();
-                    System.out.println(res.value().f0);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            });
-        } */
     }
     }

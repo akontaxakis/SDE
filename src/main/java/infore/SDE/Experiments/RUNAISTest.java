@@ -1,11 +1,10 @@
-package infore.SDE.Experiments;
+package infore.SDE.experiments;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import infore.SDE.messages.Datapoint;
 import infore.SDE.messages.Estimation;
 import infore.SDE.messages.Request;
 import infore.SDE.producersForTesting.sendAISTest;
-import infore.SDE.producersForTesting.sendSIMTest;
 import infore.SDE.sources.kafkaProducerEstimation;
 import infore.SDE.sources.kafkaStringConsumer;
 import infore.SDE.sources.kafkaStringConsumer_Earliest;

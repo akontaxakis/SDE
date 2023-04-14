@@ -1,25 +1,15 @@
-package infore.SDE.Experiments;
+package infore.SDE.experiments;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import infore.SDE.messages.Datapoint;
-import infore.SDE.messages.Estimation;
-import infore.SDE.messages.Request;
 import infore.SDE.sources.kafkaProducerEstimation;
 import infore.SDE.sources.kafkaStringConsumer_Earliest;
-import infore.SDE.transformations.ReduceFlatMap;
-import infore.SDE.transformations.RqRouterFlatMap;
-import infore.SDE.transformations.SDEcoFlatMap;
-import infore.SDE.transformations.dataRouterCoFlatMap;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
-import org.apache.flink.streaming.api.collector.selector.OutputSelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.SplitStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class RUNKafkaReadS {
 

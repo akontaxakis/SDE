@@ -1,4 +1,4 @@
-package infore.SDE.Experiments;
+package infore.SDE.experiments;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import infore.SDE.messages.Datapoint;
@@ -10,8 +10,6 @@ import infore.SDE.sources.kafkaStringConsumer;
 import infore.SDE.sources.kafkaStringConsumer_Earliest;
 import infore.SDE.transformations.*;
 import org.apache.flink.api.common.functions.MapFunction;
-import org.apache.flink.api.common.restartstrategy.RestartStrategies;
-import org.apache.flink.api.common.time.Time;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.collector.selector.OutputSelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -21,7 +19,6 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class RunSIMTest {
 

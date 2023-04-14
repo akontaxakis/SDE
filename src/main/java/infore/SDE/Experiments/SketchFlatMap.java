@@ -1,4 +1,4 @@
-package infore.SDE.Experiments;
+package infore.SDE.experiments;
 
 import infore.SDE.messages.Datapoint;
 import infore.SDE.synopses.RadiusSketch;

@@ -1,10 +1,9 @@
-package infore.SDE.Experiments;
+package infore.SDE.experiments;
 
 import infore.SDE.messages.Datapoint;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class ParalliseCoFlatMap implements FlatMapFunction<Datapoint, Datapoint> {

@@ -1,8 +1,9 @@
 # **A Client for the Synopsis Data Engine (CSDE)**
 
-## This project provides **3 Java main classes**:
+This project provides **3 Java main classes**:
 ---
 ### how to send data (SendData)
+
 ```
  create a new DataPoint
  setKey(String DataSetkey)	
@@ -10,8 +11,10 @@
  create a kafka Producer
  sendData((kafka Configuration),DataToKafkaSerialization(record))
 ```
+
 ---
-### Send requests for adding Synopses, Delete, Estimate
+
+### how to send requests for adding Synopses, Delete, Estimate
 ```
   main(kafka Configuration)
   create a new Request
@@ -25,16 +28,19 @@
   sendRequest((kafka Configuration),DataToKafkaSerialization(record))
 ```
 
-
 ---
-###  getState
+### how to getState
+
 ```
+
  FlinkQuerableState
 (SunopsisID, UID, Parameters, Parallelism) GetRunningSynopses(DataSetKey); 
-```
-### a small DEMO
 
-#### Step 1:
+```
+
+## a small Demo
+
+#### Step 1: Run the SDE
 
 -> flink run SDE.jar  "6FIN500" "testRequest5" "OUT" "localhost:9092" "4"  
 
@@ -46,49 +52,67 @@
 
 Request Add synopsis
 ```
-KEY<DatasetKey> --  Value<DatasetKey,RequestID, UID, SynopsisID, StreamID, parameters, NumberOfParallelism>
-"FINANCIAL_USECASE" -- "FINANCIAL_USECASE,1,111,1,INTEL,1;2;0.0002;0.99;4,1"
+{
+  "streamID" : "ForexALLNoExpiry",
+  "synopsisID" : 4,
+  "requestID" : 1,
+  "dataSetkey" : "Financial_Data",
+  "param" : [ "StockID", "price","Queryable", “0.0002“, “0.99", “4" ],
+  "NumberOfParallelism" : 4,
+  "uid" : 1110
+}
 ```
-
 CountMin Parameters
 
-  + KeyIndex = the field to use as a key | example:INTEL
- 
-  + ValueIndex = the field to use as a value| example:68
- 
-  + epsilon = example:0.0002
- 
-  + confidence = example: 0.99
- 
-  + seed = example:4
- 
+  + KeyField = the field to use as a key | example:StockID
+  + ValueField = the field to use as a value| example:price
+  + OperationMode = Queryable
+  + epsilon = 0.0002
+  + cofidence = 0.99
+  + seed = 4
+
 ---
 
 #### Step 3: Send Data
 
 -> Run SendData MainClass
 
-Data
+The data format is in JSON, the main fields DataSetKey,streamID, values
 
 ```
-KEY<DatasetKey,   Random>  --  Value<DataSetKey,     StreamID, Values>
-"FINANCIAL_USECASE, 7040"  --   "FINANCIAL_USECASE,   INTEL,     68"
+{
+  "values" : 
+	  "{"time":"02/19/2019 06:07:14",
+	  "StockID":"ForexALLNoExpiry",
+	  "price":"110.11"}",
+  "streamID" : "7040",
+  "dataSetkey" : "FINANCIAL_USECASE"
+}
 ```
-
 ---
 
 #### Step 4: Send an Estimation Request
 
--> Run SendEstimationRequest MainClass
+-> Run Send Estimation Request Main Class
 
-Estimation
+Estimation Request
 
 ```
-<estimationkey, StreamID, UID, RequestID,  SynopsisID, estimation, parameters, NumberOfParallelism>
-<  111,          INTEL,   111,    3,           1,        38548,      INTEL,           1           >
+{
+  "streamID" : "ForexALLNoExpiry",
+  "synopsisID" : 4,
+  "requestID" : 3,
+  "dataSetkey" : "Financial_Data",
+  "param" : [ "ForexALLNoExpiry" ],
+  "NumberOfParallelism" : 4,
+  "uid" : 1110
+}
 ```
 
 ---
+
+
+
 
 ### Contact
 

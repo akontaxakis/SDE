@@ -1,4 +1,4 @@
-package infore.SDE.Experiments;
+package infore.SDE.experiments;
 
 
 import java.io.IOException;
@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import infore.SDE.messages.Datapoint;
-import infore.SDE.producersForTesting.sendFINTest;
 import infore.SDE.producersForTesting.sendTopKTest;
 import infore.SDE.sources.kafkaProducerEstimation;
 import infore.SDE.sources.kafkaStringConsumer;
@@ -17,7 +16,6 @@ import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.streaming.api.collector.selector.OutputSelector;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.datastream.SplitStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import infore.SDE.messages.Estimation;

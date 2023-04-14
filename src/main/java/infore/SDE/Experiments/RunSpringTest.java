@@ -1,4 +1,4 @@
-package infore.SDE.Experiments;
+package infore.SDE.experiments;
 import infore.SDE.producersForTesting.sendSpringTest;
 
 
