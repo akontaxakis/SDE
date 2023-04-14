@@ -3,7 +3,6 @@
 This project provides **3 Java main classes**:
 ---
 ### how to send data (SendData)
-
 ```
  create a new DataPoint
  setKey(String DataSetkey)	
