@@ -31,8 +31,6 @@ public class RequestFIN {
         props.put("value.serializer",
                 "org.apache.kafka.common.serialization.StringSerializer");
         Producer<String, String> producer = new KafkaProducer<String, String>(props);
-
-
         //Parameters are based on each specific query or Synopsis creation check .excel file for details
         //if less than the correct number of parameters are send then the default values will be used.
         String[] parameters = {"ForexXOFNoExpiry", "2"};

@@ -41,8 +41,6 @@ public class GetSynopses {
 
         CompletableFuture<ValueState<Tuple1<String>>> resultFuture = client.getKvState(jid, "getSynopses", key, BasicTypeInfo.STRING_TYPE_INFO, descriptor);
 
-
-
         // now handle the returned value
        //resultFuture.
         ImmutableValueState<Tuple1<String>> res2 = (ImmutableValueState<Tuple1<String>>)resultFuture.get();

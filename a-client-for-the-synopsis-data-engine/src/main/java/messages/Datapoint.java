@@ -89,7 +89,6 @@ public class Datapoint implements Serializable {
         return this.DataSetkey;
     }
 
-
     public boolean compare(Datapoint dp) {
 
         JsonNode a1 = dp.getValues();

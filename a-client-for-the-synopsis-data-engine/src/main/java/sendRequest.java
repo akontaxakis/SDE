@@ -8,8 +8,6 @@ import java.util.Properties;
 public class sendRequest {
 
     public static void main(String[] args) throws Exception {
-
-
         //Kafka Producer Configuration
         //Assign topicName to string variable
         String topicRequests = "Requests";

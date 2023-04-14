@@ -32,7 +32,6 @@ public class SendEstimationRequest {
                 "org.apache.kafka.common.serialization.StringSerializer");
         Producer<String, String> producer = new KafkaProducer<String, String>(props);
 
-
          /*Synopsis IDs ATM
          CountMin 1
          BloomFilter 2

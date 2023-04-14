@@ -10,7 +10,6 @@ public class TestALLadd {
 
     public static void main(String[] args) throws Exception {
 
-
         //Kafka Producer Configuration
         //Assign topicName to string variable
         String topicRequests = "Requests";

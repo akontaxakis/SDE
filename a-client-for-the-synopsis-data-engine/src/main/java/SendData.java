@@ -37,7 +37,6 @@ public class SendData{
 
 
     //Code for Sending DataPoints to the SDE after the configuration of a kafka Producer
-
     Datapoint dp = new Datapoint();
     int i = 0;
     int min = 10;

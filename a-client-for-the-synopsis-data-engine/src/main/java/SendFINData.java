@@ -118,8 +118,6 @@ public class SendFINData{
                                         //JsonNode node = mapper.readTree(dp2.getValues());
                                         //String phoneType = node.get("price").asText();
                                         //String cat = node.get("StockID").asText();
-
-
                                         nOfMessages++;
                                         System.out.println(nOfMessages + " id ->" + stock2);
                                     }
