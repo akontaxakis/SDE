@@ -49,7 +49,7 @@ Based on the Request's KEY - VALUE pair SDE performs different actions.
 |15|	OptimalDistributedWindowSampling	|none	|Sample of the data	|Sampling|	keyField, ValueField, OperationMode, windowSize|
 |16|	OptimalDistributedSampling|	none	|Sample of the data|	Sampling|	keyField, ValueField, OperationMode|
 |17|	WindowedQuantiles|	KEY|	Quantile|	Quantiles	|keyField , ValueField, OperationMode, epsilon ( the maximum error bound ),windowSize|
-|18|	Radius Sketch Family| similarity score|	similarity score|	similarity/distance|	KeyField, ValueField, OperationMode,Group Size, Sketch Size,Window Size, Number of Groups|
+|18|	Radius Sketch Family| similarity score|	similarity score|	List of streams/windows|	KeyField, ValueField, OperationMode,Group Size, Sketch Size,Window Size, Number of Groups|
 
 ---
 ### Full list of available Requests
