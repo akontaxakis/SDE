@@ -203,7 +203,7 @@
 								<transformer
 
 				implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>infore.SDE.experiments.RUNRadiusAsPartitioner_Test</mainClass>
+									<mainClass>infore.SDE.Run</mainClass>
 						</transformer>
 							</transformers>
 						</configuration>

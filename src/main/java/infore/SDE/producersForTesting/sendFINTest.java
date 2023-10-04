@@ -101,14 +101,11 @@ public class sendFINTest {
                 "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer",
                 "org.apache.kafka.common.serialization.StringSerializer");
+
         Producer<String, String> producer = new KafkaProducer<String, String>(props);
-
-
-
-
         Request rq = new Request("fin_useCase", 3, 29, 1110, "INTEL", parameters2, 4);
 
-        //producer.send(new ProducerRecord<String, String>(topicRequests, rq.keyToKafka(), rq.toJsonString()));
+        producer.send(new ProducerRecord<String, String>(topicRequests, rq.keyToKafka(), rq.toJsonString()));
 
         producer.close();
     }

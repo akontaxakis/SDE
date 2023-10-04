@@ -4,8 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import infore.SDE.messages.Request;
-import javafx.util.Pair;
-import org.apache.commons.math3.distribution.NormalDistribution;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -78,7 +77,7 @@ public class Test_Return_FIN_Data {
         String topicName = kafkaDataInputTopic;
         int nOfMessages = 0;
         final File folder = new File(folderPath);
-        ArrayList<Pair<String, BufferedReader>> br = new ArrayList<Pair<String, BufferedReader>>();
+        ArrayList<ImmutablePair<String, BufferedReader>> br = new ArrayList<ImmutablePair<String, BufferedReader>>();
         Properties props = new Properties();
         if(mode == "cluster")
             props.put("bootstrap.servers", "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667");
@@ -110,7 +109,7 @@ public class Test_Return_FIN_Data {
                 String stock = k;
                 stock = stock.replace("╖", "");
                 stock = stock.replace("·", "");
-                br.add(new Pair<String, BufferedReader>(stock, br1));
+                br.add(new ImmutablePair<String, BufferedReader>(stock, br1));
                 while ((line = br1.readLine()) != null) {
 
                     String stock2 = stock.replace(" ", "");
@@ -183,7 +182,7 @@ public class Test_Return_FIN_Data {
         String topicName = kafkaDataInputTopic;
         int nOfMessages = 0;
         final File folder = new File(folderPath);
-        ArrayList<Pair<String, BufferedReader>> br = new ArrayList<Pair<String, BufferedReader>>();
+        ArrayList<ImmutablePair<String, BufferedReader>> br = new ArrayList<ImmutablePair<String, BufferedReader>>();
         Properties props = new Properties();
         props.put("bootstrap.servers", "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667");
         //props.put("bootstrap.servers", "localhost:9092");
@@ -210,7 +209,7 @@ public class Test_Return_FIN_Data {
                 String stock = k;
                 stock = stock.replace("╖", "");
                 stock = stock.replace("·", "");
-                br.add(new Pair<String, BufferedReader>(stock, br1));
+                br.add(new ImmutablePair<String, BufferedReader>(stock, br1));
                 while ((line = br1.readLine()) != null) {
 
                     String stock2 = stock.replace(" ", "");
@@ -268,7 +267,7 @@ public class Test_Return_FIN_Data {
         String topicName = kafkaDataInputTopic;
         int nOfMessages = 0;
         final File folder = new File(folderPath);
-        ArrayList<Pair<String, BufferedReader>> br = new ArrayList<Pair<String, BufferedReader>>();
+        ArrayList<ImmutablePair<String, BufferedReader>> br = new ArrayList<ImmutablePair<String, BufferedReader>>();
         Properties props = new Properties();
         props.put("bootstrap.servers", "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667");
         //props.put("bootstrap.servers", "localhost:9092");
@@ -295,7 +294,7 @@ public class Test_Return_FIN_Data {
                 String stock = k;
                 stock = stock.replace("╖", "");
                 stock = stock.replace("·", "");
-                br.add(new Pair<String, BufferedReader>(stock, br1));
+                br.add(new ImmutablePair<String, BufferedReader>(stock, br1));
                 while ((line = br1.readLine()) != null) {
 
                     String stock2 = stock.replace(" ", "");
@@ -357,7 +356,7 @@ public class Test_Return_FIN_Data {
         int nOfMessages = 0;
         int count_zero = 0;
         final File folder = new File(folderPath);
-        ArrayList<Pair<String, BufferedReader>> br = new ArrayList<Pair<String, BufferedReader>>();
+        ArrayList<ImmutablePair<String, BufferedReader>> br = new ArrayList<ImmutablePair<String, BufferedReader>>();
         Properties props = new Properties();
         props.put("bootstrap.servers", "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667");
         //props.put("bootstrap.servers", "localhost:9092");
@@ -386,7 +385,7 @@ public class Test_Return_FIN_Data {
                 String stock = k;
                 stock = stock.replace("╖", "");
                 stock = stock.replace("·", "");
-                br.add(new Pair<String, BufferedReader>(stock, br1));
+                br.add(new ImmutablePair<String, BufferedReader>(stock, br1));
                 while ((line = br1.readLine()) != null) {
 
                     String stock2 = stock.replace(" ", "");
