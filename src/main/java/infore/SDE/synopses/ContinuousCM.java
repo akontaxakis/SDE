@@ -13,7 +13,7 @@ public class ContinuousCM extends ContinuousSynopsis{
 
     public ContinuousCM(int uid, Request t_rq, String[] parameters) {
         super(uid,parameters[0],parameters[1], parameters[2]);
-        cm = new CM(Double.parseDouble(parameters[3]),Double.parseDouble(parameters[3]),Integer.parseInt(parameters[4]));
+        cm = new CM(Double.parseDouble(parameters[3]),Double.parseDouble(parameters[4]),Integer.parseInt(parameters[5]));
         this.setRq(t_rq);
     }
 
