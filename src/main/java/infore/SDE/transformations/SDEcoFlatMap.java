@@ -24,7 +24,7 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 	private int pId;
 
 	@Override
-	public void flatMap1(Datapoint node, Collector<Estimation> collector) {
+	public void flatMap1(Datapoint node, Collector<Estimation> collector) throws JsonProcessingException {
 		//System.out.println(node.toString());
 		//System.out.println(MC_Synopses.size());
 		ArrayList<Synopsis>  Synopses =  M_Synopses.get(node.getKey());
@@ -35,11 +35,12 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 		M_Synopses.put(node.getKey(),Synopses);
 		}
 		ArrayList<ContinuousSynopsis>  C_Synopses =  MC_Synopses.get(node.getKey());
+		System.out.println(node.toJsonString());
 		if (C_Synopses != null) {
 
 			for (ContinuousSynopsis c_ski : C_Synopses) {
 
-				Estimation e =c_ski.addEstimate(node);
+				Estimation e =c_ski.addEstimate(node.getValues());
 				if(e!=null){
 					if(e.getEstimation()!=null)
 						collector.collect(e);

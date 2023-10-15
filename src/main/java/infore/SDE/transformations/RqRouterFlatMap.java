@@ -58,7 +58,7 @@ public class RqRouterFlatMap extends RichFlatMapFunction<Request, Request> imple
 								rq.setKey(tmpkey +"_"+rq.getNoOfP()+"_RANDOM_" + i);
 								out.collect(rq);
 							}else{
-						  		System.out.println("here ->" + i );
+						  		//System.out.println("here ->" + i );
 								rq.setDataSetkey(tmpkey + "_" + rq.getNoOfP() + "_KEYED_" + i);
 
 								out.collect(rq);

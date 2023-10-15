@@ -10,7 +10,7 @@ import infore.SDE.synopses.Sketches.CM;
 public class CountMin extends Synopsis{
 
 	private CM cm;
-
+	int count = 0;
 	public CountMin(int uid, String[] parameters) {
      super(uid,parameters[0],parameters[1], parameters[2]);
 	 cm = new CM(Double.parseDouble(parameters[3]),Double.parseDouble(parameters[4]),Integer.parseInt(parameters[5]));
@@ -18,6 +18,8 @@ public class CountMin extends Synopsis{
 	 
 	@Override
 	public void add(Object k) {
+		//String j = (String)k;
+		count++;
 		//ObjectMapper mapper = new ObjectMapper();
 		JsonNode node = (JsonNode)k;
         /*try {
@@ -25,9 +27,17 @@ public class CountMin extends Synopsis{
         } catch (IOException e) {
             e.printStackTrace();
         } */
+
 		String key = node.get(this.keyIndex).asText();
-		String value = node.get(this.valueIndex).asText();
-		cm.add(Math.abs((key).hashCode()), (long)Double.parseDouble(value));
+
+		if(this.valueIndex.startsWith("null")){
+
+			cm.add(key, 1);
+		}else{
+			String value = node.get(this.valueIndex).asText();
+			//cm.add(Math.abs((key).hashCode()), (long)Double.parseDouble(value));
+			cm.add(key, (long)Double.parseDouble(value));
+		}
 
 	}
 
@@ -56,7 +66,10 @@ public class CountMin extends Synopsis{
 			return new Estimation(rq, cm, par[1]);
 
 		}
-		return new Estimation(rq, Double.toString((double)cm.estimateCount(Math.abs(rq.getParam()[0].hashCode()))), Integer.toString(rq.getUID()));
+		String key = rq.getParam()[0];
+		String e = Double.toString((double)cm.estimateCount(key));
+		System.out.println(e +" "+ count);
+		return new Estimation(rq, e, Integer.toString(rq.getUID()));
 
 
 	}

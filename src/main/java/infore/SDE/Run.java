@@ -10,6 +10,7 @@ import infore.SDE.messages.Datapoint;
 import infore.SDE.sources.kafkaProducerEstimation;
 import infore.SDE.sources.kafkaStringConsumer;
 
+import infore.SDE.sources.kafkaStringConsumer_Earliest;
 import infore.SDE.transformations.*;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
@@ -181,15 +182,16 @@ public class Run {
 			System.out.println("[INFO] Default values");
 			//Default values
 			//kafkaDataInputTopic = "FAN";
-			kafkaDataInputTopic = "FIN_DATA";
-			kafkaRequestInputTopic = "FIN_RQ";
+			kafkaDataInputTopic = "data_topic";
+			kafkaRequestInputTopic = "request_topic";
 			//kafkaRequestInputTopic = "Rq_FAN";
 			parallelism = 4;
 			//parallelism2 = 4;
 			//kafkaBrokersList = "clu02.softnet.tuc.gr:6667,clu03.softnet.tuc.gr:6667,clu04.softnet.tuc.gr:6667,clu06.softnet.tuc.gr:6667";
-			kafkaBrokersList = "45.10.26.123:19092";
+			//kafkaBrokersList = "45.10.26.123:19092";
+			kafkaBrokersList = "localhost:9092";
 			//kafkaBrokersList = "159.69.32.166:9092";
-			kafkaOutputTopic = "FIN_OUT";
+			kafkaOutputTopic = "estimation_topic";
 		}
 	}
 }
