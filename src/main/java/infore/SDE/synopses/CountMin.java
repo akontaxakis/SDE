@@ -68,7 +68,6 @@ public class CountMin extends Synopsis{
 		}
 		String key = rq.getParam()[0];
 		String e = Double.toString((double)cm.estimateCount(key));
-		System.out.println(e +" "+ count);
 		return new Estimation(rq, e, Integer.toString(rq.getUID()));
 
 

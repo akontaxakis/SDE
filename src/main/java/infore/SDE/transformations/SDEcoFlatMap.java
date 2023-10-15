@@ -35,7 +35,6 @@ public class SDEcoFlatMap extends RichCoFlatMapFunction<Datapoint, Request, Esti
 		M_Synopses.put(node.getKey(),Synopses);
 		}
 		ArrayList<ContinuousSynopsis>  C_Synopses =  MC_Synopses.get(node.getKey());
-		System.out.println(node.toJsonString());
 		if (C_Synopses != null) {
 
 			for (ContinuousSynopsis c_ski : C_Synopses) {
