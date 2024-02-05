@@ -1,4 +1,4 @@
-import message.Datapoint;
+import messages.Datapoint;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -13,12 +13,12 @@ public class SendData{
 
     //Kafka Configuration
         //Assign topicName to string variable
-        String topicData = "test";
+        String topicName = "data_topic";
         // create instance for properties to access producer configs
         Properties props = new Properties();
         //Assign localhost id KafkaAPI
-        props.put("bootstrap.servers", "45.10.26.123:19092,45.10.26.123:29092,45.10.26.123:39092");
-
+        //props.put("bootstrap.servers", "45.10.26.123:19092,45.10.26.123:29092,45.10.26.123:39092");
+        props.put("bootstrap.servers", "localhost:9092");
         //Set acknowledgements for producer requests.
         props.put("acks", "all");
         //If the request fails, the producer can automatically retry,
@@ -37,20 +37,20 @@ public class SendData{
 
 
     //Code for Sending DataPoints to the SDE after the configuration of a kafka Producer
-    Datapoint dp = new Datapoint();
+    //Datapoint dp = new Datapoint();
     int i = 0;
     int min = 10;
     int max = 100;
     Random r = new Random();
-    while (i < 10000) {
+    while (i < 1000) {
 
-        int randomValue = 10 + r.nextInt(max - min);
-        //a unique key per DataSet
-        dp.setStreamID("INTEL");
-        dp.setValues(Integer.toString(randomValue));
-        dp.setDataSetkey("FINANCIAL_USECASE");
-        System.out.println(dp.keyToKafka() + " " + dp.ValueToKafka());
-        producer.send(new ProducerRecord<String, String>(topicData,dp.keyToKafka(), dp.ValueToKafka()));
+        int randomValue = 100 + r.nextInt(max - min);
+        int randomkey = 10 + r.nextInt(100);
+        String jsonString = "{\"a1\":\""+ randomkey+"\",\"label\":\"" + randomValue + "\"}";
+        System.out.println(jsonString);
+        Datapoint dp = new Datapoint("Polynomial_Data", "1", jsonString);
+        System.out.println(dp.toJsonString());
+        //producer.send(new ProducerRecord<String, String>(topicName,dp.toJsonString()));
         i++;
 
     }

@@ -1,4 +1,4 @@
-import message.Request;
+import messages.Request;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -58,7 +58,7 @@ public class SendEstimationRequest {
         String[] parameters = {"INTEL"};
         Request rq = new Request("FINANCIAL_USECASE", 3, 1, 111, "INTEL", parameters, 1);
 
-        producer.send(new ProducerRecord<String, String>(topicRequests, rq.keyToKafka(), rq.ValueToKafka()));
+        producer.send(new ProducerRecord<String, String>(topicRequests, rq.keyToKafka(), rq.toJsonString()));
         producer.close();
 
     }

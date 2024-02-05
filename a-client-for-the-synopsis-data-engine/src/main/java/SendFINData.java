@@ -1,5 +1,6 @@
-import javafx.util.Pair;
-import message.Datapoint;
+
+import messages.Datapoint;
+import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -24,7 +25,7 @@ public class SendFINData{
         int Gcount=0;
 
         final File folder = new File(folderPath);
-        ArrayList<Pair<String, BufferedReader>> br = new ArrayList<Pair<String, BufferedReader>>();
+        ArrayList<Tuple2<String, BufferedReader>> br = new ArrayList<Tuple2<String, BufferedReader>>();
 
         HashMap<String, Integer> mp =  new HashMap<String, Integer>();
         Properties props = new Properties();
@@ -60,24 +61,26 @@ public class SendFINData{
                         stock = stock.replace("╖", "");
                         stock = stock.replace("·", "");
 
-                         add = br.add(new Pair<String, BufferedReader>(stock, br1));
+                         add = br.add(new Tuple2<String, BufferedReader>(stock, br1));
 
 
                         j = 0;
                         int c = 0;
                         int size = br.size();
                         while (c < size) {
-                            Iterator<Pair<String, BufferedReader>> e = br.iterator();
+                            Iterator<Tuple2<String, BufferedReader>> e = br.iterator();
 
                             while (e.hasNext()) {
 
                                 //System.out.println("oti nane");
                                 //br1.readLine().replace(".","").split(",")
-                                Pair<String, BufferedReader> br2 = e.next();
+                                Tuple2<String, BufferedReader> br2 = e.next();
                                 // System.out.println("key-> " + br2.getKey());
-                                line = br2.getValue().readLine();
+                                BufferedReader x =  br2.getField(1);
 
-                                String stock2 = br2.getKey().replace(" ", "");
+                                line =x.readLine();
+                                String second = br2.getField(0);
+                                String stock2 = second.replace(" ", "");
                                 stock2 = stock2.replace("╖", "");
                                 stock2 = stock2.replace("·", "");
 

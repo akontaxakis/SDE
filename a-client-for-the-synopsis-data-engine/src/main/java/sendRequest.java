@@ -1,4 +1,4 @@
-import message.Request;
+import messages.Request;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -10,7 +10,7 @@ public class sendRequest {
     public static void main(String[] args) throws Exception {
         //Kafka Producer Configuration
         //Assign topicName to string variable
-        String topicRequests = "Requests";
+        String topicRequests = "request_topic";
         // create instance for properties to access producer configs
         Properties props = new Properties();
         //Assign localhost id
@@ -57,15 +57,16 @@ public class sendRequest {
         //Parameters are based on each specific query or Synopsis creation check .excel file for details
         //if less than the correct number of parameters are send then the default values will be used.
        // String[] parameters = {"StockID", "price", "5", "30", "8"};
-        String[] parameters = {"0.95", "2"};
+        String[] parameters = {"a1","label","Queryable","0.0002", "0.99", "4"};
+        String[] parameters_2 = {"20"};
         //uID should be unique per request
         //Request rq = new Request("Forex", 5, 12, 1110, "INTEL", parameters, 4);
-        Request rq = new Request("Forex", 3, 4, 1110, "INTEL", parameters, 4);
-
+        Request rq = new Request("Polynomial_Data", 1, 1, 1110, "a1", parameters, 2);
+        Request rq_2 = new Request("Polynomial_Data", 3, 1, 1110, "a1", parameters_2, 2);
 
         System.out.println(rq.toJsonString());
         //there is a high change that the classes keyToKafka and ValueToKafka may change but that shouldn't affect the client code much.
-        producer.send(new ProducerRecord<String, String>(topicRequests, rq.keyToKafka(), rq.toJsonString()));
+        producer.send(new ProducerRecord<String, String>(topicRequests, rq_2.keyToKafka(), rq_2.toJsonString()));
 
         producer.close();
 

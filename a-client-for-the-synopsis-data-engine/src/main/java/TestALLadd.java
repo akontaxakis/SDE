@@ -1,4 +1,4 @@
-import message.Request;
+import messages.Request;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -82,7 +82,7 @@ public class TestALLadd {
         //there is a high change that the classes keyToKafka and ValueToKafka may change but that shouldn't affect the client code much.
         for( Request rq: rqs ) {
             rq.setRequestID(3);
-            producer.send(new ProducerRecord<String, String>(topicRequests, rq.keyToKafka(), rq.ValueToKafka()));
+            producer.send(new ProducerRecord<String, String>(topicRequests, rq.keyToKafka(), rq.toJsonString()));
 
         }
         producer.close();

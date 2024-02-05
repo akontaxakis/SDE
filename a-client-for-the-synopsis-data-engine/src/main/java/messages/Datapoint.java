@@ -1,13 +1,10 @@
-package infore.SDE.messages;
-
+package messages;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.math3.stat.correlation.PearsonsCorrelation;
 
 import java.io.IOException;
 import java.io.Serializable;
-
 
 public class Datapoint implements Serializable {
 
@@ -26,13 +23,13 @@ public class Datapoint implements Serializable {
 
     }
 
-    public Datapoint(String d, String s, Object o) {
+    public Datapoint(String d, String s, String o) {
         DataSetkey=d; //hash value
         StreamID=s; //the stream ID
-        String jsonString = "{\"value\":\"" +o+ "\"}";
+        String jsonString = "{\"values\":" +o+ "}";
         ObjectMapper mapper = new ObjectMapper();
         try {
-            values = mapper.readTree(jsonString);
+            values = mapper.readTree(o);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -85,34 +82,10 @@ public class Datapoint implements Serializable {
                 '}';
     }
 
-    public String  getKey() {
-        return this.DataSetkey;
-    }
-
-    public boolean compare(Datapoint dp) {
-
-        JsonNode a1 = dp.getValues();
-        String values = a1.get("price").asText();
-        String[] a1_prices = values.split(";");
-
-        values = this.values.get("price").asText();
-        String[] b1_prices = values.split(";");
+    //public String  getKey() {
+    //    return this.DataSetkey;
+    //}
 
 
 
-        double[] x = new double[a1_prices.length];
-        double[] y = new double[a1_prices.length];
-        for(int i=0;i<a1_prices.length;i++){
-            x[i] = Double.parseDouble(a1_prices[i]);
-            y[i] = Double.parseDouble(b1_prices[i]);
-        }
-
-        double corr = new PearsonsCorrelation().correlation(y, x);
-        if(corr> 0.7) {
-            //System.out.println(corr);
-            return true;
-        }else{
-            return false;
-        }
-    }
 }
