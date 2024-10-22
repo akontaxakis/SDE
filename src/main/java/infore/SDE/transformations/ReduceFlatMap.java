@@ -66,10 +66,11 @@ public class ReduceFlatMap extends RichFlatMapFunction<Estimation, Estimation> {
         else if (id == 1 || id == 3 || id == 8 || id == 9 || id == 7) {
 
             if (id == 1 && value.getRequestID() % 10 == 6) {
-                new JoinEstimationFunction(value.getNoOfP(), 0, value.getParam(), value.getSynopsisID(), value.getRequestID());
+                t_rf = new JoinEstimationFunction(value.getNoOfP(), 0, value.getParam(), value.getSynopsisID(), value.getRequestID());
             } else {
                 t_rf = new SimpleSumFunction(value.getNoOfP(), 0, value.getParam(), value.getSynopsisID(), value.getRequestID());
             }
+            t_rf.add(value);
         }
         //OR
         else if (id == 2) {

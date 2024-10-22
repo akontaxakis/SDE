@@ -31,7 +31,7 @@ import infore.SDE.messages.Request;
  * email: adokontax15@gmail.com *
  */
 
-@SuppressWarnings("deprecation")
+
 public class Run {
 
 	private static String kafkaDataInputTopic;

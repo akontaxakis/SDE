@@ -80,6 +80,7 @@ public class ContinuousCM extends ContinuousSynopsis{
         if(e != null) {
             Estimation es = new Estimation(rq, e, Integer.toString(rq.getUID()));
             es.setEstimationkey(key);
+
             return es;
         }else{
             return null;
